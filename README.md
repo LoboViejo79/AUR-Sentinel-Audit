@@ -319,32 +319,6 @@ chmod +x autorun.sh
 ./autorun.sh
 ```
 
-### Instalar integración GNOME/KDE
-
-```bash
-chmod +x install.sh
-./install.sh
-```
-
-El instalador configura:
-
-- Entorno Python local `.venv/`.
-- Acceso de menú en `~/.local/share/applications/`.
-- Autoinicio de **AUR Sentinel Guard** en `~/.config/autostart/`.
-- Wrappers `aur-guard-yay` y `aur-guard-paru` en `~/.local/bin/`.
-- Alias opcionales para que `yay` y `paru` pasen por Guardia AUR.
-
-En KDE Plasma, la Guardia AUR queda en la bandeja del sistema.
-En GNOME, si el escritorio no expone iconos de bandeja, el programa queda minimizado y mantiene popups/notificaciones visibles.
-
-### Modo guardia sin abrir la ventana principal
-
-```bash
-./autorun.sh --tray
-```
-
-Este modo se usa en el autoinicio del escritorio. No pregunta por herramientas opcionales ni instala accesos; solo inicia la GUI en segundo plano para monitoreo.
-
 ### Ejecutar versión CLI antigua
 
 ```bash
@@ -454,40 +428,6 @@ Se detectaron patrones comunes pero de bajo impacto.
 ### Riesgo medio/alto/crítico
 
 El PKGBUILD contiene patrones que deben revisarse manualmente.
-
----
-
-## 🌐 Subir a GitHub
-
-Repositorio sugerido:
-
-```text
-AUR-Sentinel-Audit
-```
-
-Descripción sugerida:
-
-```text
-Herramienta gráfica y portable de auditoría defensiva para Arch Linux y derivadas. Revisa paquetes AUR, compara bases comunitarias de paquetes reportados, analiza PKGBUILD, conexiones activas, servicios y genera reportes HTML/PDF.
-```
-
-Topics sugeridos:
-
-```text
-archlinux
-aur
-cachyos
-endeavouros
-garuda-linux
-manjaro
-linux-security
-cybersecurity
-malware-analysis
-security-audit
-pkgbuild
-python
-pyside6
-```
 
 ---
 
@@ -805,8 +745,8 @@ Instalar AUR seguro
 O desde terminal:
 
 ```bash
-tools/aur-guard-yay -S nombre-paquete
-tools/aur-guard-paru -S nombre-paquete
+tools/aur-guard-yay nombre-paquete
+tools/aur-guard-paru nombre-paquete
 ```
 
 Flujo de seguridad antes de instalar:
@@ -815,7 +755,7 @@ Flujo de seguridad antes de instalar:
 1) Actualiza/consulta lista de paquetes AUR reportados.
 2) Verifica si el paquete solicitado aparece en esa lista.
 3) Descarga el PKGBUILD desde AUR.
-4) Analiza firmas críticas confirmadas del incidente:
+4) Analiza firmas críticas:
    - atomic-lockfile
    - js-digest
    - @gsdigest/gsdigest
@@ -826,9 +766,7 @@ Flujo de seguridad antes de instalar:
 6) Solo si el usuario confirma, ejecuta yay/paru.
 ```
 
-Si un paquete aparece reportado o el PKGBUILD contiene firmas críticas confirmadas, ese paquete se bloquea automáticamente.
-Si el comando contiene otros paquetes no reportados, Guardia AUR continúa solo con los paquetes permitidos.
-Los comandos sin instalación directa, como búsquedas, información o actualizaciones sin paquetes concretos, se pasan a `yay`/`paru` sin bloqueo.
+Si el paquete aparece reportado o el PKGBUILD contiene firmas críticas, la instalación se bloquea automáticamente.
 
 En KDE Plasma usa `kdialog` para alertas interactivas. Si no existe, intenta usar `zenity`. Si tampoco existe, usa confirmación por terminal.
 
