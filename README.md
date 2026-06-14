@@ -44,6 +44,18 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 
 ---
 
+## Capturas de pantalla
+
+### Interfaz principal
+
+![Interfaz principal de AUR Sentinel Audit](screenshots/0001.png)
+
+### Resultados y reportes
+
+![Resultados y reportes de AUR Sentinel Audit](screenshots/0002.png)
+
+---
+
 ## 🧩 Características principales
 
 ### Interfaz gráfica portable
