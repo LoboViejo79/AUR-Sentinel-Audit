@@ -1307,6 +1307,7 @@ class MainWindow(QMainWindow):
         self.btn_update_db = QPushButton("Actualizar listas")
         self.btn_guard = QPushButton("Guardia AUR: ON")
         self.btn_safe_install = QPushButton("Instalar AUR seguro")
+        self.btn_remove_pkg = QPushButton("Desinstalar paquete riesgoso")
         self.btn_report = QPushButton("Generar reporte HTML/PDF")
         self.btn_open_folder = QPushButton("Abrir carpeta reportes")
         self.btn_quick.clicked.connect(lambda: self.start_scan("quick"))
@@ -1316,6 +1317,7 @@ class MainWindow(QMainWindow):
         self.btn_update_db.clicked.connect(self.update_lists_now)
         self.btn_guard.clicked.connect(self.toggle_guard)
         self.btn_safe_install.clicked.connect(self.safe_install_dialog)
+        self.btn_remove_pkg.clicked.connect(self.remove_package_dialog)
         self.btn_report.clicked.connect(self.save_report)
         self.btn_open_folder.clicked.connect(self.open_reports_folder)
         controls.addWidget(self.btn_quick)
@@ -1325,6 +1327,7 @@ class MainWindow(QMainWindow):
         controls.addWidget(self.btn_update_db)
         controls.addWidget(self.btn_guard)
         controls.addWidget(self.btn_safe_install)
+        controls.addWidget(self.btn_remove_pkg)
         controls.addWidget(self.btn_report)
         controls.addWidget(self.btn_open_folder)
         root.addLayout(controls)
@@ -1602,6 +1605,7 @@ class MainWindow(QMainWindow):
         self.btn_report.setDisabled(busy)
         self.btn_update_db.setDisabled(busy)
         self.btn_safe_install.setDisabled(busy)
+        self.btn_remove_pkg.setDisabled(busy)
 
     def start_scan(self, mode):
         if not is_arch_like():
@@ -1846,6 +1850,19 @@ class MainWindow(QMainWindow):
             "Solo si pasa los controles se permitirá continuar."
         )
         subprocess.Popen([str(wrapper), pkg, helper], cwd=str(Path(".").resolve()))
+
+    def remove_package_dialog(self):
+        pkg, ok = QInputDialog.getText(self, "Desinstalar paquete riesgoso", "Nombre del paquete a remover completamente:")
+        pkg = str(pkg).strip()
+        if not ok or not pkg:
+            return
+        msg = f"Se removerá el paquete: {pkg}\n\nAcciones:\n1) sudo pacman -Rns {pkg}\n2) limpiar cache yay/paru del paquete\n3) limpiar cache de helpers\n\n¿Continuar?"
+        if QMessageBox.question(self, "Confirmar desinstalación", msg, QMessageBox.Yes | QMessageBox.No) != QMessageBox.Yes:
+            return
+        script = f"sudo pacman -Rns {pkg}; rm -rf ~/.cache/yay/{pkg} ~/.cache/paru/clone/{pkg}; yay -Sc --noconfirm || true; paru -Sc --noconfirm || true"
+        self.append_log(f"Ejecutando desinstalación y limpieza de {pkg}")
+        subprocess.Popen(["bash", "-lc", script])
+        self.show_guard_popup("Desinstalación iniciada", f"Se inició remoción y limpieza de cache para: {pkg}", "warning", 15000)
 
     def open_reports_folder(self):
         REPORT_DIR.mkdir(exist_ok=True)

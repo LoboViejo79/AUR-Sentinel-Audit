@@ -419,6 +419,40 @@ El PKGBUILD contiene patrones que deben revisarse manualmente.
 
 ---
 
+## 🌐 Subir a GitHub
+
+Repositorio sugerido:
+
+```text
+AUR-Sentinel-Audit
+```
+
+Descripción sugerida:
+
+```text
+Herramienta gráfica y portable de auditoría defensiva para Arch Linux y derivadas. Revisa paquetes AUR, compara bases comunitarias de paquetes reportados, analiza PKGBUILD, conexiones activas, servicios y genera reportes HTML/PDF.
+```
+
+Topics sugeridos:
+
+```text
+archlinux
+aur
+cachyos
+endeavouros
+garuda-linux
+manjaro
+linux-security
+cybersecurity
+malware-analysis
+security-audit
+pkgbuild
+python
+pyside6
+```
+
+---
+
 ## 👤 Autor
 
 **LoboViejo 79**
@@ -793,134 +827,10 @@ Las alertas de Guardia AUR ahora se muestran con popup visible:
 Los wrappers `aur-guard-yay` y `aur-guard-paru` también muestran avisos gráficos durante el flujo de revisión previa.
 
 
----
+## Bloqueo real antes de instalar
 
-# 🛡️ Novedades de la versión – Guardia AUR Avanzada
+Para bloquear antes de instalar, usa `./install_guard_wrappers.sh` o el botón **Instalar AUR seguro**. El guardia descarga el snapshot completo de AUR, analiza PKGBUILD y `.install`, consulta listas reportadas y solo permite instalar si pasa los controles.
 
-## 🚀 Nuevas funciones incorporadas
+## Desinstalación y limpieza
 
-Esta versión incorpora mejoras importantes enfocadas en la detección temprana de paquetes AUR comprometidos, monitoreo continuo y análisis preventivo antes de instalar software desde AUR.
-
-### 🛡️ ¿Qué es Guardia AUR?
-
-Guardia AUR es un sistema de protección residente que permanece ejecutándose en segundo plano y ayuda a detectar riesgos relacionados con paquetes AUR.
-
-### Funciones principales
-
-- Monitoreo desde la bandeja del sistema.
-- Icono residente con notificaciones.
-- Popup interactivo visible durante 15 segundos o hasta que el usuario lo cierre.
-- Escaneo automático cuando detecta instalaciones o actualizaciones.
-- Generación automática de reportes.
-- Verificación de paquetes reportados por la comunidad.
-- Revisión automática de PKGBUILD.
-
----
-
-## 🔐 Cómo funciona Guardia AUR
-
-Cuando el usuario solicita instalar un paquete utilizando el modo seguro:
-
-```text
-1. Consulta listas de paquetes reportados.
-2. Consulta fuentes oficiales y comunitarias.
-3. Descarga el PKGBUILD.
-4. Analiza el contenido completo.
-5. Busca firmas críticas conocidas.
-6. Evalúa el riesgo.
-7. Solicita confirmación del usuario.
-8. Permite o bloquea la instalación.
-```
-
-Si detecta un paquete reportado o una firma crítica, la instalación es bloqueada automáticamente.
-
----
-
-## 🔍 Fuentes utilizadas para detección
-
-### Fuentes oficiales
-
-- Arch Linux aur-general
-- Arch Linux affected packages list
-- AUR RPC API
-- Arch Audit
-
-### Fuentes comunitarias
-
-- aur-malware-check
-- CachyOS Security Discussions
-- Garuda Linux Security Reports
-- Reportes públicos de la comunidad
-
-Las listas pueden actualizarse desde el propio programa mediante:
-
-```text
-Actualizar listas
-```
-
----
-
-## 🦠 Firmas críticas detectadas
-
-```text
-atomic-lockfile
-js-digest
-@gsdigest/gsdigest
-src/hooks/deps
-bpftool
-bpftrace
-eBPF
-rootkit
-curl | bash
-wget | sh
-base64 -d
-eval
-exec
-```
-
----
-
-## ⚠️ ADVERTENCIA LEGAL
-
-> [!WARNING]
-> Esta herramienta utiliza análisis heurístico, listas comunitarias, firmas conocidas y fuentes externas. Ningún sistema de detección puede garantizar una precisión absoluta.
-
-### Posibles falsos positivos
-
-- Un paquete legítimo podría ser marcado como sospechoso.
-- Una IP legítima podría aparecer reportada en una fuente comunitaria.
-- Una conexión legítima podría compartir infraestructura con servicios previamente reportados.
-- Un paquete no reportado NO significa que sea completamente seguro.
-
-### Posibles falsos negativos
-
-- Pueden existir amenazas nuevas aún no reportadas.
-- Pueden existir modificaciones recientes todavía no incluidas en las listas utilizadas.
-- Un atacante puede utilizar técnicas no contempladas por las reglas actuales.
-
-### Exención de responsabilidad
-
-> [!CAUTION]
-> El software se distribuye "TAL CUAL" ("AS IS"), sin garantías de ningún tipo.
-
-El autor:
-
-**LoboViejo79**
-
-no se responsabiliza por:
-
-- Daños directos o indirectos.
-- Pérdida de información.
-- Fallos del sistema.
-- Decisiones tomadas a partir de los resultados obtenidos.
-- Falsos positivos.
-- Falsos negativos.
-- Interrupciones del servicio.
-
-La decisión final sobre instalar, eliminar o mantener software corresponde exclusivamente al usuario.
-
-Se recomienda verificar manualmente cualquier hallazgo antes de tomar decisiones en entornos de producción.
-
----
-
-© LoboViejo79 – AUR Sentinel Audit
+Desde la GUI usa **Desinstalar paquete riesgoso** para ejecutar `pacman -Rns` y limpiar cache de yay/paru.

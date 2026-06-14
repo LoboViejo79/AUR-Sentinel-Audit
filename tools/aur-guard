@@ -1,248 +1,71 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 PKG="${1:-}"
 HELPER="${2:-yay}"
-
-AUR_LIST_URLS=(
-  "https://md.archlinux.org/s/SxbqukK6IA/download"
-  "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt"
-  "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
-  "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
-)
-
-DATA_DIR="data"
-CACHE_FILE="$DATA_DIR/aur_malware_package_list.txt"
-mkdir -p "$DATA_DIR"
-
-popup_15() {
-  local title="$1"
-  local msg="$2"
-  local type="${3:-info}"
-
-  if command -v kdialog >/dev/null 2>&1; then
-    kdialog --title "$title" --passivepopup "$msg" 15 || true
-  elif command -v zenity >/dev/null 2>&1; then
-    case "$type" in
-      error) zenity --title="$title" --error --text="$msg" --timeout=15 || true ;;
-      warning) zenity --title="$title" --warning --text="$msg" --timeout=15 || true ;;
-      *) zenity --title="$title" --info --text="$msg" --timeout=15 || true ;;
-    esac
-  elif command -v notify-send >/dev/null 2>&1; then
-    notify-send -t 15000 "$title" "$msg"
-  else
-    echo "==== $title ===="
-    echo "$msg"
-  fi
-}
+DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$DIR/.." && pwd)"
+SCANNER="$DIR/aur_guard_preinstall.py"
 
 gui_msg() {
-  local title="$1"
-  local msg="$2"
-  local type="${3:-info}"
-
+  local title="$1"; local msg="$2"; local type="${3:-info}"
   if command -v kdialog >/dev/null 2>&1; then
-    case "$type" in
-      error) kdialog --title "$title" --error "$msg" ;;
-      warning) kdialog --title "$title" --sorry "$msg" ;;
-      yesno) kdialog --title "$title" --yesno "$msg" ;;
-      *) kdialog --title "$title" --msgbox "$msg" ;;
-    esac
-    return $?
+    case "$type" in error) kdialog --title "$title" --error "$msg";; warning) kdialog --title "$title" --sorry "$msg";; yesno) kdialog --title "$title" --yesno "$msg";; *) kdialog --title "$title" --msgbox "$msg";; esac
   elif command -v zenity >/dev/null 2>&1; then
-    case "$type" in
-      error) zenity --title="$title" --error --text="$msg" ;;
-      warning) zenity --title="$title" --warning --text="$msg" ;;
-      yesno) zenity --title="$title" --question --text="$msg" ;;
-      *) zenity --title="$title" --info --text="$msg" ;;
-    esac
-    return $?
+    case "$type" in error) zenity --title="$title" --error --text="$msg";; warning) zenity --title="$title" --warning --text="$msg";; yesno) zenity --title="$title" --question --text="$msg";; *) zenity --title="$title" --info --text="$msg";; esac
   else
-    echo
-    echo "==== $title ===="
-    echo "$msg"
-    if [[ "$type" == "yesno" ]]; then
-      read -r -p "Continuar? [s/N]: " R
-      [[ "$R" =~ ^[sS]$ ]]
-      return $?
-    fi
+    echo "==== $title ===="; echo "$msg"
+    if [[ "$type" == "yesno" ]]; then read -r -p "Continuar? [s/N]: " R; [[ "$R" =~ ^[sS]$ ]]; fi
   fi
 }
-
-notify() {
-  if command -v notify-send >/dev/null 2>&1; then
-    notify-send "AUR Sentinel Guard" "$1"
-  fi
+popup_15() {
+  local title="$1"; local msg="$2"; local type="${3:-info}"
+  if command -v kdialog >/dev/null 2>&1; then kdialog --title "$title" --passivepopup "$msg" 15 || true
+  elif command -v zenity >/dev/null 2>&1; then zenity --title="$title" --info --text="$msg" --timeout=15 || true
+  elif command -v notify-send >/dev/null 2>&1; then notify-send -t 15000 "$title" "$msg"; fi
 }
+if [[ -z "$PKG" ]]; then gui_msg "AUR Sentinel Guard" "Uso: aur-guard <paquete> [yay|paru]" "error"; exit 1; fi
+REAL_HELPER="$(type -P "$HELPER" || true)"
+if [[ -z "$REAL_HELPER" ]]; then gui_msg "AUR Sentinel Guard" "No se encontró helper AUR: $HELPER" "error"; exit 2; fi
 
-if [[ -z "$PKG" ]]; then
-  gui_msg "AUR Sentinel Guard" "Uso: aur-guard <paquete> [yay|paru]" "error"
-  exit 1
-fi
-
-if ! command -v "$HELPER" >/dev/null 2>&1; then
-  gui_msg "AUR Sentinel Guard" "No se encontró el helper AUR: $HELPER" "error"
-  exit 2
-fi
-
-gui_msg "AUR Sentinel Guard" "Se revisará el paquete AUR antes de instalar:
+gui_msg "AUR Sentinel Guard" "Revisión previa obligatoria antes de instalar:
 
 Paquete: $PKG
 Helper: $HELPER
 
 Controles:
-1) Lista de paquetes reportados
-2) Descarga segura del PKGBUILD
-3) Firmas críticas conocidas
-4) Confirmación manual
+1) Listas reportadas.
+2) Snapshot completo AUR.
+3) PKGBUILD y .install.
+4) Firmas atomic-lockfile/js-digest/eBPF/rootkit.
+5) Confirmación manual." "info"
 
-La instalación NO continuará si falla un control." "info"
-
-WORKDIR="$(mktemp -d)"
-cleanup() { rm -rf "$WORKDIR"; }
-trap cleanup EXIT
-
-popup_15 "AUR Sentinel Guard" "Iniciando revisión previa del paquete: $PKG" "info"
-echo "🛡️ AUR Sentinel Guard - revisión previa"
-echo "Paquete: $PKG"
-echo "Helper: $HELPER"
-echo
-
-echo "[1/4] Actualizando lista de paquetes reportados..."
-TMP_LIST="$WORKDIR/aur_reported.txt"
-: > "$TMP_LIST"
-
-for url in "${AUR_LIST_URLS[@]}"; do
-  if curl -fsSL "$url" -o "$WORKDIR/source.txt"; then
-    if [[ "$url" == *"lists.archlinux.org"* ]]; then
-      grep -Eo 'aur\.archlinux\.org/(packages/|cgit/aur\.git/commit/\?h=)?[A-Za-z0-9@._+:-]+' "$WORKDIR/source.txt" \
-        | sed -E 's#.*(packages/|h=)?([A-Za-z0-9@._+:-]+)$#\2#' >> "$TMP_LIST" || true
-    else
-      grep -Eo '^[A-Za-z0-9@._+:-]+' "$WORKDIR/source.txt" >> "$TMP_LIST" || true
-      grep -Eo 'aur\.archlinux\.org/packages/[A-Za-z0-9@._+:-]+' "$WORKDIR/source.txt" \
-        | sed -E 's#.*/packages/##' >> "$TMP_LIST" || true
-    fi
-  fi
-done
-
-sort -u "$TMP_LIST" > "$CACHE_FILE.tmp" || true
-if [[ -s "$CACHE_FILE.tmp" ]]; then
-  mv "$CACHE_FILE.tmp" "$CACHE_FILE"
-else
-  rm -f "$CACHE_FILE.tmp"
-fi
-
-if [[ -f "$CACHE_FILE" ]] && grep -Fxiq "$PKG" "$CACHE_FILE"; then
-  MSG="❌ INSTALACIÓN BLOQUEADA
-
-El paquete '$PKG' aparece en la lista de paquetes AUR reportados/comprometidos.
-
-No se continuará con la instalación.
-
-Recomendación:
-- No instales el paquete.
-- Revisa las fuentes del incidente.
-- Busca alternativa en repositorios oficiales."
-  echo "$MSG"
-  notify "❌ Instalación bloqueada: $PKG aparece reportado."
-  gui_msg "AUR Sentinel Guard - BLOQUEADO" "$MSG" "error"
-  exit 20
-fi
-
-popup_15 "AUR Sentinel Guard" "✅ $PKG no aparece en la base de paquetes reportados. Continuando revisión de PKGBUILD." "info"
-echo "✅ El paquete no aparece en la base local/remota de reportados."
-
-echo "[2/4] Descargando PKGBUILD..."
-URL="https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=${PKG}"
-PKGBUILD_FILE="$WORKDIR/PKGBUILD"
-
-if ! curl -fsSL "$URL" -o "$PKGBUILD_FILE"; then
-  MSG="❌ No se pudo descargar el PKGBUILD desde AUR.
-
-No se continuará con la instalación."
-  echo "$MSG"
-  notify "❌ No se pudo descargar PKGBUILD de $PKG."
-  gui_msg "AUR Sentinel Guard - Error" "$MSG" "error"
-  exit 10
-fi
-
-echo "✅ PKGBUILD descargado."
-
-echo "[3/4] Analizando firmas críticas..."
-CRITICAL_PATTERNS=(
-  "npm[[:space:]]+install[[:space:]]+atomic-lockfile"
-  "pnpm[[:space:]]+(install|add)[[:space:]]+atomic-lockfile"
-  "yarn[[:space:]]+add[[:space:]]+atomic-lockfile"
-  "bun[[:space:]]+add[[:space:]]+atomic-lockfile"
-  "atomic-lockfile"
-  "npm[[:space:]]+install[[:space:]]+js-digest"
-  "pnpm[[:space:]]+(install|add)[[:space:]]+js-digest"
-  "bun[[:space:]]+add[[:space:]]+js-digest"
-  "@gsdigest/gsdigest"
-  "gsdigest"
-  "src/hooks/deps"
-  "/sys/fs/bpf/hidden_"
-  "bpftool"
-  "bpftrace"
-  "rootkit"
-)
-
-FOUND=0
-FOUND_TEXT=""
-for pattern in "${CRITICAL_PATTERNS[@]}"; do
-  if grep -Eiq "$pattern" "$PKGBUILD_FILE"; then
-    FOUND=1
-    FOUND_TEXT="${FOUND_TEXT}
-- $pattern"
-  fi
-done
-
-if [[ "$FOUND" -eq 1 ]]; then
-  BLOCKED_COPY="./PKGBUILD_${PKG}_BLOQUEADO_$(date +%Y%m%d_%H%M%S)"
-  cp "$PKGBUILD_FILE" "$BLOCKED_COPY"
-  MSG="❌ INSTALACIÓN BLOQUEADA
-
-El PKGBUILD contiene firmas críticas conocidas:
-
-$FOUND_TEXT
-
-Se guardó una copia para revisión:
-$BLOCKED_COPY
-
-No se continuará con la instalación."
-  echo "$MSG"
-  notify "❌ Instalación bloqueada: firmas críticas en $PKG."
-  gui_msg "AUR Sentinel Guard - FIRMA CRÍTICA" "$MSG" "error"
-  exit 30
-fi
-
-popup_15 "AUR Sentinel Guard" "✅ PKGBUILD de $PKG sin firmas críticas conocidas. Esperando confirmación final." "info"
-echo "✅ No se detectaron firmas críticas conocidas."
-
-echo "[4/4] Confirmación final del usuario..."
-SUMMARY="✅ CONTROLES APROBADOS
+cd "$ROOT"
+popup_15 "AUR Sentinel Guard" "Analizando $PKG antes de instalar..." "info"
+set +e
+SCAN_OUTPUT="$(python "$SCANNER" "$PKG" --cache "data/aur_malware_package_list.txt" 2>&1)"
+SCAN_CODE=$?
+set -e
+if [[ "$SCAN_CODE" -ne 0 ]]; then
+  echo "$SCAN_OUTPUT"
+  popup_15 "AUR Sentinel Guard - BLOQUEADO" "❌ $PKG no pasó revisión. Instalación bloqueada." "error"
+  gui_msg "AUR Sentinel Guard - BLOQUEADO" "❌ INSTALACIÓN BLOQUEADA
 
 Paquete: $PKG
 
-Resultado:
-✅ No aparece en lista de paquetes reportados
-✅ PKGBUILD descargado correctamente
-✅ Sin firmas críticas conocidas
+$SCAN_OUTPUT" "error"
+  exit "$SCAN_CODE"
+fi
+echo "$SCAN_OUTPUT"
+popup_15 "AUR Sentinel Guard - APROBADO" "✅ $PKG pasó controles. Esperando confirmación." "info"
+if gui_msg "AUR Sentinel Guard - Confirmar instalación" "✅ CONTROLES APROBADOS
 
-AUR Sentinel Guard permite continuar, pero recuerda:
-- AUR es mantenido por la comunidad.
-- Revisa manualmente el PKGBUILD si tienes dudas.
-- La responsabilidad final es del usuario.
+Paquete: $PKG
 
-¿Deseas continuar con la instalación usando $HELPER?"
+$SCAN_OUTPUT
 
-notify "✅ Controles aprobados para $PKG. Esperando confirmación."
-
-if gui_msg "AUR Sentinel Guard - Confirmar instalación" "$SUMMARY" "yesno"; then
-  notify "Instalando $PKG con $HELPER..."
-  exec "$HELPER" -S "$PKG"
+¿Continuar con $HELPER?" "yesno"; then
+  exec "$REAL_HELPER" -S "$PKG"
 else
-  echo "Instalación cancelada por el usuario."
-  notify "Instalación cancelada por el usuario."
+  echo "Instalación cancelada."
   exit 0
 fi
