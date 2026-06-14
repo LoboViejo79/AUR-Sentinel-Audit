@@ -891,14 +891,33 @@ def load_local_malware_db():
     return set()
 
 
+def write_malware_db_cache(package_names, source_stats=None):
+    LOCAL_MALWARE_DB.parent.mkdir(exist_ok=True)
+    now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    lines = [
+        "# AUR Sentinel Audit - cache local fusionada",
+        f"# Actualizado: {now}",
+        f"# Entradas: {len(package_names)}",
+        "#",
+        "# Fuentes consultadas:",
+    ]
+    for item in source_stats or []:
+        lines.append(f"# - {item.get('url')} | extraidos: {item.get('count', 0)}")
+    lines.append("")
+    lines.extend(sorted(package_names))
+    LOCAL_MALWARE_DB.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def update_malware_db():
     """
     Descarga una lista comunitaria actualizada de paquetes reportados.
+    Si hay entradas nuevas, las fusiona automáticamente con la copia local.
     Si no hay Internet, usa la copia local.
     """
-    combined = set()
+    local_before = load_local_malware_db()
+    remote_combined = set()
     errors = []
-    raw_collected = []
+    source_stats = []
     for url in MALWARE_DB_URLS:
         try:
             req = Request(url, headers={"User-Agent": "AUR-Sentinel-Audit-GUI/1.1"})
@@ -908,17 +927,36 @@ def update_malware_db():
                 names = extract_packages_from_arch_mailing_thread(txt)
             else:
                 names = parse_package_names_from_text(txt)
-            combined.update(names)
-            raw_collected.append(f"# Fuente: {url}\n# Paquetes extraídos: {len(names)}\n{txt}\n")
+            remote_combined.update(names)
+            source_stats.append({"url": url, "count": len(names)})
         except Exception as e:
             errors.append(f"{url}: {e}")
 
-    if combined:
-        LOCAL_MALWARE_DB.write_text("\n".join(raw_collected), encoding="utf-8")
-        return combined, {"source": "remota + cache local", "count": len(combined), "errors": errors}
+    if remote_combined:
+        merged = local_before | remote_combined
+        new_entries = sorted(remote_combined - local_before)
+        write_malware_db_cache(merged, source_stats)
+        return merged, {
+            "source": "remota fusionada con cache local",
+            "count": len(merged),
+            "remote_count": len(remote_combined),
+            "previous_count": len(local_before),
+            "new_count": len(new_entries),
+            "new_entries": new_entries,
+            "errors": errors,
+            "sources": source_stats,
+        }
 
-    local = load_local_malware_db()
-    return local, {"source": "cache local", "count": len(local), "errors": errors}
+    return local_before, {
+        "source": "cache local",
+        "count": len(local_before),
+        "remote_count": 0,
+        "previous_count": len(local_before),
+        "new_count": 0,
+        "new_entries": [],
+        "errors": errors,
+        "sources": source_stats,
+    }
 
 
 
@@ -927,6 +965,10 @@ def force_update_malware_db_for_ui():
     return {
         "ok": bool(malware_db),
         "count": len(malware_db),
+        "new_count": meta.get("new_count", 0),
+        "new_entries": meta.get("new_entries", []),
+        "remote_count": meta.get("remote_count", 0),
+        "previous_count": meta.get("previous_count", 0),
         "meta": meta,
         "cache": str(LOCAL_MALWARE_DB),
     }
@@ -1867,12 +1909,33 @@ class MainWindow(QMainWindow):
         result = force_update_malware_db_for_ui()
         self.txt_sources.setPlainText(self.render_sources_text())
         if result.get("ok"):
+            new_entries = result.get("new_entries", [])
+            preview = "\n".join(new_entries[:20])
+            extra = ""
+            if result.get("new_count", 0):
+                extra = f"\n\nNuevas entradas agregadas: {result.get('new_count')}"
+                if preview:
+                    extra += f"\n\nPrimeras entradas nuevas:\n{preview}"
+                    if len(new_entries) > 20:
+                        extra += "\n..."
+            else:
+                extra = "\n\nNo se encontraron paquetes nuevos; la lista local ya estaba al día."
             QMessageBox.information(
                 self,
                 "Listas actualizadas",
-                f"Base actualizada correctamente.\nEntradas detectadas: {result.get('count')}\nCache local:\n{result.get('cache')}"
+                "Base actualizada correctamente.\n"
+                f"Entradas anteriores: {result.get('previous_count')}\n"
+                f"Entradas remotas detectadas: {result.get('remote_count')}\n"
+                f"Total local fusionado: {result.get('count')}\n"
+                f"Cache local:\n{result.get('cache')}"
+                f"{extra}"
             )
-            self.append_log(f"Listas actualizadas: {result.get('count')} entradas")
+            self.append_log(
+                f"Listas actualizadas: {result.get('new_count')} nuevas | "
+                f"{result.get('count')} total local fusionado"
+            )
+            if new_entries:
+                self.append_log("Entradas nuevas agregadas: " + ", ".join(new_entries[:30]))
         else:
             QMessageBox.warning(
                 self,

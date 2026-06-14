@@ -490,7 +490,7 @@ Dentro de la GUI hay un botón:
 Actualizar listas
 ```
 
-Ese botón consulta fuentes comunitarias actualizadas y guarda cache local en:
+Ese botón consulta fuentes comunitarias actualizadas, detecta entradas nuevas, las agrega automáticamente y conserva las entradas locales anteriores en:
 
 ```text
 data/aur_malware_package_list.txt

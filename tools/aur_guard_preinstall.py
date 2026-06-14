@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 import argparse, json, re, tarfile, tempfile
+import datetime as dt
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.parse import quote
@@ -49,21 +50,32 @@ def parse_pkg_names(txt):
 
 def update_db(cache):
     cache.parent.mkdir(parents=True, exist_ok=True)
-    alln=set(); raw=[]
+    local = parse_pkg_names(cache.read_text(encoding="utf-8", errors="ignore")) if cache.exists() else set()
+    alln=set(); stats=[]
     for url in MALWARE_DB_URLS:
         try:
             txt=fetch_url(url)
             names=parse_pkg_names(txt)
             alln |= names
-            raw.append(f"# Fuente: {url}\n# Extraidos: {len(names)}\n" + "\n".join(sorted(names)) + "\n")
+            stats.append({"url": url, "count": len(names)})
         except Exception:
             pass
     if alln:
-        cache.write_text("\n".join(raw), encoding="utf-8")
-        return alln
-    if cache.exists():
-        return parse_pkg_names(cache.read_text(encoding="utf-8", errors="ignore"))
-    return set()
+        merged = local | alln
+        now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        lines = [
+            "# AUR Sentinel Audit - cache local fusionada",
+            f"# Actualizado: {now}",
+            f"# Entradas: {len(merged)}",
+            "#",
+            "# Fuentes consultadas:",
+        ]
+        lines.extend([f"# - {item['url']} | extraidos: {item['count']}" for item in stats])
+        lines.append("")
+        lines.extend(sorted(merged))
+        cache.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        return merged
+    return local
 
 def aur_rpc(pkg):
     data=json.loads(fetch_url(f"https://aur.archlinux.org/rpc/v5/info/{quote(pkg)}"))
