@@ -1,0 +1,1094 @@
+{
+  "arch_audit": {
+    "installed": true,
+    "output": "libxml2 is affected by denial of service. High risk!\npam is affected by arbitrary filesystem access. High risk!\ncoreutils is affected by information disclosure. Medium risk!\ncpio is affected by arbitrary command execution. Medium risk!\ngiflib is affected by information disclosure. Medium risk!\nlibheif is affected by information disclosure. Medium risk!\nlibtiff is affected by unknown, denial of service. Medium risk!\nopenjpeg2 is affected by arbitrary code execution. Medium risk!\nopenssl is affected by arbitrary command execution, certificate verification bypass. Medium risk!\nopenvpn is affected by information disclosure. Medium risk!\nperl is affected by signature forgery, directory traversal, unknown. Medium risk!\nsystemd is affected by information disclosure. Medium risk!\nwget is affected by information disclosure. Medium risk!\nxdg-utils is affected by information disclosure. Medium risk!\nlua51 is affected by denial of service. Low risk!",
+    "returncode": 0
+  },
+  "aur_analysis": [
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "jue 11 jun 2026 20:05:40",
+      "maintainer": "",
+      "name": "google-chrome",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "149.0.7827.114-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "lun 08 jun 2026 22:19:01",
+      "maintainer": "",
+      "name": "hyper-headset-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "1.9.1-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "sáb 13 jun 2026 21:52:10",
+      "maintainer": "",
+      "name": "microsoft-edge-stable-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "149.0.4022.69-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "lun 01 jun 2026 02:54:25",
+      "maintainer": "",
+      "name": "ttf-ms-fonts",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "2.0-12"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "vie 12 jun 2026 16:22:45",
+      "maintainer": "",
+      "name": "visual-studio-code-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "1.124.2-1"
+    }
+  ],
+  "aur_packages": [
+    {
+      "install_date": "jue 11 jun 2026 20:05:40",
+      "name": "google-chrome",
+      "packager": "",
+      "version": "149.0.7827.114-1"
+    },
+    {
+      "install_date": "lun 08 jun 2026 22:19:01",
+      "name": "hyper-headset-bin",
+      "packager": "",
+      "version": "1.9.1-1"
+    },
+    {
+      "install_date": "sáb 13 jun 2026 21:52:10",
+      "name": "microsoft-edge-stable-bin",
+      "packager": "",
+      "version": "149.0.4022.69-1"
+    },
+    {
+      "install_date": "lun 01 jun 2026 02:54:25",
+      "name": "ttf-ms-fonts",
+      "packager": "",
+      "version": "2.0-12"
+    },
+    {
+      "install_date": "vie 12 jun 2026 16:22:45",
+      "name": "visual-studio-code-bin",
+      "packager": "",
+      "version": "1.124.2-1"
+    }
+  ],
+  "connections": {
+    "connections": [
+      {
+        "local": "192.168.1.247:52706",
+        "peer": "142.251.129.110:443",
+        "process": "users:((\"brave\",pid=5423,fd=31))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:52706 142.251.129.110:443   users:((\"brave\",pid=5423,fd=31))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "0.0.0.0:55827",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"Discord\",pid=1965,fd=157))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:55827         0.0.0.0:*     users:((\"Discord\",pid=1965,fd=157))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "192.168.1.247:58566",
+        "peer": "142.251.134.202:443",
+        "process": "users:((\"brave\",pid=5423,fd=88))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:58566 142.251.134.202:443   users:((\"brave\",pid=5423,fd=88))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:59965",
+        "peer": "142.251.129.14:443",
+        "process": "users:((\"brave\",pid=5423,fd=58))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:59965  142.251.129.14:443   users:((\"brave\",pid=5423,fd=58))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.54:53",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                127.0.0.54:53            0.0.0.0:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "127.0.0.53%lo:53",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0             127.0.0.53%lo:53            0.0.0.0:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "192.168.1.247%enp8s0:68",
+        "peer": "192.168.1.1:67",
+        "process": "",
+        "raw": "udp   ESTAB      0      0      192.168.1.247%enp8s0:68        192.168.1.1:67   ",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:33300",
+        "peer": "162.159.137.232:443",
+        "process": "users:((\"Discord\",pid=1869,fd=20))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:33300 162.159.137.232:443   users:((\"Discord\",pid=1869,fd=20))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "224.0.0.251:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"brave\",pid=5377,fd=323))",
+        "raw": "udp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=5377,fd=323))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "224.0.0.251:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"brave\",pid=5423,fd=50))",
+        "raw": "udp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=5423,fd=50))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5353",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5353",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5355",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5355          0.0.0.0:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "192.168.1.247:43287",
+        "peer": "181.30.232.236:443",
+        "process": "users:((\"brave\",pid=5423,fd=30))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:43287  181.30.232.236:443   users:((\"brave\",pid=5423,fd=30))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "0.0.0.0:47486",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"Discord\",pid=1965,fd=195))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:47486         0.0.0.0:*     users:((\"Discord\",pid=1965,fd=195))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "*:1716",
+        "peer": "*:*",
+        "process": "users:((\"kdeconnectd\",pid=1578,fd=39))",
+        "raw": "udp   UNCONN     0      0                         *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=39))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5353",
+        "peer": "[::]:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                      [::]:5353             [::]:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5353",
+        "peer": "[::]:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                      [::]:5353             [::]:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5355",
+        "peer": "[::]:*",
+        "process": "",
+        "raw": "udp   UNCONN     0      0                      [::]:5355             [::]:*    ",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5355",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "tcp   LISTEN     0      4096                0.0.0.0:5355          0.0.0.0:*    ",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.54:53",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "tcp   LISTEN     0      4096             127.0.0.54:53            0.0.0.0:*    ",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:46561",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"plasmashell\",pid=1419,fd=44))",
+        "raw": "tcp   LISTEN     0      50                127.0.0.1:46561         0.0.0.0:*     users:((\"plasmashell\",pid=1419,fd=44))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:48839",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"code\",pid=41003,fd=36))",
+        "raw": "tcp   LISTEN     0      511               127.0.0.1:48839         0.0.0.0:*     users:((\"code\",pid=41003,fd=36))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.53%lo:53",
+        "peer": "0.0.0.0:*",
+        "process": "",
+        "raw": "tcp   LISTEN     0      4096          127.0.0.53%lo:53            0.0.0.0:*    ",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:6463",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"Discord\",pid=1965,fd=42))",
+        "raw": "tcp   LISTEN     0      511               127.0.0.1:6463          0.0.0.0:*     users:((\"Discord\",pid=1965,fd=42))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "192.168.1.247:33084",
+        "peer": "192.168.40.100:445",
+        "process": "",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:33084  192.168.40.100:445  ",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:44280",
+        "peer": "127.0.0.1:46561",
+        "process": "users:((\"python3\",pid=39864,fd=9))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:44280       127.0.0.1:46561 users:((\"python3\",pid=39864,fd=9))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:46064",
+        "peer": "13.107.226.33:443",
+        "process": "users:((\"code\",pid=40065,fd=23))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:46064   13.107.226.33:443   users:((\"code\",pid=40065,fd=23))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:54918",
+        "peer": "199.232.193.91:443",
+        "process": "users:((\"brave\",pid=5423,fd=79))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:54918  199.232.193.91:443   users:((\"brave\",pid=5423,fd=79))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:34460",
+        "peer": "104.18.39.21:443",
+        "process": "users:((\"brave\",pid=5423,fd=25))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:34460    104.18.39.21:443   users:((\"brave\",pid=5423,fd=25))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:47166",
+        "peer": "104.18.39.21:443",
+        "process": "users:((\"brave\",pid=5423,fd=36))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:47166    104.18.39.21:443   users:((\"brave\",pid=5423,fd=36))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:46561",
+        "peer": "127.0.0.1:44280",
+        "process": "users:((\"plasmashell\",pid=1419,fd=80))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:46561       127.0.0.1:44280 users:((\"plasmashell\",pid=1419,fd=80))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:42296",
+        "peer": "172.64.155.209:443",
+        "process": "",
+        "raw": "tcp   TIME-WAIT  0      0             192.168.1.247:42296  172.64.155.209:443  ",
+        "state": "TIME-WAIT"
+      },
+      {
+        "local": "192.168.1.247:49574",
+        "peer": "172.64.155.209:443",
+        "process": "users:((\"codex\",pid=40288,fd=55))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:49574  172.64.155.209:443   users:((\"codex\",pid=40288,fd=55))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:39728",
+        "peer": "162.159.130.234:443",
+        "process": "users:((\"Discord\",pid=1869,fd=19))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:39728 162.159.130.234:443   users:((\"Discord\",pid=1869,fd=19))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:37442",
+        "peer": "95.217.239.55:443",
+        "process": "",
+        "raw": "tcp   FIN-WAIT-1 0      25            192.168.1.247:37442   95.217.239.55:443  ",
+        "state": "FIN-WAIT-1"
+      },
+      {
+        "local": "192.168.1.247:57882",
+        "peer": "162.159.129.235:2096",
+        "process": "users:((\"Discord\",pid=1869,fd=24))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:57882 162.159.129.235:2096  users:((\"Discord\",pid=1869,fd=24))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:49620",
+        "peer": "140.82.113.25:443",
+        "process": "users:((\"brave\",pid=5423,fd=41))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:49620   140.82.113.25:443   users:((\"brave\",pid=5423,fd=41))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:39814",
+        "peer": "162.159.137.234:2087",
+        "process": "users:((\"Discord\",pid=1869,fd=27))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:39814 162.159.137.234:2087  users:((\"Discord\",pid=1869,fd=27))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "[::]:5355",
+        "peer": "[::]:*",
+        "process": "",
+        "raw": "tcp   LISTEN     0      4096                   [::]:5355             [::]:*    ",
+        "state": "LISTEN"
+      },
+      {
+        "local": "*:1716",
+        "peer": "*:*",
+        "process": "users:((\"kdeconnectd\",pid=1578,fd=40))",
+        "raw": "tcp   LISTEN     0      50                        *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=40))",
+        "state": "LISTEN"
+      }
+    ],
+    "raw_limited": "Netid State      Recv-Q Send-Q        Local Address:Port     Peer Address:Port Process\nudp   ESTAB      0      0             192.168.1.247:52706 142.251.129.110:443   users:((\"brave\",pid=5423,fd=31))\nudp   UNCONN     0      0                   0.0.0.0:55827         0.0.0.0:*     users:((\"Discord\",pid=1965,fd=157))\nudp   ESTAB      0      0             192.168.1.247:58566 142.251.134.202:443   users:((\"brave\",pid=5423,fd=88))\nudp   ESTAB      0      0             192.168.1.247:59965  142.251.129.14:443   users:((\"brave\",pid=5423,fd=58))\nudp   UNCONN     0      0                127.0.0.54:53            0.0.0.0:*    \nudp   UNCONN     0      0             127.0.0.53%lo:53            0.0.0.0:*    \nudp   ESTAB      0      0      192.168.1.247%enp8s0:68        192.168.1.1:67   \nudp   ESTAB      0      0             192.168.1.247:33300 162.159.137.232:443   users:((\"Discord\",pid=1869,fd=20))\nudp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=5377,fd=323))\nudp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=5423,fd=50))\nudp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*    \nudp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*    \nudp   UNCONN     0      0                   0.0.0.0:5355          0.0.0.0:*    \nudp   ESTAB      0      0             192.168.1.247:43287  181.30.232.236:443   users:((\"brave\",pid=5423,fd=30))\nudp   UNCONN     0      0                   0.0.0.0:47486         0.0.0.0:*     users:((\"Discord\",pid=1965,fd=195))\nudp   UNCONN     0      0                         *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=39))\nudp   UNCONN     0      0                      [::]:5353             [::]:*    \nudp   UNCONN     0      0                      [::]:5353             [::]:*    \nudp   UNCONN     0      0                      [::]:5355             [::]:*    \ntcp   LISTEN     0      4096                0.0.0.0:5355          0.0.0.0:*    \ntcp   LISTEN     0      4096             127.0.0.54:53            0.0.0.0:*    \ntcp   LISTEN     0      50                127.0.0.1:46561         0.0.0.0:*     users:((\"plasmashell\",pid=1419,fd=44))\ntcp   LISTEN     0      511               127.0.0.1:48839         0.0.0.0:*     users:((\"code\",pid=41003,fd=36))\ntcp   LISTEN     0      4096          127.0.0.53%lo:53            0.0.0.0:*    \ntcp   LISTEN     0      511               127.0.0.1:6463          0.0.0.0:*     users:((\"Discord\",pid=1965,fd=42))\ntcp   ESTAB      0      0             192.168.1.247:33084  192.168.40.100:445  \ntcp   ESTAB      0      0                 127.0.0.1:44280       127.0.0.1:46561 users:((\"python3\",pid=39864,fd=9))\ntcp   ESTAB      0      0             192.168.1.247:46064   13.107.226.33:443   users:((\"code\",pid=40065,fd=23))\ntcp   ESTAB      0      0             192.168.1.247:54918  199.232.193.91:443   users:((\"brave\",pid=5423,fd=79))\ntcp   ESTAB      0      0             192.168.1.247:34460    104.18.39.21:443   users:((\"brave\",pid=5423,fd=25))\ntcp   ESTAB      0      0             192.168.1.247:47166    104.18.39.21:443   users:((\"brave\",pid=5423,fd=36))\ntcp   ESTAB      0      0                 127.0.0.1:46561       127.0.0.1:44280 users:((\"plasmashell\",pid=1419,fd=80))\ntcp   TIME-WAIT  0      0             192.168.1.247:42296  172.64.155.209:443  \ntcp   ESTAB      0      0             192.168.1.247:49574  172.64.155.209:443   users:((\"codex\",pid=40288,fd=55))\ntcp   ESTAB      0      0             192.168.1.247:39728 162.159.130.234:443   users:((\"Discord\",pid=1869,fd=19))\ntcp   FIN-WAIT-1 0      25            192.168.1.247:37442   95.217.239.55:443  \ntcp   ESTAB      0      0             192.168.1.247:57882 162.159.129.235:2096  users:((\"Discord\",pid=1869,fd=24))\ntcp   ESTAB      0      0             192.168.1.247:49620   140.82.113.25:443   users:((\"brave\",pid=5423,fd=41))\ntcp   ESTAB      0      0             192.168.1.247:39814 162.159.137.234:2087  users:((\"Discord\",pid=1869,fd=27))\ntcp   LISTEN     0      4096                   [::]:5355             [::]:*    \ntcp   LISTEN     0      50                        *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=40))"
+  },
+  "external_aur_check": {},
+  "incident_sources": {
+    "database_urls": [
+      "https://md.archlinux.org/s/SxbqukK6IA/download",
+      "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/",
+      "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt",
+      "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt",
+      "https://paste.cachyos.org/73a714d"
+    ],
+    "links": [
+      {
+        "name": "CachyOS - AUR Compromised 1500+ packages",
+        "note": "Hilo principal con seguimiento, advertencias y discusión técnica.",
+        "url": "https://discuss.cachyos.org/t/aur-compromised-1500-packages-affected-20260611/31040"
+      },
+      {
+        "name": "CachyOS - How to check compromised packages",
+        "note": "Publicación orientada a chequeo de exposición real. Indica que las listas siguen actualizándose.",
+        "url": "https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077"
+      },
+      {
+        "name": "Garuda Linux - Attack wave on AUR packages",
+        "note": "Aviso comunitario para usuarios Garuda/Arch sobre la ola de ataque.",
+        "url": "https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124"
+      },
+      {
+        "name": "Garuda / Chaotic-AUR reports",
+        "note": "Hilo de reportes y recompilación de paquetes.",
+        "url": "https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238"
+      },
+      {
+        "name": "GitHub - lenucksi/aur-malware-check",
+        "note": "Herramienta comunitaria y listas consolidadas para el ataque atomic-lockfile.",
+        "url": "https://github.com/lenucksi/aur-malware-check"
+      },
+      {
+        "name": "Arch aur-general official report thread",
+        "note": "Hilo oficial de aur-general donde Arch pidió reportar paquetes maliciosos en un solo lugar. El programa extrae nombres desde enlaces AUR del hilo.",
+        "url": "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
+      },
+      {
+        "name": "Arch affected packages live list",
+        "note": "Lista oficial/viva mencionada por Arch con paquetes afectados conocidos. El programa la consulta automáticamente.",
+        "url": "https://md.archlinux.org/s/SxbqukK6IA/download"
+      },
+      {
+        "name": "Arch Security Advisories",
+        "note": "Fuente oficial para vulnerabilidades conocidas de paquetes oficiales de Arch. arch-audit consulta esta información.",
+        "url": "https://security.archlinux.org/"
+      }
+    ],
+    "local_cache": "data/aur_malware_package_list.txt",
+    "recommendation": "Las listas comunitarias pueden seguir actualizándose. Repite el análisis luego de actualizar el sistema o instalar paquetes AUR."
+  },
+  "integrity": {},
+  "ip_reputation": {
+    "api_keys_configured": {
+      "abuseipdb": false,
+      "otx": false,
+      "virustotal": false
+    },
+    "results": [
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.129.110",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "fastly/trafficmgr",
+          "pulse_count": 7,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:7 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=31))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.134.202",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=88))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.129.14",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=58))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "192.168.1.1",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "privada",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "162.159.137.232",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Discord- DNS | Malvertizing | Ransom/Msilzilla (sifting IoC’s created by scnrscnr)",
+          "pulse_count": 50,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-162-158-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-162-158-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:50 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"Discord\",pid=1869,fd=20))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "181.30.232.236",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "",
+          "name": "",
+          "owner_text": "",
+          "status": "Error RDAP: HTTP Error 406: Not Acceptable"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=30))"
+        ],
+        "risk": "No verificado",
+        "status": "ℹ️ Sin verificación externa completa",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "192.168.40.100",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "privada",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "127.0.0.1",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [
+          "users:((\"plasmashell\",pid=1419,fd=80))",
+          "users:((\"python3\",pid=39864,fd=9))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "loopback",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "13.107.226.33",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-13-64-0-0-1",
+          "name": "MSFT",
+          "owner_text": "MSFT NET-13-64-0-0-1  Microsoft Corporation",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:MSFT",
+        "related_processes": [
+          "users:((\"code\",pid=40065,fd=23))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "199.232.193.91",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "VBS[.]zip - 04.05.25",
+          "pulse_count": 1,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-199-232-0-0-1",
+          "name": "SKYCA-3",
+          "owner_text": "SKYCA-3 NET-199-232-0-0-1  Fastly, Inc.",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:1 | RDAP:SKYCA-3",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=79))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "104.18.39.21",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "SOHO Router Scanning",
+          "pulse_count": 15,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-104-16-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-104-16-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:15 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=25))",
+          "users:((\"brave\",pid=5423,fd=36))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "172.64.155.209",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "SOHO Router Scanning",
+          "pulse_count": 31,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-172-64-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-172-64-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:31 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"codex\",pid=40288,fd=55))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "162.159.130.234",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Discord- DNS | Malvertizing | Ransom/Msilzilla (sifting IoC’s created by scnrscnr)",
+          "pulse_count": 24,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-162-158-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-162-158-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:24 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"Discord\",pid=1869,fd=19))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": false,
+        "ip": "95.217.239.55",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "FI",
+          "handle": "95.217.232.0 - 95.217.239.255",
+          "name": "CLOUD-HEL1",
+          "owner_text": "CLOUD-HEL1 95.217.232.0 - 95.217.239.255 FI INFRA-AW Hetzner Online GmbH - Contact Role ORG-HOA1-RIPE HOS-GUN Hetzner Online GmbH Hetzner Online GmbH - Contact Role ORG-HOA1-RIPE",
+          "status": "OK"
+        },
+        "reason": "Sin API key | Sin API key | OTX pulses:0 | RDAP:CLOUD-HEL1",
+        "related_processes": [],
+        "risk": "No verificado",
+        "status": "ℹ️ Sin verificación externa completa",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "162.159.129.235",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "ETIC Cybersecurity  2024-09-10  Port Scan",
+          "pulse_count": 7,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-162-158-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-162-158-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:7 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"Discord\",pid=1869,fd=24))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "140.82.113.25",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-140-82-112-0-1",
+          "name": "GITHU",
+          "owner_text": "GITHU NET-140-82-112-0-1  GitHub, Inc.",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GITHU",
+        "related_processes": [
+          "users:((\"brave\",pid=5423,fd=41))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "162.159.137.234",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "ETIC Cybersecurity  2024-08-29  Port Scan",
+          "pulse_count": 2,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-162-158-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-162-158-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:2 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"Discord\",pid=1869,fd=27))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      }
+    ],
+    "trusted_asn_owners": [
+      "cloudflare",
+      "google",
+      "google llc",
+      "microsoft",
+      "amazon",
+      "amazon.com",
+      "amazon technologies",
+      "akamai",
+      "fastly",
+      "discord",
+      "apple",
+      "github",
+      "mozilla",
+      "cloudfront",
+      "meta platforms",
+      "facebook"
+    ]
+  },
+  "malware_db": {
+    "count": 1944,
+    "errors": [],
+    "source": "remota + cache local"
+  },
+  "persistence": {},
+  "ports": {
+    "output": "Starting Nmap 7.99 ( https://nmap.org ) at 2026-06-14 00:43 -0300\nNmap scan report for localhost (127.0.0.1)\nHost is up (0.000038s latency).\nAll 1000 scanned ports on localhost (127.0.0.1) are in ignored states.\nNot shown: 1000 closed tcp ports (conn-refused)\n\nNmap done: 1 IP address (1 host up) scanned in 0.02 seconds",
+    "tool": "nmap"
+  },
+  "scan_type": "quick",
+  "services": {
+    "enabled": "UNIT FILE                          STATE   PRESET\ncachyos-iw-set-regdomain.path      enabled disabled\nananicy-cpp.service                enabled disabled\navahi-daemon.service               enabled disabled\nbluetooth.service                  enabled disabled\ngetty@.service                     enabled enabled\nintel_lpmd.service                 enabled disabled\nNetworkManager-dispatcher.service  enabled disabled\nNetworkManager-wait-online.service enabled disabled\nNetworkManager.service             enabled disabled\nplasmalogin.service                enabled disabled\nsystemd-resolved.service           enabled enabled\nsystemd-timesyncd.service          enabled enabled\nufw.service                        enabled disabled\navahi-daemon.socket                enabled disabled\nsystemd-resolved-monitor.socket    enabled disabled\nsystemd-resolved-varlink.socket    enabled disabled\nsystemd-userdbd.socket             enabled enabled\nremote-fs.target                   enabled enabled\ncachyos-rate-mirrors.timer         enabled disabled\nfstrim.timer                       enabled disabled\n\n20 unit files listed.",
+    "running": "UNIT                          LOAD   ACTIVE SUB     DESCRIPTION\n  ananicy-cpp.service           loaded active running Ananicy-Cpp - ANother Auto NICe daemon in C++\n  avahi-daemon.service          loaded active running Avahi mDNS/DNS-SD Stack\n  bluetooth.service             loaded active running Bluetooth service\n  dbus-broker.service           loaded active running D-Bus System Message Bus\n  NetworkManager.service        loaded active running Network Manager\n  plasmalogin.service           loaded active running Plasma Login Manager\n  polkit.service                loaded active running Authorization Manager\n  power-profiles-daemon.service loaded active running Power Profiles daemon\n  rtkit-daemon.service          loaded active running RealtimeKit Scheduling Policy Service\n  systemd-journald.service      loaded active running Journal Service\n  systemd-logind.service        loaded active running User Login Management\n  systemd-resolved.service      loaded active running Network Name Resolution\n  systemd-timesyncd.service     loaded active running Network Time Synchronization\n  systemd-udevd.service         loaded active running Rule-based Manager for Device Events and Files\n  systemd-userdbd.service       loaded active running User Database Manager\n  udisks2.service               loaded active running Disk Manager\n  upower.service                loaded active running Daemon for power management\n  user@1000.service             loaded active running User Manager for UID 1000\n\nLegend: LOAD   → Reflects whether the unit definition was properly loaded.\n        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.\n        SUB    → The low-level unit activation state, values depend on unit type.\n\n18 loaded units listed."
+  },
+  "system": {
+    "app": "AUR Sentinel Audit",
+    "arch_like": true,
+    "arquitectura": "x86_64",
+    "aur_helper": "yay",
+    "desktop": "KDE",
+    "distro": "CachyOS",
+    "fecha": "2026-06-14 00:43:18",
+    "hostname": "linux",
+    "kernel": "7.0.12-1-cachyos",
+    "logo": "⚡",
+    "python": "3.14.5",
+    "usuario": "tux"
+  },
+  "tools": {
+    "arch-audit": true,
+    "bind-tools": false,
+    "curl": true,
+    "git": true,
+    "lsof": true,
+    "nmap": true,
+    "whois": true
+  }
+}

@@ -11,6 +11,22 @@ APP_NAME="AUR Sentinel Audit"
 VENV_DIR=".venv"
 LOG_DIR="logs"
 LOG_FILE="$LOG_DIR/autorun_gui_$(date '+%Y%m%d_%H%M%S').log"
+PY_ARGS=()
+
+for arg in "$@"; do
+    case "$arg" in
+        --tray|--minimized|--background)
+            PY_ARGS+=("--tray")
+            ;;
+        --force-deps)
+            FORCE_DEPS=1
+            ;;
+        *)
+            PY_ARGS+=("$arg")
+            ;;
+    esac
+done
+FORCE_DEPS="${FORCE_DEPS:-0}"
 
 cd "$(dirname "$0")"
 mkdir -p "$LOG_DIR"
@@ -19,7 +35,9 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
 }
 
-clear
+if [ -t 1 ]; then
+    clear
+fi
 echo "=================================================="
 echo "      🛡️  $APP_NAME - GUI Portable"
 echo "=================================================="
@@ -66,11 +84,13 @@ fi
 # shellcheck disable=SC1091
 source "$VENV_DIR/bin/activate"
 
-log "Actualizando pip"
-python -m pip install --upgrade pip wheel setuptools | tee -a "$LOG_FILE"
-
-log "Instalando librerías desde requirements.txt"
-pip install -r requirements.txt | tee -a "$LOG_FILE"
+if [[ "$FORCE_DEPS" -eq 1 ]] || ! python -c "import PySide6, requests, psutil, rich, tabulate" >/dev/null 2>&1; then
+    log "Instalando/actualizando librerías desde requirements.txt"
+    python -m pip install --upgrade pip wheel setuptools | tee -a "$LOG_FILE"
+    pip install -r requirements.txt | tee -a "$LOG_FILE"
+else
+    log "Dependencias Python detectadas en .venv"
+fi
 
 echo
 echo "=================================================="
@@ -81,13 +101,15 @@ echo "Estas herramientas son del sistema y mejoran el análisis:"
 echo "arch-audit, bind-tools, whois, lsof, nmap, curl, git"
 echo
 
-if command -v pacman >/dev/null 2>&1; then
-    read -r -p "¿Instalar herramientas opcionales del sistema con pacman? [s/N]: " RESP
-    if [[ "$RESP" =~ ^[sS]$ ]]; then
-        log "Instalando herramientas opcionales"
-        sudo pacman -S --needed arch-audit bind-tools whois lsof nmap curl git | tee -a "$LOG_FILE"
-    else
-        log "Instalación opcional omitida"
+if command -v pacman >/dev/null 2>&1 && [ -t 0 ]; then
+    if [[ ! " ${PY_ARGS[*]} " =~ " --tray " ]]; then
+        read -r -p "¿Instalar herramientas opcionales del sistema con pacman? [s/N]: " RESP
+        if [[ "$RESP" =~ ^[sS]$ ]]; then
+            log "Instalando herramientas opcionales"
+            sudo pacman -S --needed libnotify arch-audit bind-tools whois lsof nmap curl git | tee -a "$LOG_FILE"
+        else
+            log "Instalación opcional omitida"
+        fi
     fi
 fi
 
@@ -99,5 +121,5 @@ if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
     exit 1
 fi
 
-log "Ejecutando interfaz gráfica aur_sentinel_gui.py"
-python aur_sentinel_gui.py
+log "Ejecutando interfaz gráfica aur_sentinel_gui.py ${PY_ARGS[*]}"
+python aur_sentinel_gui.py "${PY_ARGS[@]}"

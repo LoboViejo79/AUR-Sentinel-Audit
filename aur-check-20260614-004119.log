@@ -1,0 +1,2 @@
+ERROR: Malicious npm package list not found: data/malicious_npm_packages.txt
+Set MALICIOUS_NPM_LIST or run from the repo root.

@@ -24,7 +24,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 from PySide6.QtCore import Qt, QThread, Signal, QTimer
-from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction
+from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor
 from PySide6.QtPrintSupport import QPrinter
 from PySide6.QtWidgets import (
     QApplication,
@@ -1250,11 +1250,12 @@ def get_app_icon():
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, start_minimized=False):
         super().__init__()
         self.setWindowTitle(APP_NAME + " - GUI Portable")
         self.setWindowIcon(get_app_icon())
         self.resize(1180, 760)
+        self.start_minimized = start_minimized
         self.report = {}
         self.worker = None
         self.last_report_paths = {}
@@ -1262,6 +1263,7 @@ class MainWindow(QMainWindow):
         self.tray_timer = None
         self.pacman_log_position = 0
         self.guard_enabled = True
+        self.guard_popups = []
 
         self.setStyleSheet("""
         QMainWindow, QWidget { background-color: #07101d; color: #e8eef5; font-family: Arial; }
@@ -1373,6 +1375,20 @@ class MainWindow(QMainWindow):
         self.refresh_system_header()
         self.txt_sources.setPlainText(self.render_sources_text())
         self.setup_tray_guard()
+        if self.start_minimized:
+            if self.tray_icon and self.tray_icon.isVisible():
+                QTimer.singleShot(0, self.hide)
+            else:
+                QTimer.singleShot(0, self.showMinimized)
+            QTimer.singleShot(
+                1200,
+                lambda: self.show_guard_popup(
+                    "Guardia AUR activa",
+                    "AUR Sentinel quedó ejecutándose en segundo plano. Monitorea instalaciones y actualizaciones de paquetes.",
+                    "info",
+                    7000,
+                ),
+            )
 
     def refresh_system_header(self):
         info = system_info()
@@ -1416,10 +1432,15 @@ class MainWindow(QMainWindow):
         - se cierra con click en "Cerrar",
         - o se cierra automáticamente luego de 15 segundos.
         """
-        dialog = QDialog(self)
+        dialog = QDialog(None)
         dialog.setWindowTitle(title)
         dialog.setModal(False)
-        dialog.setWindowFlags(dialog.windowFlags() | Qt.WindowStaysOnTopHint)
+        dialog.setWindowFlags(
+            dialog.windowFlags()
+            | Qt.WindowStaysOnTopHint
+            | Qt.Tool
+        )
+        dialog.setAttribute(Qt.WA_DeleteOnClose, True)
 
         colors = {
             "ok": ("#003a1d", "#00d26a", "✅"),
@@ -1488,10 +1509,21 @@ class MainWindow(QMainWindow):
         timer.timeout.connect(tick)
         timer.start(1000)
 
-        dialog.resize(520, 260)
+        dialog.resize(560, 280)
+        screen = QApplication.screenAt(QCursor.pos()) or QApplication.primaryScreen()
+        if screen:
+            geo = screen.availableGeometry()
+            margin = 24
+            dialog.move(
+                geo.right() - dialog.width() - margin,
+                geo.bottom() - dialog.height() - margin,
+            )
+        self.guard_popups.append(dialog)
+        dialog.destroyed.connect(lambda *_: self.guard_popups.remove(dialog) if dialog in self.guard_popups else None)
         dialog.show()
         dialog.raise_()
         dialog.activateWindow()
+        QApplication.alert(self, timeout_ms)
         return dialog
 
     def setup_tray_guard(self):
@@ -1524,6 +1556,8 @@ class MainWindow(QMainWindow):
 
             self.tray_icon.setContextMenu(menu)
             self.tray_icon.show()
+        else:
+            self.append_log("El entorno gráfico no expone bandeja del sistema. La Guardia AUR seguirá activa con popups/notificaciones.")
 
         try:
             if PACMAN_LOG.exists():
@@ -1880,13 +1914,23 @@ class MainWindow(QMainWindow):
             event.ignore()
         else:
             event.accept()
+            QApplication.instance().quit()
 
 
 def main():
-    app = QApplication(sys.argv)
+    start_minimized = any(arg in ("--tray", "--minimized", "--background") for arg in sys.argv[1:])
+    qt_argv = [sys.argv[0]] + [arg for arg in sys.argv[1:] if arg not in ("--tray", "--minimized", "--background")]
+    app = QApplication(qt_argv)
     app.setApplicationName(APP_NAME)
-    win = MainWindow()
-    win.show()
+    app.setQuitOnLastWindowClosed(False)
+    win = MainWindow(start_minimized=start_minimized)
+    if start_minimized:
+        if win.tray_icon and win.tray_icon.isVisible():
+            win.hide()
+        else:
+            win.showMinimized()
+    else:
+        win.show()
     sys.exit(app.exec())
 
 

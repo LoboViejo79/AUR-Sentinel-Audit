@@ -1,0 +1,74 @@
+[2026-06-14 00:38:13] Python detectado: Python 3.14.5
+[2026-06-14 00:38:13] Creando entorno virtual local
+[2026-06-14 00:38:15] Instalando/actualizando librerías desde requirements.txt
+Requirement already satisfied: pip in ./.venv/lib/python3.14/site-packages (26.1.1)
+Collecting pip
+  Using cached pip-26.1.2-py3-none-any.whl.metadata (4.6 kB)
+Collecting wheel
+  Using cached wheel-0.47.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting setuptools
+  Using cached setuptools-82.0.1-py3-none-any.whl.metadata (6.5 kB)
+Collecting packaging>=24.0 (from wheel)
+  Using cached packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Using cached pip-26.1.2-py3-none-any.whl (1.8 MB)
+Using cached wheel-0.47.0-py3-none-any.whl (32 kB)
+Using cached setuptools-82.0.1-py3-none-any.whl (1.0 MB)
+Using cached packaging-26.2-py3-none-any.whl (100 kB)
+Installing collected packages: setuptools, pip, packaging, wheel
+  Attempting uninstall: pip
+    Found existing installation: pip 26.1.1
+    Uninstalling pip-26.1.1:
+      Successfully uninstalled pip-26.1.1
+
+Successfully installed packaging-26.2 pip-26.1.2 setuptools-82.0.1 wheel-0.47.0
+Collecting rich>=13.7.0 (from -r requirements.txt (line 1))
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting PySide6>=6.7.0 (from -r requirements.txt (line 2))
+  Using cached pyside6-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (5.3 kB)
+Collecting requests>=2.32.3 (from -r requirements.txt (line 3))
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting psutil>=7.0.0 (from -r requirements.txt (line 4))
+  Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+Collecting tabulate>=0.9.0 (from -r requirements.txt (line 5))
+  Using cached tabulate-0.10.0-py3-none-any.whl.metadata (40 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.7.0->-r requirements.txt (line 1))
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.7.0->-r requirements.txt (line 1))
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting shiboken6==6.11.1 (from PySide6>=6.7.0->-r requirements.txt (line 2))
+  Using cached shiboken6-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.4 kB)
+Collecting PySide6_Essentials==6.11.1 (from PySide6>=6.7.0->-r requirements.txt (line 2))
+  Using cached pyside6_essentials-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.6 kB)
+Collecting PySide6_Addons==6.11.1 (from PySide6>=6.7.0->-r requirements.txt (line 2))
+  Using cached pyside6_addons-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (4.0 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.32.3->-r requirements.txt (line 3))
+  Using cached charset_normalizer-3.4.7-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting idna<4,>=2.5 (from requests>=2.32.3->-r requirements.txt (line 3))
+  Using cached idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+Collecting urllib3<3,>=1.26 (from requests>=2.32.3->-r requirements.txt (line 3))
+  Using cached urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests>=2.32.3->-r requirements.txt (line 3))
+  Using cached certifi-2026.5.20-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.7.0->-r requirements.txt (line 1))
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Using cached pyside6-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl (572 kB)
+Using cached pyside6_addons-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl (175.1 MB)
+Using cached pyside6_essentials-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl (79.9 MB)
+Using cached shiboken6-6.11.1-cp310-abi3-manylinux_2_34_x86_64.whl (272 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached charset_normalizer-3.4.7-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (215 kB)
+Using cached idna-3.18-py3-none-any.whl (65 kB)
+Using cached urllib3-2.7.0-py3-none-any.whl (131 kB)
+Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Using cached tabulate-0.10.0-py3-none-any.whl (39 kB)
+Using cached certifi-2026.5.20-py3-none-any.whl (134 kB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: urllib3, tabulate, shiboken6, pygments, psutil, mdurl, idna, charset_normalizer, certifi, requests, PySide6_Essentials, markdown-it-py, rich, PySide6_Addons, PySide6
+
+Successfully installed PySide6-6.11.1 PySide6_Addons-6.11.1 PySide6_Essentials-6.11.1 certifi-2026.5.20 charset_normalizer-3.4.7 idna-3.18 markdown-it-py-4.2.0 mdurl-0.1.2 psutil-7.2.2 pygments-2.20.0 requests-2.34.2 rich-15.0.0 shiboken6-6.11.1 tabulate-0.10.0 urllib3-2.7.0
+[2026-06-14 00:38:35] Instalando herramientas opcionales
+ ...el sistema ya está actualizado.
+[2026-06-14 00:38:38] Ejecutando interfaz gráfica aur_sentinel_gui.py 

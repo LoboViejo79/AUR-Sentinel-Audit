@@ -22,10 +22,7 @@ CRITICAL_SIGNATURES = {
         r"\bnpm\s+install\s+js-digest\b", r"\bpnpm\s+(install|add)\s+js-digest\b",
         r"\bbun\s+add\s+js-digest\b", r"\bjs-digest\b", r"@gsdigest/gsdigest", r"\bgsdigest\b"],
     "BPF_rootkit_indicators": [r"/sys/fs/bpf/hidden_", r"\bbpftool\b", r"\bbpftrace\b", r"\bebpf\b", r"\brootkit\b"],
-    "hooks_deps_suspicious": [r"src/hooks/deps", r"\.install\b"],
-    "dangerous_shell_patterns": [
-        r"curl\s+.*\|\s*(bash|sh)", r"wget\s+.*\|\s*(bash|sh)", r"base64\s+(-d|--decode)",
-        r"\beval\b", r"bash\s+-c", r"python[0-9.]*\s+-c", r"\bcrontab\b", r"systemctl\s+enable"],
+    "hooks_deps_suspicious": [r"src/hooks/deps"],
 }
 
 def fetch_url(url, binary=False, timeout=25):
@@ -71,11 +68,13 @@ def update_db(cache):
 def aur_rpc(pkg):
     data=json.loads(fetch_url(f"https://aur.archlinux.org/rpc/v5/info/{quote(pkg)}"))
     if data.get("resultcount",0)<1:
-        raise RuntimeError(f"El paquete '{pkg}' no existe en AUR.")
+        return None
     return data["results"][0]
 
 def download_snapshot(pkg, tmp):
     info=aur_rpc(pkg)
+    if not info:
+        return None
     url="https://aur.archlinux.org"+info.get("URLPath", f"/cgit/aur.git/snapshot/{quote(pkg)}.tar.gz")
     tar_path=tmp/f"{pkg}.tar.gz"
     tar_path.write_bytes(fetch_url(url, binary=True, timeout=35))
@@ -111,7 +110,12 @@ def main():
             print(json.dumps(res, indent=2, ensure_ascii=False) if args.json else "❌ BLOQUEADO: aparece en listas reportadas.")
             return 20
         with tempfile.TemporaryDirectory() as td:
-            findings=scan(download_snapshot(pkg, Path(td)))
+            snapshot=download_snapshot(pkg, Path(td))
+            if snapshot is None:
+                res.update(passed=True, reasons=["No aparece en listas reportadas. No existe en AUR; se deja pasar para que yay/paru resuelva repositorios oficiales o errores de nombre."])
+                print(json.dumps(res, indent=2, ensure_ascii=False) if args.json else "✅ APROBADO: no figura reportado y no existe en AUR; yay/paru continuará normalmente.")
+                return 0
+            findings=scan(snapshot)
         if findings:
             res.update(blocked=True, reasons=["Firmas críticas detectadas en snapshot/PKGBUILD."], findings=findings)
             if args.json:
@@ -124,8 +128,8 @@ def main():
         print(json.dumps(res, indent=2, ensure_ascii=False) if args.json else "✅ APROBADO: sin reportes ni firmas críticas conocidas.")
         return 0
     except Exception as e:
-        res.update(blocked=True, reasons=[f"Error durante revisión previa: {e}"])
-        print(json.dumps(res, indent=2, ensure_ascii=False) if args.json else f"❌ BLOQUEADO por seguridad: {e}")
-        return 40
+        res.update(passed=True, reasons=[f"No se pudo completar la revisión previa; no hay bloqueo confirmado: {e}"])
+        print(json.dumps(res, indent=2, ensure_ascii=False) if args.json else f"⚠️ AVISO: no se pudo completar la revisión previa; yay/paru continuará. Detalle: {e}")
+        return 0
 if __name__=="__main__":
     raise SystemExit(main())

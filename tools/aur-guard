@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
-PKG="${1:-}"
-HELPER="${2:-yay}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$DIR/.." && pwd)"
 SCANNER="$DIR/aur_guard_preinstall.py"
+HELPER="yay"
+HELPER_ARGS=()
+
+usage() {
+  gui_msg "AUR Sentinel Guard" "Uso:
+  aur-guard yay <argumentos de yay>
+  aur-guard paru <argumentos de paru>
+  aur-guard <paquete> [yay|paru]" "error"
+}
 
 gui_msg() {
   local title="$1"; local msg="$2"; local type="${3:-info}"
@@ -23,48 +30,144 @@ popup_15() {
   elif command -v zenity >/dev/null 2>&1; then zenity --title="$title" --info --text="$msg" --timeout=15 || true
   elif command -v notify-send >/dev/null 2>&1; then notify-send -t 15000 "$title" "$msg"; fi
 }
-if [[ -z "$PKG" ]]; then gui_msg "AUR Sentinel Guard" "Uso: aur-guard <paquete> [yay|paru]" "error"; exit 1; fi
+
+if [[ $# -eq 0 ]]; then usage; exit 1; fi
+
+if [[ "${1:-}" == "yay" || "${1:-}" == "paru" ]]; then
+  HELPER="$1"
+  shift
+  HELPER_ARGS=("$@")
+elif [[ $# -ge 1 ]]; then
+  PKG="$1"
+  HELPER="${2:-yay}"
+  HELPER_ARGS=("-S" "$PKG")
+fi
+
 REAL_HELPER="$(type -P "$HELPER" || true)"
 if [[ -z "$REAL_HELPER" ]]; then gui_msg "AUR Sentinel Guard" "No se encontró helper AUR: $HELPER" "error"; exit 2; fi
 
+is_sync_install=0
+plain_args=0
+for arg in "${HELPER_ARGS[@]}"; do
+  case "$arg" in
+    -S|--sync) is_sync_install=1 ;;
+    -Ss|-Si|-Sss|-Sii|-Scc|-Sc|-Sg|-Sl|--search|--info|--clean|--groups|--list) ;;
+    -S*) is_sync_install=1 ;;
+    -*) ;;
+    *) plain_args=$((plain_args + 1)) ;;
+  esac
+done
+
+if [[ "$is_sync_install" -eq 0 && "$plain_args" -gt 0 && "${#HELPER_ARGS[@]}" -eq "$plain_args" ]]; then
+  is_sync_install=1
+fi
+
+if [[ "$is_sync_install" -eq 0 ]]; then
+  exec "$REAL_HELPER" "${HELPER_ARGS[@]}"
+fi
+
+targets=()
+skip_next=0
+for arg in "${HELPER_ARGS[@]}"; do
+  if [[ "$skip_next" -eq 1 ]]; then
+    skip_next=0
+    continue
+  fi
+  case "$arg" in
+    --config|--root|--dbpath|--cachedir|--gpgdir|--hookdir|--logfile|--color|--builddir|--editor|--makepkg|--mflags|--answerclean|--answerdiff|--answeredit|--answerupgrade)
+      skip_next=1
+      continue
+      ;;
+    -*|http://*|https://*|*/*)
+      continue
+      ;;
+    *)
+      targets+=("$arg")
+      ;;
+  esac
+done
+
+if [[ "${#targets[@]}" -eq 0 ]]; then
+  exec "$REAL_HELPER" "${HELPER_ARGS[@]}"
+fi
+
 gui_msg "AUR Sentinel Guard" "Revisión previa obligatoria antes de instalar:
 
-Paquete: $PKG
+Paquetes: ${targets[*]}
 Helper: $HELPER
 
 Controles:
 1) Listas reportadas.
 2) Snapshot completo AUR.
 3) PKGBUILD y .install.
-4) Firmas atomic-lockfile/js-digest/eBPF/rootkit.
+4) Firmas confirmadas atomic-lockfile/js-digest/eBPF/rootkit.
 5) Confirmación manual." "info"
 
 cd "$ROOT"
-popup_15 "AUR Sentinel Guard" "Analizando $PKG antes de instalar..." "info"
-set +e
-SCAN_OUTPUT="$(python "$SCANNER" "$PKG" --cache "data/aur_malware_package_list.txt" 2>&1)"
-SCAN_CODE=$?
-set -e
-if [[ "$SCAN_CODE" -ne 0 ]]; then
+safe_targets=()
+blocked_targets=()
+scan_log=""
+
+for pkg in "${targets[@]}"; do
+  popup_15 "AUR Sentinel Guard" "Analizando $pkg antes de instalar..." "info"
+  set +e
+  SCAN_OUTPUT="$(python "$SCANNER" "$pkg" --cache "data/aur_malware_package_list.txt" 2>&1)"
+  SCAN_CODE=$?
+  set -e
+  scan_log+=$'\n'"===== $pkg ====="$'\n'"$SCAN_OUTPUT"$'\n'
+  echo "===== $pkg ====="
   echo "$SCAN_OUTPUT"
-  popup_15 "AUR Sentinel Guard - BLOQUEADO" "❌ $PKG no pasó revisión. Instalación bloqueada." "error"
-  gui_msg "AUR Sentinel Guard - BLOQUEADO" "❌ INSTALACIÓN BLOQUEADA
 
-Paquete: $PKG
+  if [[ "$SCAN_CODE" -eq 20 || "$SCAN_CODE" -eq 30 ]]; then
+    blocked_targets+=("$pkg")
+  else
+    safe_targets+=("$pkg")
+  fi
+done
 
-$SCAN_OUTPUT" "error"
-  exit "$SCAN_CODE"
+filtered_args=()
+for arg in "${HELPER_ARGS[@]}"; do
+  keep=1
+  for blocked in "${blocked_targets[@]}"; do
+    if [[ "$arg" == "$blocked" ]]; then
+      keep=0
+      break
+    fi
+  done
+  if [[ "$keep" -eq 1 ]]; then
+    filtered_args+=("$arg")
+  fi
+done
+
+if [[ "${#blocked_targets[@]}" -gt 0 ]]; then
+  popup_15 "AUR Sentinel Guard - BLOQUEADO" "❌ Bloqueado: ${blocked_targets[*]}" "error"
+  if [[ "${#safe_targets[@]}" -eq 0 ]]; then
+    gui_msg "AUR Sentinel Guard - BLOQUEADO" "❌ INSTALACIÓN BLOQUEADA
+
+Paquetes bloqueados: ${blocked_targets[*]}
+
+$scan_log" "error"
+    exit 30
+  fi
+  gui_msg "AUR Sentinel Guard - Bloqueo parcial" "❌ Paquetes bloqueados:
+${blocked_targets[*]}
+
+✅ Paquetes permitidos:
+${safe_targets[*]}
+
+Se continuará solo con los paquetes permitidos." "warning"
 fi
-echo "$SCAN_OUTPUT"
-popup_15 "AUR Sentinel Guard - APROBADO" "✅ $PKG pasó controles. Esperando confirmación." "info"
+
+echo "$scan_log"
+popup_15 "AUR Sentinel Guard - APROBADO" "✅ Paquetes permitidos: ${safe_targets[*]}" "info"
 if gui_msg "AUR Sentinel Guard - Confirmar instalación" "✅ CONTROLES APROBADOS
 
-Paquete: $PKG
+Paquetes permitidos: ${safe_targets[*]}
 
-$SCAN_OUTPUT
+$scan_log
 
 ¿Continuar con $HELPER?" "yesno"; then
-  exec "$REAL_HELPER" -S "$PKG"
+  exec "$REAL_HELPER" "${filtered_args[@]}"
 else
   echo "Instalación cancelada."
   exit 0
