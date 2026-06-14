@@ -419,40 +419,6 @@ El PKGBUILD contiene patrones que deben revisarse manualmente.
 
 ---
 
-## 🌐 Subir a GitHub
-
-Repositorio sugerido:
-
-```text
-AUR-Sentinel-Audit
-```
-
-Descripción sugerida:
-
-```text
-Herramienta gráfica y portable de auditoría defensiva para Arch Linux y derivadas. Revisa paquetes AUR, compara bases comunitarias de paquetes reportados, analiza PKGBUILD, conexiones activas, servicios y genera reportes HTML/PDF.
-```
-
-Topics sugeridos:
-
-```text
-archlinux
-aur
-cachyos
-endeavouros
-garuda-linux
-manjaro
-linux-security
-cybersecurity
-malware-analysis
-security-audit
-pkgbuild
-python
-pyside6
-```
-
----
-
 ## 👤 Autor
 
 **LoboViejo 79**
