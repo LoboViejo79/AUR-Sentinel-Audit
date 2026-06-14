@@ -811,4 +811,13 @@ Para bloquear antes de instalar, usa `./install_guard_wrappers.sh` o el botón *
 
 ## Desinstalación y limpieza
 
-Desde la GUI usa **Desinstalar paquete riesgoso** para ejecutar `pacman -Rns` y limpiar cache de yay/paru.
+Desde la pestaña **Paquetes AUR**, cada paquete reportado, comprometido o con riesgo alto/crítico muestra un botón **Remover** en su fila.
+Al presionarlo, la GUI abre una ventana con el proceso de desinstalación en vivo:
+
+```text
+pacman -Rns paquete
+limpieza de cache yay/paru del paquete
+verificación final
+```
+
+También puedes usar **Desinstalar paquete riesgoso** para ingresar un paquete manualmente.

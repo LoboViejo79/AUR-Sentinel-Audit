@@ -16,6 +16,7 @@ import json
 import os
 import platform
 import re
+import shlex
 import shutil
 import socket
 import subprocess
@@ -23,7 +24,7 @@ import sys
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from PySide6.QtCore import Qt, QThread, Signal, QTimer
+from PySide6.QtCore import Qt, QThread, Signal, QTimer, QProcess
 from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor
 from PySide6.QtPrintSupport import QPrinter
 from PySide6.QtWidgets import (
@@ -1264,6 +1265,7 @@ class MainWindow(QMainWindow):
         self.pacman_log_position = 0
         self.guard_enabled = True
         self.guard_popups = []
+        self.remove_processes = []
 
         self.setStyleSheet("""
         QMainWindow, QWidget { background-color: #07101d; color: #e8eef5; font-family: Arial; }
@@ -1341,8 +1343,8 @@ class MainWindow(QMainWindow):
         root.addWidget(self.status)
 
         self.tabs = QTabWidget()
-        self.table_aur = QTableWidget(0, 8)
-        self.table_aur.setHorizontalHeaderLabels(["Estado", "Paquete", "Versión", "AUR", "Mantenedor", "Riesgo", "Puntaje", "Motivos"])
+        self.table_aur = QTableWidget(0, 9)
+        self.table_aur.setHorizontalHeaderLabels(["Estado", "Paquete", "Versión", "AUR", "Mantenedor", "Riesgo", "Puntaje", "Motivos", "Acción"])
         self.tabs.addTab(self.table_aur, "Paquetes AUR")
 
         self.txt_connections = QPlainTextEdit()
@@ -1720,6 +1722,17 @@ class MainWindow(QMainWindow):
                     else:
                         item.setToolTip("Este paquete aparece en la base de paquetes reportados. Revisar urgente.")
                 self.table_aur.setItem(row, col, item)
+            pkg_name = str(p.get("name", "")).strip()
+            removable = bool(p.get("incident_reported")) or p.get("risk_level") in ["Crítico", "Alto"]
+            btn = QPushButton("Remover" if removable else "Seguro")
+            btn.setToolTip(
+                "Desinstalar este paquete y limpiar cache de yay/paru."
+                if removable
+                else "El paquete no está marcado como comprometido o crítico."
+            )
+            btn.setEnabled(removable and bool(pkg_name))
+            btn.clicked.connect(lambda _checked=False, pkg=pkg_name, data=p: self.remove_package_dialog(pkg, data))
+            self.table_aur.setCellWidget(row, 8, btn)
         self.table_aur.resizeColumnsToContents()
 
         self.txt_connections.setPlainText(self.report.get("connections", {}).get("raw_limited", ""))
@@ -1885,18 +1898,126 @@ class MainWindow(QMainWindow):
         )
         subprocess.Popen([str(wrapper), pkg, helper], cwd=str(Path(".").resolve()))
 
-    def remove_package_dialog(self):
-        pkg, ok = QInputDialog.getText(self, "Desinstalar paquete riesgoso", "Nombre del paquete a remover completamente:")
+    def remove_package_dialog(self, pkg=None, package_data=None):
+        if not pkg:
+            pkg, ok = QInputDialog.getText(self, "Desinstalar paquete riesgoso", "Nombre del paquete a remover completamente:")
+            pkg = str(pkg).strip()
+            if not ok or not pkg:
+                return
+
         pkg = str(pkg).strip()
-        if not ok or not pkg:
+        if not re.fullmatch(r"[A-Za-z0-9@._+:-]{2,}", pkg):
+            QMessageBox.warning(self, "Paquete inválido", "El nombre del paquete contiene caracteres no permitidos.")
             return
-        msg = f"Se removerá el paquete: {pkg}\n\nAcciones:\n1) sudo pacman -Rns {pkg}\n2) limpiar cache yay/paru del paquete\n3) limpiar cache de helpers\n\n¿Continuar?"
+
+        risk = (package_data or {}).get("risk_level", "No especificado")
+        status = (package_data or {}).get("incident_status", "")
+        msg = (
+            f"Se removerá el paquete: {pkg}\n\n"
+            f"Estado: {status or 'seleccionado manualmente'}\n"
+            f"Riesgo: {risk}\n\n"
+            "Acciones:\n"
+            f"1) pacman -Rns {pkg}\n"
+            "2) limpiar cache local de yay/paru para ese paquete\n"
+            "3) mostrar el proceso completo en pantalla\n\n"
+            "¿Continuar?"
+        )
         if QMessageBox.question(self, "Confirmar desinstalación", msg, QMessageBox.Yes | QMessageBox.No) != QMessageBox.Yes:
             return
-        script = f"sudo pacman -Rns {pkg}; rm -rf ~/.cache/yay/{pkg} ~/.cache/paru/clone/{pkg}; yay -Sc --noconfirm || true; paru -Sc --noconfirm || true"
-        self.append_log(f"Ejecutando desinstalación y limpieza de {pkg}")
-        subprocess.Popen(["bash", "-lc", script])
-        self.show_guard_popup("Desinstalación iniciada", f"Se inició remoción y limpieza de cache para: {pkg}", "warning", 15000)
+
+        self.run_package_removal(pkg)
+
+    def run_package_removal(self, pkg):
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Removiendo paquete: {pkg}")
+        dialog.resize(820, 520)
+
+        layout = QVBoxLayout(dialog)
+        title = QLabel(f"Proceso de desinstalación: {pkg}")
+        title.setObjectName("PopupTitle")
+        log_box = QPlainTextEdit()
+        log_box.setReadOnly(True)
+        close_btn = QPushButton("Cerrar")
+        close_btn.setEnabled(False)
+        close_btn.clicked.connect(dialog.close)
+
+        layout.addWidget(title)
+        layout.addWidget(log_box)
+        layout.addWidget(close_btn, alignment=Qt.AlignRight)
+
+        pkg_q = shlex.quote(pkg)
+        cache_yay = shlex.quote(str(Path.home() / ".cache" / "yay" / pkg))
+        cache_paru = shlex.quote(str(Path.home() / ".cache" / "paru" / "clone" / pkg))
+        script = f"""
+set -u
+echo "[1/4] Verificando si el paquete está instalado: {pkg_q}"
+if ! pacman -Q {pkg_q} >/dev/null 2>&1; then
+  echo "[AVISO] El paquete no aparece instalado con pacman -Q."
+  exit 0
+fi
+
+echo "[2/4] Solicitando desinstalación con pacman -Rns..."
+if command -v pkexec >/dev/null 2>&1; then
+  pkexec pacman -Rns --noconfirm {pkg_q}
+else
+  sudo pacman -Rns --noconfirm {pkg_q}
+fi
+REMOVE_CODE=$?
+
+echo "[3/4] Limpiando cache local del paquete en yay/paru..."
+rm -rf -- {cache_yay} {cache_paru}
+
+echo "[4/4] Verificación final..."
+if pacman -Q {pkg_q} >/dev/null 2>&1; then
+  echo "[ALERTA] El paquete todavía aparece instalado. Revisa dependencias o errores anteriores."
+  exit 10
+fi
+
+if [ "$REMOVE_CODE" -eq 0 ]; then
+  echo "[OK] Paquete removido correctamente: {pkg_q}"
+else
+  echo "[ERROR] pacman terminó con código $REMOVE_CODE"
+fi
+exit "$REMOVE_CODE"
+"""
+
+        process = QProcess(dialog)
+        process.setProcessChannelMode(QProcess.MergedChannels)
+        self.remove_processes.append(process)
+
+        def append_output():
+            data = bytes(process.readAllStandardOutput()).decode("utf-8", errors="ignore")
+            if data:
+                log_box.appendPlainText(data.rstrip())
+                self.append_log(data.rstrip())
+
+        def finished(exit_code, _status):
+            append_output()
+            close_btn.setEnabled(True)
+            if process in self.remove_processes:
+                self.remove_processes.remove(process)
+            if exit_code == 0:
+                log_box.appendPlainText("\n[FINALIZADO] Desinstalación completada.")
+                self.show_guard_popup("Paquete removido", f"{pkg} fue removido correctamente.", "ok", 12000)
+                if self.report:
+                    QTimer.singleShot(500, lambda: self.start_scan("quick") if not self.worker or not self.worker.isRunning() else None)
+            else:
+                log_box.appendPlainText(f"\n[FINALIZADO] El proceso terminó con código {exit_code}.")
+                self.show_guard_popup("Revisar desinstalación", f"La remoción de {pkg} terminó con código {exit_code}. Revisa el detalle.", "warning", 15000)
+
+        process.readyReadStandardOutput.connect(append_output)
+        process.finished.connect(finished)
+        dialog.show()
+
+        self.tabs.setCurrentWidget(self.txt_log)
+        self.append_log(f"Iniciando desinstalación guiada de {pkg}")
+        log_box.appendPlainText(f"Iniciando desinstalación guiada de {pkg}...\n")
+        process.start("bash", ["-lc", script])
+        if not process.waitForStarted(3000):
+            close_btn.setEnabled(True)
+            log_box.appendPlainText("[ERROR] No se pudo iniciar el proceso de desinstalación.")
+            if process in self.remove_processes:
+                self.remove_processes.remove(process)
 
     def open_reports_folder(self):
         REPORT_DIR.mkdir(exist_ok=True)
