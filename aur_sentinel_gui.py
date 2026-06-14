@@ -36,7 +36,6 @@ from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
     QGroupBox,
-    QHBoxLayout,
     QLabel,
     QMainWindow,
     QMessageBox,
@@ -44,7 +43,10 @@ from PySide6.QtWidgets import (
     QPushButton,
     QProgressBar,
     QPlainTextEdit,
+    QScrollArea,
     QSplitter,
+    QHeaderView,
+    QAbstractItemView,
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
@@ -1250,12 +1252,30 @@ def get_app_icon():
     return QIcon.fromTheme("security-high")
 
 
+def available_screen_geometry():
+    screen = QApplication.screenAt(QCursor.pos()) or QApplication.primaryScreen()
+    return screen.availableGeometry() if screen else None
+
+
+def fit_size_to_screen(preferred_w, preferred_h, min_w=760, min_h=520, width_ratio=0.92, height_ratio=0.88):
+    geo = available_screen_geometry()
+    if not geo:
+        return preferred_w, preferred_h
+    width = min(preferred_w, int(geo.width() * width_ratio))
+    height = min(preferred_h, int(geo.height() * height_ratio))
+    width = max(min(min_w, geo.width()), width)
+    height = max(min(min_h, geo.height()), height)
+    return width, height
+
+
 class MainWindow(QMainWindow):
     def __init__(self, start_minimized=False):
         super().__init__()
         self.setWindowTitle(APP_NAME + " - GUI Portable")
         self.setWindowIcon(get_app_icon())
-        self.resize(1180, 760)
+        initial_w, initial_h = fit_size_to_screen(1180, 760)
+        self.resize(initial_w, initial_h)
+        self.setMinimumSize(min(720, initial_w), min(520, initial_h))
         self.start_minimized = start_minimized
         self.report = {}
         self.worker = None
@@ -1266,6 +1286,8 @@ class MainWindow(QMainWindow):
         self.guard_enabled = True
         self.guard_popups = []
         self.remove_processes = []
+        self.control_buttons = []
+        self.controls_layout = None
 
         self.setStyleSheet("""
         QMainWindow, QWidget { background-color: #07101d; color: #e8eef5; font-family: Arial; }
@@ -1285,6 +1307,8 @@ class MainWindow(QMainWindow):
 
         central = QWidget()
         root = QVBoxLayout(central)
+        root.setContentsMargins(12, 12, 12, 12)
+        root.setSpacing(8)
 
         self.header = QGroupBox("Sistema detectado")
         h = QGridLayout(self.header)
@@ -1293,17 +1317,22 @@ class MainWindow(QMainWindow):
         self.title = QLabel(APP_NAME)
         self.title.setObjectName("Title")
         self.sysinfo_label = QLabel("")
+        self.sysinfo_label.setWordWrap(True)
         self.risk_label = QLabel("Riesgo: sin escaneo")
         self.risk_label.setObjectName("Risk")
+        self.risk_label.setWordWrap(True)
 
         h.addWidget(self.logo, 0, 0, 2, 1)
         h.addWidget(self.title, 0, 1)
         h.addWidget(self.sysinfo_label, 1, 1)
         h.addWidget(self.risk_label, 0, 2, 2, 1)
+        h.setColumnStretch(1, 1)
 
         root.addWidget(self.header)
 
-        controls = QHBoxLayout()
+        controls = QGridLayout()
+        controls.setSpacing(8)
+        self.controls_layout = controls
         self.btn_quick = QPushButton("Escaneo rápido")
         self.btn_full = QPushButton("Escaneo completo")
         self.btn_tools = QPushButton("Ver herramientas")
@@ -1324,16 +1353,25 @@ class MainWindow(QMainWindow):
         self.btn_remove_pkg.clicked.connect(self.remove_package_dialog)
         self.btn_report.clicked.connect(self.save_report)
         self.btn_open_folder.clicked.connect(self.open_reports_folder)
-        controls.addWidget(self.btn_quick)
-        controls.addWidget(self.btn_full)
-        controls.addWidget(self.btn_tools)
-        controls.addWidget(self.btn_sources)
-        controls.addWidget(self.btn_update_db)
-        controls.addWidget(self.btn_guard)
-        controls.addWidget(self.btn_safe_install)
-        controls.addWidget(self.btn_remove_pkg)
-        controls.addWidget(self.btn_report)
-        controls.addWidget(self.btn_open_folder)
+        buttons = [
+            self.btn_quick,
+            self.btn_full,
+            self.btn_tools,
+            self.btn_sources,
+            self.btn_update_db,
+            self.btn_guard,
+            self.btn_safe_install,
+            self.btn_remove_pkg,
+            self.btn_report,
+            self.btn_open_folder,
+        ]
+        self.control_buttons = buttons
+        for index, button in enumerate(self.control_buttons):
+            button.setMinimumHeight(40)
+            button.setMaximumHeight(48)
+            controls.addWidget(button, index // 5, index % 5)
+        for col in range(5):
+            controls.setColumnStretch(col, 1)
         root.addLayout(controls)
 
         self.progress = QProgressBar()
@@ -1345,6 +1383,7 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
         self.table_aur = QTableWidget(0, 9)
         self.table_aur.setHorizontalHeaderLabels(["Estado", "Paquete", "Versión", "AUR", "Mantenedor", "Riesgo", "Puntaje", "Motivos", "Acción"])
+        self.configure_table(self.table_aur)
         self.tabs.addTab(self.table_aur, "Paquetes AUR")
 
         self.txt_connections = QPlainTextEdit()
@@ -1353,6 +1392,7 @@ class MainWindow(QMainWindow):
 
         self.table_iprep = QTableWidget(0, 10)
         self.table_iprep.setHorizontalHeaderLabels(["Estado", "IP", "Tipo", "Riesgo", "RDAP/ASN", "VirusTotal", "AbuseIPDB", "OTX", "Motivo", "Procesos"])
+        self.configure_table(self.table_iprep)
         self.tabs.addTab(self.table_iprep, "Reputación IP")
 
         self.txt_services = QPlainTextEdit()
@@ -1372,11 +1412,16 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.txt_log, "Log")
 
         root.addWidget(self.tabs)
-        self.setCentralWidget(central)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setWidget(central)
+        self.setCentralWidget(scroll)
 
         self.refresh_system_header()
         self.txt_sources.setPlainText(self.render_sources_text())
         self.setup_tray_guard()
+        self.reflow_controls()
         if self.start_minimized:
             if self.tray_icon and self.tray_icon.isVisible():
                 QTimer.singleShot(0, self.hide)
@@ -1391,6 +1436,39 @@ class MainWindow(QMainWindow):
                     7000,
                 ),
             )
+
+    def configure_table(self, table):
+        table.setAlternatingRowColors(True)
+        table.setWordWrap(False)
+        table.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        table.horizontalHeader().setStretchLastSection(False)
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        table.verticalHeader().setVisible(False)
+
+    def reflow_controls(self):
+        if not self.controls_layout or not self.control_buttons:
+            return
+        width = max(1, self.width())
+        if width < 820:
+            columns = 2
+        elif width < 1120:
+            columns = 3
+        else:
+            columns = 5
+        while self.controls_layout.count():
+            item = self.controls_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+        for index, button in enumerate(self.control_buttons):
+            self.controls_layout.addWidget(button, index // columns, index % columns)
+        for col in range(5):
+            self.controls_layout.setColumnStretch(col, 1 if col < columns else 0)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.reflow_controls()
 
     def refresh_system_header(self):
         info = system_info()
@@ -1511,10 +1589,10 @@ class MainWindow(QMainWindow):
         timer.timeout.connect(tick)
         timer.start(1000)
 
-        dialog.resize(560, 280)
-        screen = QApplication.screenAt(QCursor.pos()) or QApplication.primaryScreen()
-        if screen:
-            geo = screen.availableGeometry()
+        popup_w, popup_h = fit_size_to_screen(560, 280, min_w=320, min_h=220, width_ratio=0.86, height_ratio=0.42)
+        dialog.resize(popup_w, popup_h)
+        geo = available_screen_geometry()
+        if geo:
             margin = 24
             dialog.move(
                 geo.right() - dialog.width() - margin,
@@ -1734,6 +1812,8 @@ class MainWindow(QMainWindow):
             btn.clicked.connect(lambda _checked=False, pkg=pkg_name, data=p: self.remove_package_dialog(pkg, data))
             self.table_aur.setCellWidget(row, 8, btn)
         self.table_aur.resizeColumnsToContents()
+        self.table_aur.horizontalHeader().setSectionResizeMode(7, QHeaderView.Stretch)
+        self.table_aur.setColumnWidth(8, max(96, self.table_aur.columnWidth(8)))
 
         self.txt_connections.setPlainText(self.report.get("connections", {}).get("raw_limited", ""))
 
@@ -1772,6 +1852,7 @@ class MainWindow(QMainWindow):
                     item.setTextAlignment(Qt.AlignCenter)
                 self.table_iprep.setItem(row, col, item)
         self.table_iprep.resizeColumnsToContents()
+        self.table_iprep.horizontalHeader().setSectionResizeMode(8, QHeaderView.Stretch)
 
         services = self.report.get("services", {})
         self.txt_services.setPlainText("SERVICIOS EN EJECUCIÓN\n\n" + services.get("running", "") + "\n\nSERVICIOS HABILITADOS\n\n" + services.get("enabled", ""))
@@ -1930,7 +2011,8 @@ class MainWindow(QMainWindow):
     def run_package_removal(self, pkg):
         dialog = QDialog(self)
         dialog.setWindowTitle(f"Removiendo paquete: {pkg}")
-        dialog.resize(820, 520)
+        remove_w, remove_h = fit_size_to_screen(820, 520, min_w=520, min_h=360, width_ratio=0.9, height_ratio=0.82)
+        dialog.resize(remove_w, remove_h)
 
         layout = QVBoxLayout(dialog)
         title = QLabel(f"Proceso de desinstalación: {pkg}")

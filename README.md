@@ -61,6 +61,9 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 ### Interfaz gráfica portable
 
 - Interfaz GUI con PySide6.
+- Ventana adaptativa según resolución de pantalla.
+- Botones reorganizables en filas para pantallas pequeñas.
+- Tablas con scroll horizontal y columnas ajustables.
 - Barra de progreso.
 - Detección automática de distro.
 - Logo visual según distro:
