@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#1793ff"/>
+<stop offset="1" stop-color="#00d26a"/>
+</linearGradient>
+</defs>
+<rect width="128" height="128" rx="26" fill="#07101d"/>
+<path d="M64 12 L112 32 V64 C112 94 91 116 64 122 C37 116 16 94 16 64 V32 Z" fill="url(#g)" stroke="#e8eef5" stroke-width="5"/>
+<path d="M38 65 L55 82 L92 43" fill="none" stroke="#07101d" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="64" y="111" font-family="Arial" font-size="17" text-anchor="middle" fill="#e8eef5" font-weight="bold">AUR</text>
+</svg>

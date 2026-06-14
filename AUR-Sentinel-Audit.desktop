@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=AUR Sentinel Audit
+Comment=Auditoría defensiva AUR para Arch Linux y derivadas
+Exec=sh -c 'cd "$(dirname "%k")" && ./autorun.sh'
+Icon=assets/aur_sentinel.svg
+Terminal=true
+Categories=System;Security;

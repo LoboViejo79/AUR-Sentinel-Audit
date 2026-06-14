@@ -1,0 +1,5 @@
+{
+  "virustotal_api_key": "PEGAR_AQUI_TU_API_KEY_DE_VIRUSTOTAL",
+  "abuseipdb_api_key": "PEGAR_AQUI_TU_API_KEY_DE_ABUSEIPDB",
+  "otx_api_key": "OPCIONAL_PEGAR_AQUI_TU_API_KEY_DE_ALIENVAULT_OTX"
+}
