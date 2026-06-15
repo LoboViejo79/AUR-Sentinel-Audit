@@ -25,7 +25,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 from PySide6.QtCore import Qt, QThread, Signal, QTimer, QProcess
-from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor
+from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor, QColor, QPalette
 from PySide6.QtPrintSupport import QPrinter
 from PySide6.QtWidgets import (
     QApplication,
@@ -69,16 +69,25 @@ RECOMMENDED_TOOLS = ["arch-audit", "bind-tools", "whois", "lsof", "nmap", "curl"
 # Fuentes oficiales/comunitarias del incidente AUR
 ARCH_OFFICIAL_AFFECTED_LIST_URL = "https://md.archlinux.org/s/SxbqukK6IA/download"
 AUR_GENERAL_REPORT_THREAD_URL = "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
+LENUCKSI_PACKAGE_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt"
+LENUCKSI_MALICIOUS_NPM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
+CSCS_AUR_VULN_LIST_URL = "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt"
+CACHYOS_AUR_VULN_LIST_URL = "https://paste.cachyos.org/73a714d"
 
 MALWARE_DB_URLS = [
     ARCH_OFFICIAL_AFFECTED_LIST_URL,
     AUR_GENERAL_REPORT_THREAD_URL,
-    "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt",
-    "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt",
-    "https://paste.cachyos.org/73a714d",
+    LENUCKSI_PACKAGE_LIST_URL,
+    CSCS_AUR_VULN_LIST_URL,
+    CACHYOS_AUR_VULN_LIST_URL,
 ]
 LOCAL_MALWARE_DB = Path("data/aur_malware_package_list.txt")
 LOCAL_MALWARE_DB.parent.mkdir(exist_ok=True)
+LOCAL_AUR_PACKAGE_LIST = Path("data/package_list.txt")
+LOCAL_MALICIOUS_NPM_LIST = Path("data/malicious_npm_packages.txt")
+MALICIOUS_NPM_DB_URLS = [
+    LENUCKSI_MALICIOUS_NPM_LIST_URL,
+]
 
 
 CONFIG_DIR = Path("config")
@@ -120,8 +129,8 @@ TRUSTED_PROCESS_HINTS = [
 
 INCIDENT_INFO_LINKS = [
     {
-        "name": "CachyOS - AUR Compromised 1500+ packages",
-        "url": "https://discuss.cachyos.org/t/aur-compromised-1500-packages-affected-20260611/31040",
+        "name": "CachyOS - AUR Compromised almost 2000 packages",
+        "url": "https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040",
         "note": "Hilo principal con seguimiento, advertencias y discusión técnica."
     },
     {
@@ -153,6 +162,16 @@ INCIDENT_INFO_LINKS = [
         "name": "Arch affected packages live list",
         "url": ARCH_OFFICIAL_AFFECTED_LIST_URL,
         "note": "Lista oficial/viva mencionada por Arch con paquetes afectados conocidos. El programa la consulta automáticamente."
+    },
+    {
+        "name": "CSCS raw AUR vulnerable package list",
+        "url": CSCS_AUR_VULN_LIST_URL,
+        "note": "Lista raw citada por CachyOS para el one-liner de comparación con pacman -Qqm."
+    },
+    {
+        "name": "CachyOS paste package list",
+        "url": CACHYOS_AUR_VULN_LIST_URL,
+        "note": "Espejo/lista comunitaria usada como fuente adicional de paquetes reportados."
     },
     {
         "name": "Arch Security Advisories",
@@ -212,10 +231,16 @@ AUR_MALWARE_SIGNATURES = {
             r"\byarn\s+add\s+atomic-lockfile\b",
             r"\bbun\s+add\s+atomic-lockfile\b",
             r"\batomic-lockfile\b",
+            r"\bnpm\s+install\s+lockfile-js\b",
+            r"\bpnpm\s+(install|add)\s+lockfile-js\b",
+            r"\byarn\s+add\s+lockfile-js\b",
+            r"\bbun\s+add\s+lockfile-js\b",
+            r"\blockfile-js\b",
+            r"\bnextfile-js\b",
         ],
         "risk": "Crítico",
         "score": 100,
-        "description": "Firma relacionada con el incidente AUR atomic-lockfile.",
+        "description": "Firma relacionada con el incidente AUR atomic-lockfile/lockfile-js.",
     },
     "INCIDENTE_AUR_js_digest": {
         "patterns": [
@@ -759,21 +784,20 @@ def analyze_ip_reputation(connections):
         abuse_bad = abuse.get("abuse_score") if abuse.get("abuse_score") is not None else 0
         otx_bad = otx.get("pulse_count") if otx.get("pulse_count") is not None else 0
 
+        primary_reputation_available = (
+            vt.get("malicious") is not None or abuse.get("abuse_score") is not None
+        )
+
         # Reglas de decisión:
         # 1) VT/AbuseIPDB pesan más que OTX.
-        # 2) OTX en CDNs genera muchos falsos positivos, por eso no sube a Alto solo.
-        # 3) Sin API keys se marca como "no verificado" salvo que OTX sea fuerte y no sea CDN.
+        # 2) OTX es muy ruidoso en CDNs y servicios compartidos; por sí solo no sube a Alto.
+        # 3) Si RDAP falla pero el proceso es habitual, OTX queda como dato informativo.
+        # 4) Sin VT/AbuseIPDB, una IP pública desconocida queda "No verificado" salvo señales fuertes.
         if vt_bad >= 2 or abuse_bad >= 50:
             base["status"] = "❌ Sospechosa"
             base["risk"] = "Alto"
         elif vt_bad == 1 or abuse_bad >= 15:
             base["status"] = "⚠️ Revisar"
-            base["risk"] = "Medio"
-        elif otx_bad >= 10 and not trusted_infra:
-            base["status"] = "❌ Sospechosa por OTX"
-            base["risk"] = "Alto"
-        elif otx_bad >= 1 and not trusted_infra:
-            base["status"] = "⚠️ Revisar por OTX"
             base["risk"] = "Medio"
         elif trusted_infra and common_proc:
             base["status"] = "✅ CDN/servicio reconocido"
@@ -781,6 +805,18 @@ def analyze_ip_reputation(connections):
         elif trusted_infra:
             base["status"] = "✅ Infraestructura reconocida"
             base["risk"] = "Bajo"
+        elif common_proc and not primary_reputation_available:
+            base["status"] = "✅ Proceso habitual; OTX informativo"
+            base["risk"] = "Bajo"
+        elif common_proc and otx_bad <= 3:
+            base["status"] = "✅ Proceso habitual sin señales fuertes"
+            base["risk"] = "Bajo"
+        elif otx_bad >= 10 and not trusted_infra:
+            base["status"] = "⚠️ Revisar por OTX"
+            base["risk"] = "Medio"
+        elif otx_bad >= 1 and not trusted_infra:
+            base["status"] = "ℹ️ OTX informativo"
+            base["risk"] = "No verificado"
         elif not keys.get("virustotal") and not keys.get("abuseipdb"):
             base["status"] = "ℹ️ Sin verificación externa completa"
             base["risk"] = "No verificado"
@@ -906,6 +942,63 @@ def write_malware_db_cache(package_names, source_stats=None):
     lines.append("")
     lines.extend(sorted(package_names))
     LOCAL_MALWARE_DB.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    LOCAL_AUR_PACKAGE_LIST.write_text("\n".join(sorted(package_names)) + "\n", encoding="utf-8")
+
+
+def load_local_malicious_npm_db():
+    if LOCAL_MALICIOUS_NPM_LIST.exists():
+        return parse_package_names_from_text(LOCAL_MALICIOUS_NPM_LIST.read_text(encoding="utf-8", errors="ignore"))
+    return {"atomic-lockfile", "js-digest", "lockfile-js", "nextfile-js"}
+
+
+def write_malicious_npm_cache(package_names, source_stats=None):
+    LOCAL_MALICIOUS_NPM_LIST.parent.mkdir(exist_ok=True)
+    now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    lines = [
+        "# AUR Sentinel Audit - malicious npm/bun packages",
+        f"# Actualizado: {now}",
+        f"# Entradas: {len(package_names)}",
+        "#",
+        "# Fuentes consultadas:",
+    ]
+    for item in source_stats or []:
+        lines.append(f"# - {item.get('url')} | extraidos: {item.get('count', 0)}")
+    lines.append("")
+    lines.extend(sorted(package_names))
+    LOCAL_MALICIOUS_NPM_LIST.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def update_malicious_npm_db():
+    local_before = load_local_malicious_npm_db()
+    remote_combined = set()
+    errors = []
+    source_stats = []
+
+    for url in MALICIOUS_NPM_DB_URLS:
+        try:
+            req = Request(url, headers={"User-Agent": "AUR-Sentinel-Audit-GUI/1.4"})
+            with urlopen(req, timeout=15) as r:
+                txt = r.read().decode("utf-8", errors="ignore")
+            names = parse_package_names_from_text(txt)
+            remote_combined.update(names)
+            source_stats.append({"url": url, "count": len(names)})
+        except Exception as e:
+            errors.append(f"{url}: {e}")
+
+    package_names = (local_before | remote_combined) or {"atomic-lockfile", "js-digest", "lockfile-js", "nextfile-js"}
+    write_malicious_npm_cache(package_names, source_stats)
+    new_entries = sorted(remote_combined - local_before)
+    return package_names, {
+        "source": "remota fusionada con cache local" if remote_combined else "cache local",
+        "count": len(package_names),
+        "remote_count": len(remote_combined),
+        "previous_count": len(local_before),
+        "new_count": len(new_entries),
+        "new_entries": new_entries,
+        "errors": errors,
+        "sources": source_stats,
+        "cache": str(LOCAL_MALICIOUS_NPM_LIST),
+    }
 
 
 def update_malware_db():
@@ -936,6 +1029,7 @@ def update_malware_db():
         merged = local_before | remote_combined
         new_entries = sorted(remote_combined - local_before)
         write_malware_db_cache(merged, source_stats)
+        npm_names, npm_meta = update_malicious_npm_db()
         return merged, {
             "source": "remota fusionada con cache local",
             "count": len(merged),
@@ -945,8 +1039,11 @@ def update_malware_db():
             "new_entries": new_entries,
             "errors": errors,
             "sources": source_stats,
+            "aur_package_list": str(LOCAL_AUR_PACKAGE_LIST),
+            "malicious_npm": npm_meta,
         }
 
+    npm_names, npm_meta = update_malicious_npm_db()
     return local_before, {
         "source": "cache local",
         "count": len(local_before),
@@ -956,6 +1053,8 @@ def update_malware_db():
         "new_entries": [],
         "errors": errors,
         "sources": source_stats,
+        "aur_package_list": str(LOCAL_AUR_PACKAGE_LIST),
+        "malicious_npm": npm_meta,
     }
 
 
@@ -981,7 +1080,10 @@ def incident_sources_status():
     return {
         "links": INCIDENT_INFO_LINKS,
         "database_urls": MALWARE_DB_URLS,
+        "malicious_npm_urls": MALICIOUS_NPM_DB_URLS,
         "local_cache": str(LOCAL_MALWARE_DB),
+        "local_aur_package_list": str(LOCAL_AUR_PACKAGE_LIST),
+        "local_malicious_npm_list": str(LOCAL_MALICIOUS_NPM_LIST),
         "recommendation": (
             "Las listas comunitarias pueden seguir actualizándose. "
             "Repite el análisis luego de actualizar el sistema o instalar paquetes AUR."
@@ -1003,8 +1105,40 @@ def run_external_aur_malware_check():
         if "#!/usr/bin/env bash" in script and "AUR Malware Check" in script:
             script_path.write_text(script, encoding="utf-8")
             os.chmod(script_path, 0o755)
-            res = run_cmd(["bash", str(script_path), "--full"], timeout=240)
-            return {"available": True, "command": res["cmd"], "returncode": res["returncode"], "output": res["stdout"] or res["stderr"]}
+            args = [
+                "bash",
+                str(script_path),
+                "--refresh",
+                "--full",
+                "--all-time",
+                f"--malicious-npm-list={LOCAL_MALICIOUS_NPM_LIST}",
+            ]
+            elevated = False
+            elevation_note = (
+                "Nota: el chequeo externo se ejecutó sin sudo. "
+                "La revisión eBPF/rootkit puede ser parcial si /sys/fs/bpf requiere privilegios."
+            )
+            if os.geteuid() == 0:
+                elevated = True
+                elevation_note = "Chequeo externo ejecutado con privilegios de root."
+            elif which("sudo"):
+                sudo_check = run_cmd(["sudo", "-n", "true"], timeout=5)
+                if sudo_check["returncode"] == 0:
+                    args = ["sudo", "-n"] + args
+                    elevated = True
+                    elevation_note = "Chequeo externo ejecutado con sudo no interactivo para cubrir eBPF/rootkit."
+            res = run_cmd(args, timeout=300)
+            output = (res["stdout"] or res["stderr"] or "").strip()
+            if not elevated:
+                output = f"{output}\n\n{elevation_note}".strip()
+            return {
+                "available": True,
+                "command": res["cmd"],
+                "returncode": res["returncode"],
+                "elevated": elevated,
+                "elevation_note": elevation_note,
+                "output": output,
+            }
         return {"available": False, "output": "El script remoto no pasó la validación básica."}
     except Exception as e:
         return {"available": False, "output": f"No se pudo ejecutar chequeo externo: {e}"}
@@ -1338,7 +1472,24 @@ class MainWindow(QMainWindow):
         QPushButton { background-color: #1266aa; color: white; border: 0; border-radius: 8px; padding: 10px 14px; font-weight: bold; }
         QPushButton:hover { background-color: #1793ff; }
         QPushButton:disabled { background-color: #334155; color: #94a3b8; }
-        QPlainTextEdit, QTableWidget { background-color: #0b1320; border: 1px solid #26384f; border-radius: 8px; color: #e8eef5; }
+        QPlainTextEdit, QTableWidget {
+            background-color: #0b1320;
+            alternate-background-color: #101a28;
+            border: 1px solid #26384f;
+            border-radius: 8px;
+            color: #e8eef5;
+            gridline-color: #1f3147;
+            selection-background-color: #1d4f7a;
+            selection-color: #ffffff;
+        }
+        QTableWidget::item {
+            color: #e8eef5;
+            padding: 3px;
+        }
+        QTableWidget::item:selected {
+            background-color: #1d4f7a;
+            color: #ffffff;
+        }
         QHeaderView::section { background-color: #101a28; color: white; padding: 6px; border: 1px solid #26384f; }
         QProgressBar { border: 1px solid #26384f; border-radius: 8px; text-align: center; background: #0b1320; }
         QProgressBar::chunk { background-color: #1793ff; border-radius: 8px; }
@@ -1481,6 +1632,14 @@ class MainWindow(QMainWindow):
 
     def configure_table(self, table):
         table.setAlternatingRowColors(True)
+        palette = table.palette()
+        palette.setColor(QPalette.Base, QColor("#0b1320"))
+        palette.setColor(QPalette.AlternateBase, QColor("#101a28"))
+        palette.setColor(QPalette.Text, QColor("#e8eef5"))
+        palette.setColor(QPalette.WindowText, QColor("#e8eef5"))
+        palette.setColor(QPalette.Highlight, QColor("#1d4f7a"))
+        palette.setColor(QPalette.HighlightedText, QColor("#ffffff"))
+        table.setPalette(palette)
         table.setWordWrap(False)
         table.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
@@ -1530,7 +1689,13 @@ class MainWindow(QMainWindow):
         for url in sources.get("database_urls", []):
             lines.append(f"- {url}")
         lines.append("")
+        lines.append("Payloads npm/bun usados por el incidente:")
+        for url in sources.get("malicious_npm_urls", []):
+            lines.append(f"- {url}")
+        lines.append("")
         lines.append(f"Cache local: {sources.get('local_cache')}")
+        lines.append(f"Lista AUR local: {sources.get('local_aur_package_list')}")
+        lines.append(f"Lista npm/bun local: {sources.get('local_malicious_npm_list')}")
         lines.append("")
         lines.append("Fuentes informativas:")
         for item in sources.get("links", []):

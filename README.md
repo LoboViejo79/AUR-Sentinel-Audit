@@ -44,6 +44,66 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 
 ---
 
+## Novedades y actualizaciones del programa
+
+Esta sección resume los cambios recientes incorporados a **AUR Sentinel Audit** para mejorar la actualización de fuentes, la detección de paquetes AUR comprometidos y la revisión defensiva del sistema.
+
+### 2026-06-15 - Mejoras de fuentes y detección AUR
+
+- Se separó la base de **paquetes AUR comprometidos** de la lista de **paquetes npm/bun usados como payload**.
+- Se agregó `data/package_list.txt` como lista local compatible con `aur_check-v2.sh`.
+- Se agregó `data/malicious_npm_packages.txt` para mantener payloads npm/bun conocidos.
+- Se integró la fuente comunitaria `lenucksi/aur-malware-check` como referencia principal de listas consolidadas.
+- Se agregó la lista raw de CSCS citada por CachyOS para el chequeo con `pacman -Qqm`.
+- Se mejoró el uso de fuentes remotas con cache local para que el programa pueda seguir funcionando si no hay Internet.
+- Se actualizó el checker comunitario para ejecutarse con:
+
+```text
+--refresh --full --all-time
+```
+
+- El checker comunitario intenta usar `sudo -n` si el sistema ya permite sudo no interactivo. Si no está disponible, continúa sin sudo y avisa que la revisión eBPF/rootkit puede ser parcial.
+- Se ampliaron las firmas críticas del incidente AUR para detectar:
+
+```text
+atomic-lockfile
+js-digest
+lockfile-js
+nextfile-js
+src/hooks/deps
+/sys/fs/bpf/hidden_
+```
+
+- Se redujo el riesgo de falsos positivos al no mezclar nombres de paquetes npm/bun con nombres de paquetes AUR.
+- Se actualizó la documentación para explicar qué lista usa cada parte del programa.
+
+### Archivos de datos usados actualmente
+
+```text
+data/aur_malware_package_list.txt      Cache fusionada principal
+data/package_list.txt                  Lista local de paquetes AUR comprometidos
+data/malicious_npm_packages.txt        Lista local de payloads npm/bun maliciosos
+data/aur_check-v2.sh                   Checker comunitario integrado
+```
+
+### Fuentes verificadas para estas mejoras
+
+```text
+https://github.com/lenucksi/aur-malware-check
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+https://md.archlinux.org/s/SxbqukK6IA/download
+https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
+https://paste.cachyos.org/73a714d
+https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040
+https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077
+https://discourse.ifin.network/t/400-aur-packages-compromised-with-infostealer-and-rootkit/577
+https://ioctl.fail/preliminary-analysis-of-aur-malware/
+https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/
+```
+
+---
+
 ## Capturas de pantalla
 
 ### Interfaz principal
@@ -115,13 +175,28 @@ Fuentes principales usadas por el programa:
 ```text
 https://github.com/lenucksi/aur-malware-check
 https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+https://md.archlinux.org/s/SxbqukK6IA/download
+https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
+https://paste.cachyos.org/73a714d
 ```
 
-Si la descarga remota falla, usa cache local en:
+La lista de paquetes AUR comprometidos se guarda en:
 
 ```text
 data/aur_malware_package_list.txt
+data/package_list.txt
+```
+
+Los paquetes npm/bun usados como payload se actualizan por separado desde:
+
+```text
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+```
+
+y se guardan en:
+
+```text
+data/malicious_npm_packages.txt
 ```
 
 ### Fuentes informativas incluidas
@@ -130,10 +205,12 @@ La pestaña **Fuentes** incluye enlaces de seguimiento para consulta manual:
 
 ```text
 https://discuss.cachyos.org/t/aur-compromised-1500-packages-affected-20260611/31040
+https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040
 https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077
 https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124
 https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238
 https://github.com/lenucksi/aur-malware-check
+https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
 ```
 
 ---
@@ -411,6 +488,12 @@ AUR Sentinel Audit:
 8. Generar reporte HTML/PDF.
 9. Guardar el reporte.
 
+Nota sobre eBPF/rootkit:
+
+- El escaneo completo ejecuta el checker comunitario `data/aur_check-v2.sh`.
+- Si el sistema permite `sudo -n`, el programa lo usa para mejorar la revisión de `/sys/fs/bpf/hidden_*`.
+- Si `sudo -n` no está disponible, el análisis continúa sin bloquear la GUI y el reporte avisa que la revisión eBPF/rootkit puede ser parcial.
+
 ---
 
 ## 🧾 Interpretación rápida
@@ -494,6 +577,8 @@ Ese botón consulta fuentes comunitarias actualizadas, detecta entradas nuevas, 
 
 ```text
 data/aur_malware_package_list.txt
+data/package_list.txt
+data/malicious_npm_packages.txt
 ```
 
 Después de actualizar listas, se recomienda ejecutar:
@@ -504,12 +589,18 @@ Escaneo completo
 
 ### Fuentes usadas para listas y seguimiento
 
-- GitHub: lenucksi/aur-malware-check
-- Arch HedgeDoc live list usada por aur_check-v2.sh
-- CachyOS forum sobre AUR compromised 1500+ packages
-- CachyOS guía para revisar paquetes comprometidos
-- Garuda Linux forum
-- Arch Security Advisories para vulnerabilidades conocidas usadas por arch-audit
+- lenucksi/aur-malware-check: https://github.com/lenucksi/aur-malware-check
+- Lista AUR de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
+- Lista npm/bun de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+- Arch HedgeDoc live list usada por `aur_check-v2.sh`: https://md.archlinux.org/s/SxbqukK6IA/download
+- CSCS raw list citada por CachyOS: https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
+- CachyOS paste/lista comunitaria: https://paste.cachyos.org/73a714d
+- CachyOS almost 2000 packages affected: https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040
+- CachyOS guía para revisar paquetes comprometidos: https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077
+- IFIN Discourse threat intel: https://discourse.ifin.network/t/400-aur-packages-compromised-with-infostealer-and-rootkit/577
+- ioctl.fail análisis técnico: https://ioctl.fail/preliminary-analysis-of-aur-malware/
+- Arch aur-general: https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/
+- Arch Security Advisories para vulnerabilidades conocidas usadas por `arch-audit`: https://security.archlinux.org/
 
 
 ---
@@ -639,6 +730,12 @@ pnpm install atomic-lockfile
 yarn add atomic-lockfile
 bun add atomic-lockfile
 atomic-lockfile
+npm install lockfile-js
+pnpm add lockfile-js
+yarn add lockfile-js
+bun add lockfile-js
+lockfile-js
+nextfile-js
 npm install js-digest
 pnpm add js-digest
 bun add js-digest

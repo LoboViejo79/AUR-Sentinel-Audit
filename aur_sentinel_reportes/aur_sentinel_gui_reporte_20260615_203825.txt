@@ -1,0 +1,1570 @@
+{
+  "arch_audit": {
+    "installed": true,
+    "output": "libxml2 is affected by denial of service. High risk!\npam is affected by arbitrary filesystem access. High risk!\ncoreutils is affected by information disclosure. Medium risk!\ncpio is affected by arbitrary command execution. Medium risk!\ngiflib is affected by information disclosure. Medium risk!\nlibheif is affected by information disclosure. Medium risk!\nlibtiff is affected by unknown, denial of service. Medium risk!\nopenjpeg2 is affected by arbitrary code execution. Medium risk!\nopenssl is affected by arbitrary command execution, certificate verification bypass. Medium risk!\nopenvpn is affected by information disclosure. Medium risk!\nperl is affected by signature forgery, directory traversal, unknown. Medium risk!\nsystemd is affected by information disclosure. Medium risk!\nwget is affected by information disclosure. Medium risk!\nxdg-utils is affected by information disclosure. Medium risk!\nlua51 is affected by denial of service. Low risk!",
+    "returncode": 0
+  },
+  "aur_analysis": [
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "jue 11 jun 2026 20:05:40",
+      "maintainer": "",
+      "name": "google-chrome",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "149.0.7827.114-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "lun 08 jun 2026 22:19:01",
+      "maintainer": "",
+      "name": "hyper-headset-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "1.9.1-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "sáb 13 jun 2026 21:52:10",
+      "maintainer": "",
+      "name": "microsoft-edge-stable-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "149.0.4022.69-1"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "lun 01 jun 2026 02:54:25",
+      "maintainer": "",
+      "name": "ttf-ms-fonts",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "2.0-12"
+    },
+    {
+      "aur_exists": "no analizado",
+      "hits": [],
+      "incident_reported": false,
+      "incident_status": "✅ No figura en base del incidente",
+      "install_date": "vie 12 jun 2026 16:22:45",
+      "maintainer": "",
+      "name": "visual-studio-code-bin",
+      "packager": "",
+      "risk_level": "No analizado",
+      "risk_score": 0,
+      "version": "1.124.2-1"
+    }
+  ],
+  "aur_packages": [
+    {
+      "install_date": "jue 11 jun 2026 20:05:40",
+      "name": "google-chrome",
+      "packager": "",
+      "version": "149.0.7827.114-1"
+    },
+    {
+      "install_date": "lun 08 jun 2026 22:19:01",
+      "name": "hyper-headset-bin",
+      "packager": "",
+      "version": "1.9.1-1"
+    },
+    {
+      "install_date": "sáb 13 jun 2026 21:52:10",
+      "name": "microsoft-edge-stable-bin",
+      "packager": "",
+      "version": "149.0.4022.69-1"
+    },
+    {
+      "install_date": "lun 01 jun 2026 02:54:25",
+      "name": "ttf-ms-fonts",
+      "packager": "",
+      "version": "2.0-12"
+    },
+    {
+      "install_date": "vie 12 jun 2026 16:22:45",
+      "name": "visual-studio-code-bin",
+      "packager": "",
+      "version": "1.124.2-1"
+    }
+  ],
+  "connections": {
+    "connections": [
+      {
+        "local": "192.168.1.247:51608",
+        "peer": "142.251.129.110:443",
+        "process": "users:((\"brave\",pid=198348,fd=52))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:51608 142.251.129.110:443   users:((\"brave\",pid=198348,fd=52))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:59396",
+        "peer": "142.251.128.138:443",
+        "process": "users:((\"brave\",pid=198348,fd=62))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:59396 142.251.128.138:443   users:((\"brave\",pid=198348,fd=62))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "0.0.0.0:27036",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=159))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:27036         0.0.0.0:*     users:((\"steam\",pid=128062,fd=159))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "127.0.0.54:53",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=24))",
+        "raw": "udp   UNCONN     0      0                127.0.0.54:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=24))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "127.0.0.53%lo:53",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=22))",
+        "raw": "udp   UNCONN     0      0             127.0.0.53%lo:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=22))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "192.168.1.247%enp8s0:68",
+        "peer": "192.168.1.1:67",
+        "process": "users:((\"NetworkManager\",pid=895,fd=26))",
+        "raw": "udp   ESTAB      0      0      192.168.1.247%enp8s0:68        192.168.1.1:67    users:((\"NetworkManager\",pid=895,fd=26))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:32933",
+        "peer": "142.251.128.46:443",
+        "process": "users:((\"brave\",pid=198348,fd=29))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:32933  142.251.128.46:443   users:((\"brave\",pid=198348,fd=29))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:35276",
+        "peer": "181.30.232.237:443",
+        "process": "users:((\"brave\",pid=198348,fd=53))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:35276  181.30.232.237:443   users:((\"brave\",pid=198348,fd=53))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:36081",
+        "peer": "142.251.129.118:443",
+        "process": "users:((\"brave\",pid=198348,fd=35))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:36081 142.251.129.118:443   users:((\"brave\",pid=198348,fd=35))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "224.0.0.251:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steamwebhelper\",pid=128287,fd=245))",
+        "raw": "udp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"steamwebhelper\",pid=128287,fd=245))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "224.0.0.251:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"brave\",pid=198300,fd=248))",
+        "raw": "udp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=198300,fd=248))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "224.0.0.251:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"brave\",pid=198348,fd=119))",
+        "raw": "udp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=198348,fd=119))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"avahi-daemon\",pid=897,fd=12))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*     users:((\"avahi-daemon\",pid=897,fd=12))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5353",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=17))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=17))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5355",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=13))",
+        "raw": "udp   UNCONN     0      0                   0.0.0.0:5355          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=13))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "192.168.1.247:44668",
+        "peer": "142.251.134.86:443",
+        "process": "users:((\"brave\",pid=198348,fd=63))",
+        "raw": "udp   ESTAB      0      0             192.168.1.247:44668  142.251.134.86:443   users:((\"brave\",pid=198348,fd=63))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "*:1716",
+        "peer": "*:*",
+        "process": "users:((\"kdeconnectd\",pid=1578,fd=39))",
+        "raw": "udp   UNCONN     0      0                         *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=39))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5353",
+        "peer": "[::]:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=18))",
+        "raw": "udp   UNCONN     0      0                      [::]:5353             [::]:*     users:((\"systemd-resolve\",pid=620,fd=18))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5353",
+        "peer": "[::]:*",
+        "process": "users:((\"avahi-daemon\",pid=897,fd=13))",
+        "raw": "udp   UNCONN     0      0                      [::]:5353             [::]:*     users:((\"avahi-daemon\",pid=897,fd=13))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "[::]:5355",
+        "peer": "[::]:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=15))",
+        "raw": "udp   UNCONN     0      0                      [::]:5355             [::]:*     users:((\"systemd-resolve\",pid=620,fd=15))",
+        "state": "UNCONN"
+      },
+      {
+        "local": "0.0.0.0:5355",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=14))",
+        "raw": "tcp   LISTEN     0      4096                0.0.0.0:5355          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=14))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.54:53",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=25))",
+        "raw": "tcp   LISTEN     0      4096             127.0.0.54:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=25))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:27060",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=94))",
+        "raw": "tcp   LISTEN     0      128               127.0.0.1:27060         0.0.0.0:*     users:((\"steam\",pid=128062,fd=94))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:57343",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=60))",
+        "raw": "tcp   LISTEN     0      128               127.0.0.1:57343         0.0.0.0:*     users:((\"steam\",pid=128062,fd=60))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:42321",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=119))",
+        "raw": "tcp   LISTEN     0      128               127.0.0.1:42321         0.0.0.0:*     users:((\"steam\",pid=128062,fd=119))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:43761",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=68))",
+        "raw": "tcp   LISTEN     0      128               127.0.0.1:43761         0.0.0.0:*     users:((\"steam\",pid=128062,fd=68))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.53%lo:53",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=23))",
+        "raw": "tcp   LISTEN     0      4096          127.0.0.53%lo:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=23))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:6463",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"Discord\",pid=305954,fd=118))",
+        "raw": "tcp   LISTEN     0      511               127.0.0.1:6463          0.0.0.0:*     users:((\"Discord\",pid=305954,fd=118))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:33835",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"code\",pid=301631,fd=36))",
+        "raw": "tcp   LISTEN     0      511               127.0.0.1:33835         0.0.0.0:*     users:((\"code\",pid=301631,fd=36))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "0.0.0.0:27036",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"steam\",pid=128062,fd=161))",
+        "raw": "tcp   LISTEN     0      128                 0.0.0.0:27036         0.0.0.0:*     users:((\"steam\",pid=128062,fd=161))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "127.0.0.1:35431",
+        "peer": "0.0.0.0:*",
+        "process": "users:((\"plasmashell\",pid=166126,fd=47))",
+        "raw": "tcp   LISTEN     0      50                127.0.0.1:35431         0.0.0.0:*     users:((\"plasmashell\",pid=166126,fd=47))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "192.168.1.247:45062",
+        "peer": "192.168.40.100:445",
+        "process": "",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:45062  192.168.40.100:445  ",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:27060",
+        "peer": "127.0.0.1:48498",
+        "process": "users:((\"steam\",pid=128062,fd=155))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:27060       127.0.0.1:48498 users:((\"steam\",pid=128062,fd=155))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:39348",
+        "peer": "142.251.134.197:443",
+        "process": "users:((\"brave\",pid=198348,fd=33))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:39348 142.251.134.197:443   users:((\"brave\",pid=198348,fd=33))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:42321",
+        "peer": "127.0.0.1:41292",
+        "process": "users:((\"steam\",pid=128062,fd=52))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:42321       127.0.0.1:41292 users:((\"steam\",pid=128062,fd=52))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:37294",
+        "peer": "127.0.0.1:35431",
+        "process": "users:((\"python3\",pid=315739,fd=9))",
+        "raw": "tcp   ESTAB      0      137               127.0.0.1:37294       127.0.0.1:35431 users:((\"python3\",pid=315739,fd=9))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:55998",
+        "peer": "129.158.244.68:443",
+        "process": "users:((\"code\",pid=300694,fd=30))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:55998  129.158.244.68:443   users:((\"code\",pid=300694,fd=30))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:32780",
+        "peer": "104.18.32.47:443",
+        "process": "",
+        "raw": "tcp   TIME-WAIT  0      0             192.168.1.247:32780    104.18.32.47:443  ",
+        "state": "TIME-WAIT"
+      },
+      {
+        "local": "192.168.1.247:38137",
+        "peer": "155.133.249.164:443",
+        "process": "users:((\"steam\",pid=128062,fd=169))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:38137 155.133.249.164:443   users:((\"steam\",pid=128062,fd=169))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:56284",
+        "peer": "185.199.111.133:443",
+        "process": "users:((\"brave\",pid=198348,fd=56))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:56284 185.199.111.133:443   users:((\"brave\",pid=198348,fd=56))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:36938",
+        "peer": "199.232.193.91:443",
+        "process": "users:((\"brave\",pid=198348,fd=34))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:36938  199.232.193.91:443   users:((\"brave\",pid=198348,fd=34))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:55878",
+        "peer": "127.0.0.1:43761",
+        "process": "users:((\"steamwebhelper\",pid=128337,fd=31))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:55878       127.0.0.1:43761 users:((\"steamwebhelper\",pid=128337,fd=31))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:35431",
+        "peer": "127.0.0.1:37294",
+        "process": "users:((\"plasmashell\",pid=166126,fd=177))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:35431       127.0.0.1:37294 users:((\"plasmashell\",pid=166126,fd=177))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:36880",
+        "peer": "104.18.39.21:443",
+        "process": "users:((\"brave\",pid=198348,fd=25))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:36880    104.18.39.21:443   users:((\"brave\",pid=198348,fd=25))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:48498",
+        "peer": "127.0.0.1:27060",
+        "process": "users:((\"steamwebhelper\",pid=128337,fd=50))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:48498       127.0.0.1:27060 users:((\"steamwebhelper\",pid=128337,fd=50))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:46768",
+        "peer": "127.0.0.1:57343",
+        "process": "users:((\"steamwebhelper\",pid=128287,fd=94))",
+        "raw": "tcp   ESTAB      5      0                 127.0.0.1:46768       127.0.0.1:57343 users:((\"steamwebhelper\",pid=128287,fd=94))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:45162",
+        "peer": "172.64.155.209:443",
+        "process": "users:((\"codex\",pid=300926,fd=41))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:45162  172.64.155.209:443   users:((\"codex\",pid=300926,fd=41))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:47800",
+        "peer": "172.64.155.209:443",
+        "process": "users:((\"code\",pid=300819,fd=67))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:47800  172.64.155.209:443   users:((\"code\",pid=300819,fd=67))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:51722",
+        "peer": "172.64.155.209:443",
+        "process": "users:((\"codex\",pid=300926,fd=22))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:51722  172.64.155.209:443   users:((\"codex\",pid=300926,fd=22))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:42916",
+        "peer": "104.208.16.90:443",
+        "process": "users:((\"code\",pid=300694,fd=22))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:42916   104.208.16.90:443   users:((\"code\",pid=300694,fd=22))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:38482",
+        "peer": "162.159.130.234:443",
+        "process": "users:((\"Discord\",pid=305859,fd=25))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:38482 162.159.130.234:443   users:((\"Discord\",pid=305859,fd=25))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:52990",
+        "peer": "104.26.4.68:443",
+        "process": "users:((\"code\",pid=300694,fd=35))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:52990     104.26.4.68:443   users:((\"code\",pid=300694,fd=35))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:40922",
+        "peer": "95.217.239.55:443",
+        "process": "",
+        "raw": "tcp   FIN-WAIT-1 0      25            192.168.1.247:40922   95.217.239.55:443  ",
+        "state": "FIN-WAIT-1"
+      },
+      {
+        "local": "192.168.1.247:51052",
+        "peer": "108.138.14.98:443",
+        "process": "users:((\"brave\",pid=198348,fd=59))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:51052   108.138.14.98:443   users:((\"brave\",pid=198348,fd=59))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:51058",
+        "peer": "108.138.14.98:443",
+        "process": "users:((\"brave\",pid=198348,fd=43))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:51058   108.138.14.98:443   users:((\"brave\",pid=198348,fd=43))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:41292",
+        "peer": "127.0.0.1:42321",
+        "process": "users:((\"steamwebhelper\",pid=128337,fd=30))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:41292       127.0.0.1:42321 users:((\"steamwebhelper\",pid=128337,fd=30))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:57343",
+        "peer": "127.0.0.1:46768",
+        "process": "users:((\"steam\",pid=128062,fd=128))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:57343       127.0.0.1:46768 users:((\"steam\",pid=128062,fd=128))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:44426",
+        "peer": "140.82.114.26:443",
+        "process": "users:((\"brave\",pid=198348,fd=83))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:44426   140.82.114.26:443   users:((\"brave\",pid=198348,fd=83))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "192.168.1.247:45334",
+        "peer": "13.107.253.34:443",
+        "process": "users:((\"code\",pid=300694,fd=25))",
+        "raw": "tcp   ESTAB      0      0             192.168.1.247:45334   13.107.253.34:443   users:((\"code\",pid=300694,fd=25))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "127.0.0.1:43761",
+        "peer": "127.0.0.1:55878",
+        "process": "users:((\"steam\",pid=128062,fd=138))",
+        "raw": "tcp   ESTAB      0      0                 127.0.0.1:43761       127.0.0.1:55878 users:((\"steam\",pid=128062,fd=138))",
+        "state": "ESTAB"
+      },
+      {
+        "local": "[::]:5355",
+        "peer": "[::]:*",
+        "process": "users:((\"systemd-resolve\",pid=620,fd=16))",
+        "raw": "tcp   LISTEN     0      4096                   [::]:5355             [::]:*     users:((\"systemd-resolve\",pid=620,fd=16))",
+        "state": "LISTEN"
+      },
+      {
+        "local": "*:1716",
+        "peer": "*:*",
+        "process": "users:((\"kdeconnectd\",pid=1578,fd=40))",
+        "raw": "tcp   LISTEN     0      50                        *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=40))",
+        "state": "LISTEN"
+      }
+    ],
+    "raw_limited": "Netid State      Recv-Q Send-Q        Local Address:Port     Peer Address:Port Process\nudp   ESTAB      0      0             192.168.1.247:51608 142.251.129.110:443   users:((\"brave\",pid=198348,fd=52))\nudp   ESTAB      0      0             192.168.1.247:59396 142.251.128.138:443   users:((\"brave\",pid=198348,fd=62))\nudp   UNCONN     0      0                   0.0.0.0:27036         0.0.0.0:*     users:((\"steam\",pid=128062,fd=159))\nudp   UNCONN     0      0                127.0.0.54:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=24))\nudp   UNCONN     0      0             127.0.0.53%lo:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=22))\nudp   ESTAB      0      0      192.168.1.247%enp8s0:68        192.168.1.1:67    users:((\"NetworkManager\",pid=895,fd=26))\nudp   ESTAB      0      0             192.168.1.247:32933  142.251.128.46:443   users:((\"brave\",pid=198348,fd=29))\nudp   ESTAB      0      0             192.168.1.247:35276  181.30.232.237:443   users:((\"brave\",pid=198348,fd=53))\nudp   ESTAB      0      0             192.168.1.247:36081 142.251.129.118:443   users:((\"brave\",pid=198348,fd=35))\nudp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"steamwebhelper\",pid=128287,fd=245))\nudp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=198300,fd=248))\nudp   UNCONN     0      0               224.0.0.251:5353          0.0.0.0:*     users:((\"brave\",pid=198348,fd=119))\nudp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*     users:((\"avahi-daemon\",pid=897,fd=12))\nudp   UNCONN     0      0                   0.0.0.0:5353          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=17))\nudp   UNCONN     0      0                   0.0.0.0:5355          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=13))\nudp   ESTAB      0      0             192.168.1.247:44668  142.251.134.86:443   users:((\"brave\",pid=198348,fd=63))\nudp   UNCONN     0      0                         *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=39))\nudp   UNCONN     0      0                      [::]:5353             [::]:*     users:((\"systemd-resolve\",pid=620,fd=18))\nudp   UNCONN     0      0                      [::]:5353             [::]:*     users:((\"avahi-daemon\",pid=897,fd=13))\nudp   UNCONN     0      0                      [::]:5355             [::]:*     users:((\"systemd-resolve\",pid=620,fd=15))\ntcp   LISTEN     0      4096                0.0.0.0:5355          0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=14))\ntcp   LISTEN     0      4096             127.0.0.54:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=25))\ntcp   LISTEN     0      128               127.0.0.1:27060         0.0.0.0:*     users:((\"steam\",pid=128062,fd=94))\ntcp   LISTEN     0      128               127.0.0.1:57343         0.0.0.0:*     users:((\"steam\",pid=128062,fd=60))\ntcp   LISTEN     0      128               127.0.0.1:42321         0.0.0.0:*     users:((\"steam\",pid=128062,fd=119))\ntcp   LISTEN     0      128               127.0.0.1:43761         0.0.0.0:*     users:((\"steam\",pid=128062,fd=68))\ntcp   LISTEN     0      4096          127.0.0.53%lo:53            0.0.0.0:*     users:((\"systemd-resolve\",pid=620,fd=23))\ntcp   LISTEN     0      511               127.0.0.1:6463          0.0.0.0:*     users:((\"Discord\",pid=305954,fd=118))\ntcp   LISTEN     0      511               127.0.0.1:33835         0.0.0.0:*     users:((\"code\",pid=301631,fd=36))\ntcp   LISTEN     0      128                 0.0.0.0:27036         0.0.0.0:*     users:((\"steam\",pid=128062,fd=161))\ntcp   LISTEN     0      50                127.0.0.1:35431         0.0.0.0:*     users:((\"plasmashell\",pid=166126,fd=47))\ntcp   ESTAB      0      0             192.168.1.247:45062  192.168.40.100:445  \ntcp   ESTAB      0      0                 127.0.0.1:27060       127.0.0.1:48498 users:((\"steam\",pid=128062,fd=155))\ntcp   ESTAB      0      0             192.168.1.247:39348 142.251.134.197:443   users:((\"brave\",pid=198348,fd=33))\ntcp   ESTAB      0      0                 127.0.0.1:42321       127.0.0.1:41292 users:((\"steam\",pid=128062,fd=52))\ntcp   ESTAB      0      137               127.0.0.1:37294       127.0.0.1:35431 users:((\"python3\",pid=315739,fd=9))\ntcp   ESTAB      0      0             192.168.1.247:55998  129.158.244.68:443   users:((\"code\",pid=300694,fd=30))\ntcp   TIME-WAIT  0      0             192.168.1.247:32780    104.18.32.47:443  \ntcp   ESTAB      0      0             192.168.1.247:38137 155.133.249.164:443   users:((\"steam\",pid=128062,fd=169))\ntcp   ESTAB      0      0             192.168.1.247:56284 185.199.111.133:443   users:((\"brave\",pid=198348,fd=56))\ntcp   ESTAB      0      0             192.168.1.247:36938  199.232.193.91:443   users:((\"brave\",pid=198348,fd=34))\ntcp   ESTAB      0      0                 127.0.0.1:55878       127.0.0.1:43761 users:((\"steamwebhelper\",pid=128337,fd=31))\ntcp   ESTAB      0      0                 127.0.0.1:35431       127.0.0.1:37294 users:((\"plasmashell\",pid=166126,fd=177))\ntcp   ESTAB      0      0             192.168.1.247:36880    104.18.39.21:443   users:((\"brave\",pid=198348,fd=25))\ntcp   ESTAB      0      0                 127.0.0.1:48498       127.0.0.1:27060 users:((\"steamwebhelper\",pid=128337,fd=50))\ntcp   ESTAB      5      0                 127.0.0.1:46768       127.0.0.1:57343 users:((\"steamwebhelper\",pid=128287,fd=94))\ntcp   ESTAB      0      0             192.168.1.247:45162  172.64.155.209:443   users:((\"codex\",pid=300926,fd=41))\ntcp   ESTAB      0      0             192.168.1.247:47800  172.64.155.209:443   users:((\"code\",pid=300819,fd=67))\ntcp   ESTAB      0      0             192.168.1.247:51722  172.64.155.209:443   users:((\"codex\",pid=300926,fd=22))\ntcp   ESTAB      0      0             192.168.1.247:42916   104.208.16.90:443   users:((\"code\",pid=300694,fd=22))\ntcp   ESTAB      0      0             192.168.1.247:38482 162.159.130.234:443   users:((\"Discord\",pid=305859,fd=25))\ntcp   ESTAB      0      0             192.168.1.247:52990     104.26.4.68:443   users:((\"code\",pid=300694,fd=35))\ntcp   FIN-WAIT-1 0      25            192.168.1.247:40922   95.217.239.55:443  \ntcp   ESTAB      0      0             192.168.1.247:51052   108.138.14.98:443   users:((\"brave\",pid=198348,fd=59))\ntcp   ESTAB      0      0             192.168.1.247:51058   108.138.14.98:443   users:((\"brave\",pid=198348,fd=43))\ntcp   ESTAB      0      0                 127.0.0.1:41292       127.0.0.1:42321 users:((\"steamwebhelper\",pid=128337,fd=30))\ntcp   ESTAB      0      0                 127.0.0.1:57343       127.0.0.1:46768 users:((\"steam\",pid=128062,fd=128))\ntcp   ESTAB      0      0             192.168.1.247:44426   140.82.114.26:443   users:((\"brave\",pid=198348,fd=83))\ntcp   ESTAB      0      0             192.168.1.247:45334   13.107.253.34:443   users:((\"code\",pid=300694,fd=25))\ntcp   ESTAB      0      0                 127.0.0.1:43761       127.0.0.1:55878 users:((\"steam\",pid=128062,fd=138))\ntcp   LISTEN     0      4096                   [::]:5355             [::]:*     users:((\"systemd-resolve\",pid=620,fd=16))\ntcp   LISTEN     0      50                        *:1716                *:*     users:((\"kdeconnectd\",pid=1578,fd=40))"
+  },
+  "external_aur_check": {},
+  "incident_sources": {
+    "database_urls": [
+      "https://md.archlinux.org/s/SxbqukK6IA/download",
+      "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/",
+      "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt",
+      "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt",
+      "https://paste.cachyos.org/73a714d"
+    ],
+    "links": [
+      {
+        "name": "CachyOS - AUR Compromised almost 2000 packages",
+        "note": "Hilo principal con seguimiento, advertencias y discusión técnica.",
+        "url": "https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040"
+      },
+      {
+        "name": "CachyOS - How to check compromised packages",
+        "note": "Publicación orientada a chequeo de exposición real. Indica que las listas siguen actualizándose.",
+        "url": "https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077"
+      },
+      {
+        "name": "Garuda Linux - Attack wave on AUR packages",
+        "note": "Aviso comunitario para usuarios Garuda/Arch sobre la ola de ataque.",
+        "url": "https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124"
+      },
+      {
+        "name": "Garuda / Chaotic-AUR reports",
+        "note": "Hilo de reportes y recompilación de paquetes.",
+        "url": "https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238"
+      },
+      {
+        "name": "GitHub - lenucksi/aur-malware-check",
+        "note": "Herramienta comunitaria y listas consolidadas para el ataque atomic-lockfile.",
+        "url": "https://github.com/lenucksi/aur-malware-check"
+      },
+      {
+        "name": "Arch aur-general official report thread",
+        "note": "Hilo oficial de aur-general donde Arch pidió reportar paquetes maliciosos en un solo lugar. El programa extrae nombres desde enlaces AUR del hilo.",
+        "url": "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
+      },
+      {
+        "name": "Arch affected packages live list",
+        "note": "Lista oficial/viva mencionada por Arch con paquetes afectados conocidos. El programa la consulta automáticamente.",
+        "url": "https://md.archlinux.org/s/SxbqukK6IA/download"
+      },
+      {
+        "name": "CSCS raw AUR vulnerable package list",
+        "note": "Lista raw citada por CachyOS para el one-liner de comparación con pacman -Qqm.",
+        "url": "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt"
+      },
+      {
+        "name": "CachyOS paste package list",
+        "note": "Espejo/lista comunitaria usada como fuente adicional de paquetes reportados.",
+        "url": "https://paste.cachyos.org/73a714d"
+      },
+      {
+        "name": "Arch Security Advisories",
+        "note": "Fuente oficial para vulnerabilidades conocidas de paquetes oficiales de Arch. arch-audit consulta esta información.",
+        "url": "https://security.archlinux.org/"
+      }
+    ],
+    "local_aur_package_list": "data/package_list.txt",
+    "local_cache": "data/aur_malware_package_list.txt",
+    "local_malicious_npm_list": "data/malicious_npm_packages.txt",
+    "malicious_npm_urls": [
+      "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
+    ],
+    "recommendation": "Las listas comunitarias pueden seguir actualizándose. Repite el análisis luego de actualizar el sistema o instalar paquetes AUR."
+  },
+  "integrity": {},
+  "ip_reputation": {
+    "api_keys_configured": {
+      "abuseipdb": false,
+      "otx": false,
+      "virustotal": false
+    },
+    "results": [
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.129.110",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "fastly/trafficmgr",
+          "pulse_count": 7,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:7 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=52))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.128.138",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=62))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "192.168.1.1",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [
+          "users:((\"NetworkManager\",pid=895,fd=26))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "privada",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.128.46",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=29))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "181.30.232.237",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "",
+          "name": "",
+          "owner_text": "",
+          "status": "Error RDAP: HTTP Error 406: Not Acceptable"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=53))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Proceso habitual; OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.129.118",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=35))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.134.86",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=63))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "192.168.40.100",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "privada",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {},
+        "common_process": false,
+        "ip": "127.0.0.1",
+        "otx": {},
+        "rdap": {},
+        "reason": "IP privada/local/reservada. No se consulta reputación externa.",
+        "related_processes": [
+          "users:((\"plasmashell\",pid=166126,fd=177))",
+          "users:((\"python3\",pid=315739,fd=9))",
+          "users:((\"steam\",pid=128062,fd=128))",
+          "users:((\"steam\",pid=128062,fd=138))",
+          "users:((\"steam\",pid=128062,fd=155))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Conexión local/confiable",
+        "trusted_infra": false,
+        "type": "loopback",
+        "vt": {}
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "142.251.134.197",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-142-250-0-0-1",
+          "name": "GOOGLE",
+          "owner_text": "GOOGLE NET-142-250-0-0-1  Google LLC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=33))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "129.158.244.68",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-129-144-0-0-1",
+          "name": "OPC1",
+          "owner_text": "OPC1 NET-129-144-0-0-1  Oracle Corporation",
+          "status": "OK"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:OPC1",
+        "related_processes": [
+          "users:((\"code\",pid=300694,fd=30))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Proceso habitual; OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": false,
+        "ip": "104.18.32.47",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "CAPE Sandbox",
+          "pulse_count": 6,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "",
+          "name": "",
+          "owner_text": "",
+          "status": "Error RDAP: The read operation timed out"
+        },
+        "reason": "Sin API key | Sin API key | OTX pulses:6",
+        "related_processes": [],
+        "risk": "No verificado",
+        "status": "ℹ️ OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "155.133.249.164",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "US",
+          "handle": "155.133.224.0 - 155.133.255.255",
+          "name": "VALVE-L1",
+          "owner_text": "VALVE-L1 155.133.224.0 - 155.133.255.255 US Milton Ngan MN9099-MNT Valve Corporation RIPE-NCC-LEGACY-MNT ORG-NCC1-RIPE Valve Abuse Contact",
+          "status": "OK"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:VALVE-L1",
+        "related_processes": [
+          "users:((\"steam\",pid=128062,fd=169))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Proceso habitual; OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "185.199.111.133",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Honeypot Data – T-Pot - Sydney, Australia - June 2026",
+          "pulse_count": 50,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "US",
+          "handle": "185.199.108.0 - 185.199.111.255",
+          "name": "US-GITHUB-20170413",
+          "owner_text": "US-GITHUB-20170413 185.199.108.0 - 185.199.111.255 US GitHub Admin ORG-GI58-RIPE GitHub Network Operations ORG-GI58-RIPE GitHub, Inc. RIPE-NCC-HM-MNT ORG-NCC1-RIPE us-github-1-mnt ORG-GI58-RIPE GitHub Abuse ORG-GI58-RIPE",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:50 | RDAP:US-GITHUB-20170413",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=56))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "199.232.193.91",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "VBS[.]zip - 04.05.25",
+          "pulse_count": 1,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-199-232-0-0-1",
+          "name": "SKYCA-3",
+          "owner_text": "SKYCA-3 NET-199-232-0-0-1  Fastly, Inc.",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:1 | RDAP:SKYCA-3",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=34))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "104.18.39.21",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "SOHO Router Scanning",
+          "pulse_count": 15,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-104-16-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-104-16-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:15 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=25))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "172.64.155.209",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "SOHO Router Scanning",
+          "pulse_count": 31,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-172-64-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-172-64-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:31 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"code\",pid=300819,fd=67))",
+          "users:((\"codex\",pid=300926,fd=22))",
+          "users:((\"codex\",pid=300926,fd=41))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "104.208.16.90",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Credit: disable_duck [title: n0paste,  show paste :/ no problems] ",
+          "pulse_count": 18,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-104-208-0-0-1",
+          "name": "MSFT",
+          "owner_text": "MSFT NET-104-208-0-0-1  Microsoft Corporation",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:18 | RDAP:MSFT",
+        "related_processes": [
+          "users:((\"code\",pid=300694,fd=22))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "162.159.130.234",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Discord- DNS | Malvertizing | Ransom/Msilzilla (sifting IoC’s created by scnrscnr)",
+          "pulse_count": 24,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-162-158-0-0-1",
+          "name": "CLOUDFLARENET",
+          "owner_text": "CLOUDFLARENET NET-162-158-0-0-1  All Cloudflare abuse reporting can be done via https://www.cloudflare.com/abuse Geofeed: https://api.cloudflare.com/local-ip-ranges.csv Cloudflare, Inc. Abuse Abuse Admin Admin NOC NOC",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:24 | RDAP:CLOUDFLARENET",
+        "related_processes": [
+          "users:((\"Discord\",pid=305859,fd=25))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "104.26.4.68",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "Kelowna Mental Health",
+          "pulse_count": 1,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "",
+          "name": "",
+          "owner_text": "",
+          "status": "Error RDAP: The read operation timed out"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:1",
+        "related_processes": [
+          "users:((\"code\",pid=300694,fd=35))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Proceso habitual; OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": false,
+        "ip": "95.217.239.55",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "FI",
+          "handle": "95.217.232.0 - 95.217.239.255",
+          "name": "CLOUD-HEL1",
+          "owner_text": "CLOUD-HEL1 95.217.232.0 - 95.217.239.255 FI INFRA-AW Hetzner Online GmbH - Contact Role ORG-HOA1-RIPE HOS-GUN Hetzner Online GmbH Hetzner Online GmbH - Contact Role ORG-HOA1-RIPE",
+          "status": "OK"
+        },
+        "reason": "Sin API key | Sin API key | OTX pulses:0 | RDAP:CLOUD-HEL1",
+        "related_processes": [],
+        "risk": "No verificado",
+        "status": "ℹ️ Sin verificación externa completa",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "108.138.14.98",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "",
+          "name": "",
+          "owner_text": "",
+          "status": "Error RDAP: The read operation timed out"
+        },
+        "reason": "Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=43))",
+          "users:((\"brave\",pid=198348,fd=59))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ Proceso habitual; OTX informativo",
+        "trusted_infra": false,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "140.82.114.26",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "“Broken Seal” DocuSign-themed Delivery with Fileless Process Hollowing (Zeppelin/Bloat-A)",
+          "pulse_count": 3,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-140-82-112-0-1",
+          "name": "GITHU",
+          "owner_text": "GITHU NET-140-82-112-0-1  GitHub, Inc.",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:3 | RDAP:GITHU",
+        "related_processes": [
+          "users:((\"brave\",pid=198348,fd=83))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      },
+      {
+        "abuseipdb": {
+          "abuse_score": null,
+          "enabled": false,
+          "status": "Sin API key",
+          "total_reports": null
+        },
+        "common_process": true,
+        "ip": "13.107.253.34",
+        "otx": {
+          "enabled": true,
+          "first_pulse": "",
+          "pulse_count": 0,
+          "status": "OK"
+        },
+        "rdap": {
+          "country": "",
+          "handle": "NET-13-64-0-0-1",
+          "name": "MSFT",
+          "owner_text": "MSFT NET-13-64-0-0-1  Microsoft Corporation",
+          "status": "OK"
+        },
+        "reason": "Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:MSFT",
+        "related_processes": [
+          "users:((\"code\",pid=300694,fd=25))"
+        ],
+        "risk": "Bajo",
+        "status": "✅ CDN/servicio reconocido",
+        "trusted_infra": true,
+        "type": "pública",
+        "vt": {
+          "enabled": false,
+          "harmless": null,
+          "malicious": null,
+          "status": "Sin API key",
+          "suspicious": null
+        }
+      }
+    ],
+    "trusted_asn_owners": [
+      "cloudflare",
+      "google",
+      "google llc",
+      "microsoft",
+      "amazon",
+      "amazon.com",
+      "amazon technologies",
+      "akamai",
+      "fastly",
+      "discord",
+      "apple",
+      "github",
+      "mozilla",
+      "cloudfront",
+      "meta platforms",
+      "facebook"
+    ]
+  },
+  "malware_db": {
+    "aur_package_list": "data/package_list.txt",
+    "count": 1962,
+    "errors": [],
+    "malicious_npm": {
+      "cache": "data/malicious_npm_packages.txt",
+      "count": 4,
+      "errors": [],
+      "new_count": 0,
+      "new_entries": [],
+      "previous_count": 4,
+      "remote_count": 4,
+      "source": "remota fusionada con cache local",
+      "sources": [
+        {
+          "count": 4,
+          "url": "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
+        }
+      ]
+    },
+    "new_count": 0,
+    "new_entries": [],
+    "previous_count": 1962,
+    "remote_count": 1941,
+    "source": "remota fusionada con cache local",
+    "sources": [
+      {
+        "count": 1935,
+        "url": "https://md.archlinux.org/s/SxbqukK6IA/download"
+      },
+      {
+        "count": 0,
+        "url": "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
+      },
+      {
+        "count": 1619,
+        "url": "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt"
+      },
+      {
+        "count": 1935,
+        "url": "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt"
+      },
+      {
+        "count": 1359,
+        "url": "https://paste.cachyos.org/73a714d"
+      }
+    ]
+  },
+  "persistence": {},
+  "ports": {
+    "output": "Starting Nmap 7.99 ( https://nmap.org ) at 2026-06-15 20:38 -0300\nNmap scan report for localhost (127.0.0.1)\nHost is up (0.000043s latency).\nAll 1000 scanned ports on localhost (127.0.0.1) are in ignored states.\nNot shown: 1000 closed tcp ports (conn-refused)\n\nNmap done: 1 IP address (1 host up) scanned in 0.03 seconds",
+    "tool": "nmap"
+  },
+  "scan_type": "quick",
+  "services": {
+    "enabled": "UNIT FILE                          STATE   PRESET\ncachyos-iw-set-regdomain.path      enabled disabled\nananicy-cpp.service                enabled disabled\navahi-daemon.service               enabled disabled\nbluetooth.service                  enabled disabled\ngetty@.service                     enabled enabled\nintel_lpmd.service                 enabled disabled\nNetworkManager-dispatcher.service  enabled disabled\nNetworkManager-wait-online.service enabled disabled\nNetworkManager.service             enabled disabled\nplasmalogin.service                enabled disabled\nsystemd-resolved.service           enabled enabled\nsystemd-timesyncd.service          enabled enabled\nufw.service                        enabled disabled\navahi-daemon.socket                enabled disabled\nsystemd-resolved-monitor.socket    enabled disabled\nsystemd-resolved-varlink.socket    enabled disabled\nsystemd-userdbd.socket             enabled enabled\nremote-fs.target                   enabled enabled\ncachyos-rate-mirrors.timer         enabled disabled\nfstrim.timer                       enabled disabled\n\n20 unit files listed.",
+    "running": "UNIT                                 LOAD   ACTIVE SUB     DESCRIPTION\n  accounts-daemon.service              loaded active running Accounts Service\n  ananicy-cpp.service                  loaded active running Ananicy-Cpp - ANother Auto NICe daemon in C++\n  avahi-daemon.service                 loaded active running Avahi mDNS/DNS-SD Stack\n  bluetooth.service                    loaded active running Bluetooth service\n  dbus-broker.service                  loaded active running D-Bus System Message Bus\n  dirmngr@etc-pacman.d-gnupg.service   loaded active running GnuPG network certificate management daemon for /etc/pacman.d/gnupg\n  gpg-agent@etc-pacman.d-gnupg.service loaded active running GnuPG cryptographic agent and passphrase cache for /etc/pacman.d/gnupg\n  NetworkManager.service               loaded active running Network Manager\n  plasmalogin.service                  loaded active running Plasma Login Manager\n  polkit.service                       loaded active running Authorization Manager\n  power-profiles-daemon.service        loaded active running Power Profiles daemon\n  rtkit-daemon.service                 loaded active running RealtimeKit Scheduling Policy Service\n  systemd-journald.service             loaded active running Journal Service\n  systemd-logind.service               loaded active running User Login Management\n  systemd-resolved.service             loaded active running Network Name Resolution\n  systemd-timesyncd.service            loaded active running Network Time Synchronization\n  systemd-udevd.service                loaded active running Rule-based Manager for Device Events and Files\n  systemd-userdbd.service              loaded active running User Database Manager\n  udisks2.service                      loaded active running Disk Manager\n  upower.service                       loaded active running Daemon for power management\n  user@1000.service                    loaded active running User Manager for UID 1000\n\nLegend: LOAD   → Reflects whether the unit definition was properly loaded.\n        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.\n        SUB    → The low-level unit activation state, values depend on unit type.\n\n21 loaded units listed."
+  },
+  "system": {
+    "app": "AUR Sentinel Audit",
+    "arch_like": true,
+    "arquitectura": "x86_64",
+    "aur_helper": "yay",
+    "desktop": "KDE",
+    "distro": "CachyOS",
+    "fecha": "2026-06-15 20:36:45",
+    "hostname": "linux",
+    "kernel": "7.0.12-1-cachyos",
+    "logo": "⚡",
+    "python": "3.14.5",
+    "usuario": "root"
+  },
+  "tools": {
+    "arch-audit": true,
+    "bind-tools": false,
+    "curl": true,
+    "git": true,
+    "lsof": true,
+    "nmap": true,
+    "whois": true
+  }
+}

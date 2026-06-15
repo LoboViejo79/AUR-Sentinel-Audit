@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>AUR Sentinel Audit - Reporte</title>
+<style>
+body { margin:0; background:#07101d; color:#e8eef5; font-family:Arial, sans-serif; }
+header { padding:28px; background:#05080e; border-bottom:1px solid #243449; }
+h1 { margin:0; font-size:34px; }
+.container { padding:24px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+.card { background:#101a28; border:1px solid #26384f; border-radius:14px; padding:16px; margin-bottom:16px; }
+.kpi { font-size:34px; font-weight:bold; }
+table { width:100%; border-collapse:collapse; }
+th,td { padding:9px; border-bottom:1px solid #26384f; text-align:left; font-size:14px; }
+th { background:#0b1320; }
+a { color:#59b8ff; }
+pre { white-space:pre-wrap; max-height:420px; overflow:auto; background:#05080e; border:1px solid #26384f; padding:12px; border-radius:10px; }
+.badge { padding:5px 9px; border-radius:999px; font-weight:bold; display:inline-block; }
+.critical { background:#4d0000; color:#ffb3b3; border:1px solid #ff3131; }
+.high { background:#4a1a00; color:#ffc28a; border:1px solid #ff7a00; }
+.medium { background:#4d4100; color:#fff1a8; border:1px solid #ffd400; }
+.low { background:#00314d; color:#a6dcff; border:1px solid #1793ff; }
+.ok { background:#003a1d; color:#9fffc8; border:1px solid #00d26a; }
+.unknown { background:#333; color:#ddd; }
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ AUR Sentinel Audit</h1>
+<p>Reporte defensivo para Arch Linux y derivadas compatibles con AUR</p>
+</header>
+<div class="container">
+<div class="grid">
+<div class="card"><h2>Riesgo general</h2><div class="kpi"><span class="badge low">Bajo</span></div></div>
+<div class="card"><h2>Distro</h2><div class="kpi">CachyOS</div><p>7.0.12-1-cachyos</p></div>
+<div class="card"><h2>Paquetes AUR</h2><div class="kpi">5</div></div>
+<div class="card"><h2>Base incidente</h2><div class="kpi">1962</div><p>remota fusionada con cache local</p></div>
+<div class="card"><h2>Conexiones</h2><div class="kpi">62</div></div>
+</div>
+<div class="card"><h2>Guía para usuarios no técnicos</h2>
+<p>Este reporte revisa si los paquetes instalados desde AUR aparecen en listas comunitarias relacionadas con el incidente de malware. También revisa señales de riesgo como conexiones activas, servicios, puertos abiertos y vulnerabilidades conocidas.</p>
+<ul>
+<li><b>✅ No figura en base del incidente:</b> el paquete no apareció en las listas consultadas. No significa seguridad absoluta.</li>
+<li><b>❌ REPORTADO / INFECTADO:</b> el paquete coincide con una lista del incidente. Requiere revisión urgente.</li>
+<li><b>Riesgo bajo/medio/alto/crítico:</b> se calcula por patrones encontrados en PKGBUILD y coincidencias con listas.</li>
+<li><b>arch-audit:</b> revisa vulnerabilidades conocidas de paquetes de Arch.</li>
+</ul>
+</div>
+<div class="card"><h2>Sistema</h2><table><tr><th>app</th><td>AUR Sentinel Audit</td></tr><tr><th>arch_like</th><td>True</td></tr><tr><th>arquitectura</th><td>x86_64</td></tr><tr><th>aur_helper</th><td>yay</td></tr><tr><th>desktop</th><td>KDE</td></tr><tr><th>distro</th><td>CachyOS</td></tr><tr><th>fecha</th><td>2026-06-15 20:36:45</td></tr><tr><th>hostname</th><td>linux</td></tr><tr><th>kernel</th><td>7.0.12-1-cachyos</td></tr><tr><th>logo</th><td>⚡</td></tr><tr><th>python</th><td>3.14.5</td></tr><tr><th>usuario</th><td>root</td></tr></table></div>
+<div class="card"><h2>Paquetes AUR analizados</h2><p>✅ significa que el paquete instalado no figura en la base comunitaria consultada del incidente AUR. No reemplaza una revisión manual del PKGBUILD.</p><table><tr><th>Estado incidente</th><th>Paquete</th><th>Versión</th><th>AUR</th><th>Mantenedor</th><th>Riesgo</th><th>Puntaje</th><th>Motivos</th></tr>
+        <tr>
+          <td>✅ No figura en base del incidente</td>
+          <td>google-chrome</td>
+          <td>149.0.7827.114-1</td>
+          <td>no analizado</td>
+          <td></td>
+          <td><span class="badge unknown">No analizado</span></td>
+          <td></td>
+          <td>Sin patrones detectados</td>
+        </tr>
+        <tr>
+          <td>✅ No figura en base del incidente</td>
+          <td>hyper-headset-bin</td>
+          <td>1.9.1-1</td>
+          <td>no analizado</td>
+          <td></td>
+          <td><span class="badge unknown">No analizado</span></td>
+          <td></td>
+          <td>Sin patrones detectados</td>
+        </tr>
+        <tr>
+          <td>✅ No figura en base del incidente</td>
+          <td>microsoft-edge-stable-bin</td>
+          <td>149.0.4022.69-1</td>
+          <td>no analizado</td>
+          <td></td>
+          <td><span class="badge unknown">No analizado</span></td>
+          <td></td>
+          <td>Sin patrones detectados</td>
+        </tr>
+        <tr>
+          <td>✅ No figura en base del incidente</td>
+          <td>ttf-ms-fonts</td>
+          <td>2.0-12</td>
+          <td>no analizado</td>
+          <td></td>
+          <td><span class="badge unknown">No analizado</span></td>
+          <td></td>
+          <td>Sin patrones detectados</td>
+        </tr>
+        <tr>
+          <td>✅ No figura en base del incidente</td>
+          <td>visual-studio-code-bin</td>
+          <td>1.124.2-1</td>
+          <td>no analizado</td>
+          <td></td>
+          <td><span class="badge unknown">No analizado</span></td>
+          <td></td>
+          <td>Sin patrones detectados</td>
+        </tr></table></div>
+<div class="card"><h2>Chequeo comunitario aur-malware-check</h2><pre></pre></div>
+<div class="card"><h2>arch-audit</h2><pre>libxml2 is affected by denial of service. High risk!
+pam is affected by arbitrary filesystem access. High risk!
+coreutils is affected by information disclosure. Medium risk!
+cpio is affected by arbitrary command execution. Medium risk!
+giflib is affected by information disclosure. Medium risk!
+libheif is affected by information disclosure. Medium risk!
+libtiff is affected by unknown, denial of service. Medium risk!
+openjpeg2 is affected by arbitrary code execution. Medium risk!
+openssl is affected by arbitrary command execution, certificate verification bypass. Medium risk!
+openvpn is affected by information disclosure. Medium risk!
+perl is affected by signature forgery, directory traversal, unknown. Medium risk!
+systemd is affected by information disclosure. Medium risk!
+wget is affected by information disclosure. Medium risk!
+xdg-utils is affected by information disclosure. Medium risk!
+lua51 is affected by denial of service. Low risk!</pre></div>
+<div class="card"><h2>Integridad pacman -Qkk</h2><pre></pre></div>
+<div class="card"><h2>Conexiones activas</h2><table><tr><th>Estado</th><th>Local</th><th>Remoto</th><th>Proceso</th></tr><tr><td>ESTAB</td><td>192.168.1.247:51608</td><td>142.251.129.110:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=52))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:59396</td><td>142.251.128.138:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=62))</td></tr><tr><td>UNCONN</td><td>0.0.0.0:27036</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=159))</td></tr><tr><td>UNCONN</td><td>127.0.0.54:53</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=24))</td></tr><tr><td>UNCONN</td><td>127.0.0.53%lo:53</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=22))</td></tr><tr><td>ESTAB</td><td>192.168.1.247%enp8s0:68</td><td>192.168.1.1:67</td><td>users:((&quot;NetworkManager&quot;,pid=895,fd=26))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:32933</td><td>142.251.128.46:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=29))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:35276</td><td>181.30.232.237:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=53))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:36081</td><td>142.251.129.118:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=35))</td></tr><tr><td>UNCONN</td><td>224.0.0.251:5353</td><td>0.0.0.0:*</td><td>users:((&quot;steamwebhelper&quot;,pid=128287,fd=245))</td></tr><tr><td>UNCONN</td><td>224.0.0.251:5353</td><td>0.0.0.0:*</td><td>users:((&quot;brave&quot;,pid=198300,fd=248))</td></tr><tr><td>UNCONN</td><td>224.0.0.251:5353</td><td>0.0.0.0:*</td><td>users:((&quot;brave&quot;,pid=198348,fd=119))</td></tr><tr><td>UNCONN</td><td>0.0.0.0:5353</td><td>0.0.0.0:*</td><td>users:((&quot;avahi-daemon&quot;,pid=897,fd=12))</td></tr><tr><td>UNCONN</td><td>0.0.0.0:5353</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=17))</td></tr><tr><td>UNCONN</td><td>0.0.0.0:5355</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=13))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:44668</td><td>142.251.134.86:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=63))</td></tr><tr><td>UNCONN</td><td>*:1716</td><td>*:*</td><td>users:((&quot;kdeconnectd&quot;,pid=1578,fd=39))</td></tr><tr><td>UNCONN</td><td>[::]:5353</td><td>[::]:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=18))</td></tr><tr><td>UNCONN</td><td>[::]:5353</td><td>[::]:*</td><td>users:((&quot;avahi-daemon&quot;,pid=897,fd=13))</td></tr><tr><td>UNCONN</td><td>[::]:5355</td><td>[::]:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=15))</td></tr><tr><td>LISTEN</td><td>0.0.0.0:5355</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=14))</td></tr><tr><td>LISTEN</td><td>127.0.0.54:53</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=25))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:27060</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=94))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:57343</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=60))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:42321</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=119))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:43761</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=68))</td></tr><tr><td>LISTEN</td><td>127.0.0.53%lo:53</td><td>0.0.0.0:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=23))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:6463</td><td>0.0.0.0:*</td><td>users:((&quot;Discord&quot;,pid=305954,fd=118))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:33835</td><td>0.0.0.0:*</td><td>users:((&quot;code&quot;,pid=301631,fd=36))</td></tr><tr><td>LISTEN</td><td>0.0.0.0:27036</td><td>0.0.0.0:*</td><td>users:((&quot;steam&quot;,pid=128062,fd=161))</td></tr><tr><td>LISTEN</td><td>127.0.0.1:35431</td><td>0.0.0.0:*</td><td>users:((&quot;plasmashell&quot;,pid=166126,fd=47))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:45062</td><td>192.168.40.100:445</td><td></td></tr><tr><td>ESTAB</td><td>127.0.0.1:27060</td><td>127.0.0.1:48498</td><td>users:((&quot;steam&quot;,pid=128062,fd=155))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:39348</td><td>142.251.134.197:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=33))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:42321</td><td>127.0.0.1:41292</td><td>users:((&quot;steam&quot;,pid=128062,fd=52))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:37294</td><td>127.0.0.1:35431</td><td>users:((&quot;python3&quot;,pid=315739,fd=9))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:55998</td><td>129.158.244.68:443</td><td>users:((&quot;code&quot;,pid=300694,fd=30))</td></tr><tr><td>TIME-WAIT</td><td>192.168.1.247:32780</td><td>104.18.32.47:443</td><td></td></tr><tr><td>ESTAB</td><td>192.168.1.247:38137</td><td>155.133.249.164:443</td><td>users:((&quot;steam&quot;,pid=128062,fd=169))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:56284</td><td>185.199.111.133:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=56))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:36938</td><td>199.232.193.91:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=34))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:55878</td><td>127.0.0.1:43761</td><td>users:((&quot;steamwebhelper&quot;,pid=128337,fd=31))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:35431</td><td>127.0.0.1:37294</td><td>users:((&quot;plasmashell&quot;,pid=166126,fd=177))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:36880</td><td>104.18.39.21:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=25))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:48498</td><td>127.0.0.1:27060</td><td>users:((&quot;steamwebhelper&quot;,pid=128337,fd=50))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:46768</td><td>127.0.0.1:57343</td><td>users:((&quot;steamwebhelper&quot;,pid=128287,fd=94))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:45162</td><td>172.64.155.209:443</td><td>users:((&quot;codex&quot;,pid=300926,fd=41))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:47800</td><td>172.64.155.209:443</td><td>users:((&quot;code&quot;,pid=300819,fd=67))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:51722</td><td>172.64.155.209:443</td><td>users:((&quot;codex&quot;,pid=300926,fd=22))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:42916</td><td>104.208.16.90:443</td><td>users:((&quot;code&quot;,pid=300694,fd=22))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:38482</td><td>162.159.130.234:443</td><td>users:((&quot;Discord&quot;,pid=305859,fd=25))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:52990</td><td>104.26.4.68:443</td><td>users:((&quot;code&quot;,pid=300694,fd=35))</td></tr><tr><td>FIN-WAIT-1</td><td>192.168.1.247:40922</td><td>95.217.239.55:443</td><td></td></tr><tr><td>ESTAB</td><td>192.168.1.247:51052</td><td>108.138.14.98:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=59))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:51058</td><td>108.138.14.98:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=43))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:41292</td><td>127.0.0.1:42321</td><td>users:((&quot;steamwebhelper&quot;,pid=128337,fd=30))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:57343</td><td>127.0.0.1:46768</td><td>users:((&quot;steam&quot;,pid=128062,fd=128))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:44426</td><td>140.82.114.26:443</td><td>users:((&quot;brave&quot;,pid=198348,fd=83))</td></tr><tr><td>ESTAB</td><td>192.168.1.247:45334</td><td>13.107.253.34:443</td><td>users:((&quot;code&quot;,pid=300694,fd=25))</td></tr><tr><td>ESTAB</td><td>127.0.0.1:43761</td><td>127.0.0.1:55878</td><td>users:((&quot;steam&quot;,pid=128062,fd=138))</td></tr><tr><td>LISTEN</td><td>[::]:5355</td><td>[::]:*</td><td>users:((&quot;systemd-resolve&quot;,pid=620,fd=16))</td></tr><tr><td>LISTEN</td><td>*:1716</td><td>*:*</td><td>users:((&quot;kdeconnectd&quot;,pid=1578,fd=40))</td></tr></table></div>
+<div class="card"><h2>Reputación de IPs externas</h2><p>Se analizan IPs públicas detectadas en conexiones activas. VirusTotal y AbuseIPDB requieren API key; OTX se intenta consultar como fuente comunitaria. Las IP privadas/locales se marcan como locales.</p><table><tr><th>Estado</th><th>IP</th><th>Tipo</th><th>Riesgo</th><th>RDAP/ASN</th><th>VirusTotal</th><th>AbuseIPDB</th><th>OTX</th><th>Motivo</th><th>Procesos</th></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.129.110</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:7 fastly/trafficmgr</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:7 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=52))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.128.138</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=62))</td></tr><tr><td>✅ Conexión local/confiable</td><td>192.168.1.1</td><td>privada</td><td>Bajo</td><td></td><td></td><td></td><td></td><td>IP privada/local/reservada. No se consulta reputación externa.</td><td>users:((&quot;NetworkManager&quot;,pid=895,fd=26))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.128.46</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=29))</td></tr><tr><td>✅ Proceso habitual; OTX informativo</td><td>181.30.232.237</td><td>pública</td><td>Bajo</td><td>Error RDAP: HTTP Error 406: Not Acceptable</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0</td><td>users:((&quot;brave&quot;,pid=198348,fd=53))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.129.118</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=35))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.134.86</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=63))</td></tr><tr><td>✅ Conexión local/confiable</td><td>192.168.40.100</td><td>privada</td><td>Bajo</td><td></td><td></td><td></td><td></td><td>IP privada/local/reservada. No se consulta reputación externa.</td><td></td></tr><tr><td>✅ Conexión local/confiable</td><td>127.0.0.1</td><td>loopback</td><td>Bajo</td><td></td><td></td><td></td><td></td><td>IP privada/local/reservada. No se consulta reputación externa.</td><td>users:((&quot;plasmashell&quot;,pid=166126,fd=177)), users:((&quot;python3&quot;,pid=315739,fd=9)), users:((&quot;steam&quot;,pid=128062,fd=128)), users:((&quot;steam&quot;,pid=128062,fd=138)), users:((&quot;steam&quot;,pid=128062,fd=155))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>142.251.134.197</td><td>pública</td><td>Bajo</td><td>GOOGLE</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:GOOGLE</td><td>users:((&quot;brave&quot;,pid=198348,fd=33))</td></tr><tr><td>✅ Proceso habitual; OTX informativo</td><td>129.158.244.68</td><td>pública</td><td>Bajo</td><td>OPC1</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:OPC1</td><td>users:((&quot;code&quot;,pid=300694,fd=30))</td></tr><tr><td>ℹ️ OTX informativo</td><td>104.18.32.47</td><td>pública</td><td>No verificado</td><td>Error RDAP: The read operation timed out</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:6 CAPE Sandbox</td><td>Sin API key | Sin API key | OTX pulses:6</td><td></td></tr><tr><td>✅ Proceso habitual; OTX informativo</td><td>155.133.249.164</td><td>pública</td><td>Bajo</td><td>VALVE-L1</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:VALVE-L1</td><td>users:((&quot;steam&quot;,pid=128062,fd=169))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>185.199.111.133</td><td>pública</td><td>Bajo</td><td>US-GITHUB-20170413</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:50 Honeypot Data – T-Pot - Sydney, Australia - June 2026</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:50 | RDAP:US-GITHUB-20170413</td><td>users:((&quot;brave&quot;,pid=198348,fd=56))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>199.232.193.91</td><td>pública</td><td>Bajo</td><td>SKYCA-3</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:1 VBS[.]zip - 04.05.25</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:1 | RDAP:SKYCA-3</td><td>users:((&quot;brave&quot;,pid=198348,fd=34))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>104.18.39.21</td><td>pública</td><td>Bajo</td><td>CLOUDFLARENET</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:15 SOHO Router Scanning</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:15 | RDAP:CLOUDFLARENET</td><td>users:((&quot;brave&quot;,pid=198348,fd=25))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>172.64.155.209</td><td>pública</td><td>Bajo</td><td>CLOUDFLARENET</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:31 SOHO Router Scanning</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:31 | RDAP:CLOUDFLARENET</td><td>users:((&quot;code&quot;,pid=300819,fd=67)), users:((&quot;codex&quot;,pid=300926,fd=22)), users:((&quot;codex&quot;,pid=300926,fd=41))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>104.208.16.90</td><td>pública</td><td>Bajo</td><td>MSFT</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:18 Credit: disable_duck [title: n0paste,  show paste :/ no problems] </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:18 | RDAP:MSFT</td><td>users:((&quot;code&quot;,pid=300694,fd=22))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>162.159.130.234</td><td>pública</td><td>Bajo</td><td>CLOUDFLARENET</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:24 Discord- DNS | Malvertizing | Ransom/Msilzilla (sifting IoC’s created by scnrscnr)</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:24 | RDAP:CLOUDFLARENET</td><td>users:((&quot;Discord&quot;,pid=305859,fd=25))</td></tr><tr><td>✅ Proceso habitual; OTX informativo</td><td>104.26.4.68</td><td>pública</td><td>Bajo</td><td>Error RDAP: The read operation timed out</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:1 Kelowna Mental Health</td><td>Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:1</td><td>users:((&quot;code&quot;,pid=300694,fd=35))</td></tr><tr><td>ℹ️ Sin verificación externa completa</td><td>95.217.239.55</td><td>pública</td><td>No verificado</td><td>CLOUD-HEL1</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Sin API key | Sin API key | OTX pulses:0 | RDAP:CLOUD-HEL1</td><td></td></tr><tr><td>✅ Proceso habitual; OTX informativo</td><td>108.138.14.98</td><td>pública</td><td>Bajo</td><td>Error RDAP: The read operation timed out</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0</td><td>users:((&quot;brave&quot;,pid=198348,fd=43)), users:((&quot;brave&quot;,pid=198348,fd=59))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>140.82.114.26</td><td>pública</td><td>Bajo</td><td>GITHU</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:3 “Broken Seal” DocuSign-themed Delivery with Fileless Process Hollowing (Zeppelin/Bloat-A)</td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:3 | RDAP:GITHU</td><td>users:((&quot;brave&quot;,pid=198348,fd=83))</td></tr><tr><td>✅ CDN/servicio reconocido</td><td>13.107.253.34</td><td>pública</td><td>Bajo</td><td>MSFT</td><td>Sin API key</td><td>Sin API key</td><td>Pulses:0 </td><td>Proveedor/CDN reconocido por RDAP | Proceso habitual de usuario | Sin API key | Sin API key | OTX pulses:0 | RDAP:MSFT</td><td>users:((&quot;code&quot;,pid=300694,fd=25))</td></tr></table></div>
+<div class="card"><h2>Servicios en ejecución</h2><pre>UNIT                                 LOAD   ACTIVE SUB     DESCRIPTION
+  accounts-daemon.service              loaded active running Accounts Service
+  ananicy-cpp.service                  loaded active running Ananicy-Cpp - ANother Auto NICe daemon in C++
+  avahi-daemon.service                 loaded active running Avahi mDNS/DNS-SD Stack
+  bluetooth.service                    loaded active running Bluetooth service
+  dbus-broker.service                  loaded active running D-Bus System Message Bus
+  dirmngr@etc-pacman.d-gnupg.service   loaded active running GnuPG network certificate management daemon for /etc/pacman.d/gnupg
+  gpg-agent@etc-pacman.d-gnupg.service loaded active running GnuPG cryptographic agent and passphrase cache for /etc/pacman.d/gnupg
+  NetworkManager.service               loaded active running Network Manager
+  plasmalogin.service                  loaded active running Plasma Login Manager
+  polkit.service                       loaded active running Authorization Manager
+  power-profiles-daemon.service        loaded active running Power Profiles daemon
+  rtkit-daemon.service                 loaded active running RealtimeKit Scheduling Policy Service
+  systemd-journald.service             loaded active running Journal Service
+  systemd-logind.service               loaded active running User Login Management
+  systemd-resolved.service             loaded active running Network Name Resolution
+  systemd-timesyncd.service            loaded active running Network Time Synchronization
+  systemd-udevd.service                loaded active running Rule-based Manager for Device Events and Files
+  systemd-userdbd.service              loaded active running User Database Manager
+  udisks2.service                      loaded active running Disk Manager
+  upower.service                       loaded active running Daemon for power management
+  user@1000.service                    loaded active running User Manager for UID 1000
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+21 loaded units listed.</pre></div>
+<div class="card"><h2>Servicios habilitados</h2><pre>UNIT FILE                          STATE   PRESET
+cachyos-iw-set-regdomain.path      enabled disabled
+ananicy-cpp.service                enabled disabled
+avahi-daemon.service               enabled disabled
+bluetooth.service                  enabled disabled
+getty@.service                     enabled enabled
+intel_lpmd.service                 enabled disabled
+NetworkManager-dispatcher.service  enabled disabled
+NetworkManager-wait-online.service enabled disabled
+NetworkManager.service             enabled disabled
+plasmalogin.service                enabled disabled
+systemd-resolved.service           enabled enabled
+systemd-timesyncd.service          enabled enabled
+ufw.service                        enabled disabled
+avahi-daemon.socket                enabled disabled
+systemd-resolved-monitor.socket    enabled disabled
+systemd-resolved-varlink.socket    enabled disabled
+systemd-userdbd.socket             enabled enabled
+remote-fs.target                   enabled enabled
+cachyos-rate-mirrors.timer         enabled disabled
+fstrim.timer                       enabled disabled
+
+20 unit files listed.</pre></div>
+<div class="card"><h2>Persistencia básica</h2><pre>{}</pre></div>
+<div class="card"><h2>Fuentes de seguimiento y actualización</h2><p>Estas fuentes pueden actualizarse. Desde el programa puedes presionar <b>Actualizar listas</b> y luego ejecutar <b>Escaneo completo</b> nuevamente.</p><p>Base local/cache: data/aur_malware_package_list.txt</p><ul><li><b>CachyOS - AUR Compromised almost 2000 packages</b>: <a href="https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040">https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040</a><br>Hilo principal con seguimiento, advertencias y discusión técnica.</li><li><b>CachyOS - How to check compromised packages</b>: <a href="https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077">https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077</a><br>Publicación orientada a chequeo de exposición real. Indica que las listas siguen actualizándose.</li><li><b>Garuda Linux - Attack wave on AUR packages</b>: <a href="https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124">https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124</a><br>Aviso comunitario para usuarios Garuda/Arch sobre la ola de ataque.</li><li><b>Garuda / Chaotic-AUR reports</b>: <a href="https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238">https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238</a><br>Hilo de reportes y recompilación de paquetes.</li><li><b>GitHub - lenucksi/aur-malware-check</b>: <a href="https://github.com/lenucksi/aur-malware-check">https://github.com/lenucksi/aur-malware-check</a><br>Herramienta comunitaria y listas consolidadas para el ataque atomic-lockfile.</li><li><b>Arch aur-general official report thread</b>: <a href="https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/">https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/</a><br>Hilo oficial de aur-general donde Arch pidió reportar paquetes maliciosos en un solo lugar. El programa extrae nombres desde enlaces AUR del hilo.</li><li><b>Arch affected packages live list</b>: <a href="https://md.archlinux.org/s/SxbqukK6IA/download">https://md.archlinux.org/s/SxbqukK6IA/download</a><br>Lista oficial/viva mencionada por Arch con paquetes afectados conocidos. El programa la consulta automáticamente.</li><li><b>CSCS raw AUR vulnerable package list</b>: <a href="https://cscs.pastes.sh/raw/aurvulnlist20260611.txt">https://cscs.pastes.sh/raw/aurvulnlist20260611.txt</a><br>Lista raw citada por CachyOS para el one-liner de comparación con pacman -Qqm.</li><li><b>CachyOS paste package list</b>: <a href="https://paste.cachyos.org/73a714d">https://paste.cachyos.org/73a714d</a><br>Espejo/lista comunitaria usada como fuente adicional de paquetes reportados.</li><li><b>Arch Security Advisories</b>: <a href="https://security.archlinux.org/">https://security.archlinux.org/</a><br>Fuente oficial para vulnerabilidades conocidas de paquetes oficiales de Arch. arch-audit consulta esta información.</li></ul></div>
+<div class="card"><h2>Recomendaciones</h2><ul><li>Revisa PKGBUILD antes de instalar.</li><li>Prioriza repositorios oficiales.</li><li>Evita paquetes huérfanos o con cambios recientes sospechosos.</li><li>Ejecuta arch-audit periódicamente.</li><li>Repite el análisis porque las listas comunitarias pueden actualizarse.</li><li>No borres evidencia si sospechas infección.</li></ul></div>
+</div>
+</body>
+</html>
