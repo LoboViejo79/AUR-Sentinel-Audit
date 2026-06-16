@@ -47,6 +47,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QHeaderView,
     QAbstractItemView,
+    QSizePolicy,
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
@@ -1444,6 +1445,13 @@ def fit_size_to_screen(preferred_w, preferred_h, min_w=760, min_h=520, width_rat
     return width, height
 
 
+def prepare_qt_platform():
+    if os.environ.get("QT_QPA_PLATFORM"):
+        return
+    if os.environ.get("WAYLAND_DISPLAY"):
+        os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
+
+
 class MainWindow(QMainWindow):
     def __init__(self, start_minimized=False):
         super().__init__()
@@ -1464,6 +1472,8 @@ class MainWindow(QMainWindow):
         self.remove_processes = []
         self.control_buttons = []
         self.controls_layout = None
+        self.header_layout = None
+        self.header_is_compact = None
 
         self.setStyleSheet("""
         QMainWindow, QWidget { background-color: #07101d; color: #e8eef5; font-family: Arial; }
@@ -1472,6 +1482,21 @@ class MainWindow(QMainWindow):
         QPushButton { background-color: #1266aa; color: white; border: 0; border-radius: 8px; padding: 10px 14px; font-weight: bold; }
         QPushButton:hover { background-color: #1793ff; }
         QPushButton:disabled { background-color: #334155; color: #94a3b8; }
+        QPushButton#TableActionButton {
+            background-color: #334155;
+            color: #e8eef5;
+            border: 1px solid #4b617d;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-weight: bold;
+            min-height: 28px;
+        }
+        QPushButton#TableActionButton:hover { background-color: #475569; }
+        QPushButton#TableActionButton:disabled {
+            background-color: #233044;
+            color: #cbd5e1;
+            border-color: #40536d;
+        }
         QPlainTextEdit, QTableWidget {
             background-color: #0b1320;
             alternate-background-color: #101a28;
@@ -1505,6 +1530,7 @@ class MainWindow(QMainWindow):
 
         self.header = QGroupBox("Sistema detectado")
         h = QGridLayout(self.header)
+        self.header_layout = h
         self.logo = QLabel("🐧")
         self.logo.setObjectName("Logo")
         self.title = QLabel(APP_NAME)
@@ -1645,12 +1671,17 @@ class MainWindow(QMainWindow):
         table.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         table.horizontalHeader().setStretchLastSection(False)
         table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        table.horizontalHeader().setMinimumSectionSize(62)
         table.verticalHeader().setVisible(False)
+        table.verticalHeader().setDefaultSectionSize(42)
+        table.verticalHeader().setMinimumSectionSize(42)
+        table.setMinimumHeight(260)
 
     def reflow_controls(self):
         if not self.controls_layout or not self.control_buttons:
             return
         width = max(1, self.width())
+        self.reflow_header(width)
         if width < 820:
             columns = 2
         elif width < 1120:
@@ -1667,9 +1698,79 @@ class MainWindow(QMainWindow):
         for col in range(5):
             self.controls_layout.setColumnStretch(col, 1 if col < columns else 0)
 
+    def reflow_header(self, width):
+        if not self.header_layout:
+            return
+        compact = width < 820
+        if compact == self.header_is_compact:
+            return
+        self.header_is_compact = compact
+        for widget in (self.logo, self.title, self.sysinfo_label, self.risk_label):
+            self.header_layout.removeWidget(widget)
+        if compact:
+            self.header_layout.addWidget(self.logo, 0, 0, 1, 1)
+            self.header_layout.addWidget(self.title, 0, 1, 1, 1)
+            self.header_layout.addWidget(self.sysinfo_label, 1, 0, 1, 2)
+            self.header_layout.addWidget(self.risk_label, 2, 0, 1, 2)
+            self.header_layout.setColumnStretch(0, 0)
+            self.header_layout.setColumnStretch(1, 1)
+            self.header_layout.setColumnStretch(2, 0)
+        else:
+            self.header_layout.addWidget(self.logo, 0, 0, 2, 1)
+            self.header_layout.addWidget(self.title, 0, 1)
+            self.header_layout.addWidget(self.sysinfo_label, 1, 1)
+            self.header_layout.addWidget(self.risk_label, 0, 2, 2, 1)
+            self.header_layout.setColumnStretch(0, 0)
+            self.header_layout.setColumnStretch(1, 1)
+            self.header_layout.setColumnStretch(2, 0)
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.reflow_controls()
+        self.tune_table_columns()
+
+    def tune_table_columns(self):
+        if hasattr(self, "table_aur"):
+            self.tune_aur_table_columns()
+        if hasattr(self, "table_iprep"):
+            self.tune_iprep_table_columns()
+
+    def tune_aur_table_columns(self):
+        viewport_w = max(1, self.table_aur.viewport().width())
+        widths = {
+            0: max(150, min(240, int(viewport_w * 0.18))),
+            1: max(150, min(260, int(viewport_w * 0.18))),
+            2: max(120, min(210, int(viewport_w * 0.14))),
+            3: 76,
+            4: max(120, min(220, int(viewport_w * 0.14))),
+            5: 92,
+            6: 82,
+            8: 122,
+        }
+        header = self.table_aur.horizontalHeader()
+        for col, width in widths.items():
+            header.setSectionResizeMode(col, QHeaderView.Interactive)
+            self.table_aur.setColumnWidth(col, width)
+        header.setSectionResizeMode(7, QHeaderView.Stretch)
+
+    def tune_iprep_table_columns(self):
+        viewport_w = max(1, self.table_iprep.viewport().width())
+        widths = {
+            0: 120,
+            1: max(130, min(180, int(viewport_w * 0.14))),
+            2: 92,
+            3: 92,
+            4: max(150, min(240, int(viewport_w * 0.16))),
+            5: 128,
+            6: 144,
+            7: 132,
+            9: max(160, min(280, int(viewport_w * 0.18))),
+        }
+        header = self.table_iprep.horizontalHeader()
+        for col, width in widths.items():
+            header.setSectionResizeMode(col, QHeaderView.Interactive)
+            self.table_iprep.setColumnWidth(col, width)
+        header.setSectionResizeMode(8, QHeaderView.Stretch)
 
     def refresh_system_header(self):
         info = system_info()
@@ -2010,6 +2111,10 @@ class MainWindow(QMainWindow):
             pkg_name = str(p.get("name", "")).strip()
             removable = bool(p.get("incident_reported")) or p.get("risk_level") in ["Crítico", "Alto"]
             btn = QPushButton("Remover" if removable else "Seguro")
+            btn.setObjectName("TableActionButton")
+            btn.setMinimumSize(106, 30)
+            btn.setMaximumHeight(34)
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
             btn.setToolTip(
                 "Desinstalar este paquete y limpiar cache de yay/paru."
                 if removable
@@ -2018,9 +2123,8 @@ class MainWindow(QMainWindow):
             btn.setEnabled(removable and bool(pkg_name))
             btn.clicked.connect(lambda _checked=False, pkg=pkg_name, data=p: self.remove_package_dialog(pkg, data))
             self.table_aur.setCellWidget(row, 8, btn)
-        self.table_aur.resizeColumnsToContents()
-        self.table_aur.horizontalHeader().setSectionResizeMode(7, QHeaderView.Stretch)
-        self.table_aur.setColumnWidth(8, max(96, self.table_aur.columnWidth(8)))
+            self.table_aur.setRowHeight(row, 42)
+        self.tune_aur_table_columns()
 
         self.txt_connections.setPlainText(self.report.get("connections", {}).get("raw_limited", ""))
 
@@ -2058,8 +2162,7 @@ class MainWindow(QMainWindow):
                 if col in [0, 3]:
                     item.setTextAlignment(Qt.AlignCenter)
                 self.table_iprep.setItem(row, col, item)
-        self.table_iprep.resizeColumnsToContents()
-        self.table_iprep.horizontalHeader().setSectionResizeMode(8, QHeaderView.Stretch)
+        self.tune_iprep_table_columns()
 
         services = self.report.get("services", {})
         self.txt_services.setPlainText("SERVICIOS EN EJECUCIÓN\n\n" + services.get("running", "") + "\n\nSERVICIOS HABILITADOS\n\n" + services.get("enabled", ""))
@@ -2349,6 +2452,7 @@ exit "$REMOVE_CODE"
 
 
 def main():
+    prepare_qt_platform()
     start_minimized = any(arg in ("--tray", "--minimized", "--background") for arg in sys.argv[1:])
     qt_argv = [sys.argv[0]] + [arg for arg in sys.argv[1:] if arg not in ("--tray", "--minimized", "--background")]
     app = QApplication(qt_argv)

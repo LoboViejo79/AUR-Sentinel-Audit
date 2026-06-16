@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Local configuration and secrets
+config/api_keys.json
+*.env
+.env
+
+# Runtime logs and generated reports
+logs/*
+!logs/.gitkeep
+aur-check-*.log
+aur_sentinel_reportes/
+reports/*
+!reports/.gitkeep
+
+# Generated exports
+*.pdf
+
+# Editor and OS noise
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
