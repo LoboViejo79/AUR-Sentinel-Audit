@@ -1,24 +1,8 @@
---
-11
 123pan-bin
 1code
-2026
-26
-33
 8188eu-dkms
 8192eu-dkms-git
-83
-AUR
-Age
-If
-Last
-List
-Manage
-Powered
-Re:
-Sign
 abntex
-accounts.
 acpitool
 actual-ai
 adapta-gtk-theme-git
@@ -31,9 +15,11 @@ akonadi-git
 aksusbd
 albion-online-launcher-bin
 alfont
+algobox
 algorand-devtools-bin
 alienfx
 alienfx-lite
+alist-desktop-bin
 alock-git
 alternating-layouts-git
 alttab-git
@@ -91,12 +77,14 @@ arm-linux-gnueabihf-binutils
 arm-linux-gnueabihf-glibc-headers
 arm-linux-gnueabihf-linux-api-headers
 armitage-git
+arpoison
 artanis-git
 ascii-rain-git
 asciiworld-git
 astah-uml
 astro-editor-appimage
 asus-fan-dkms-git
+asymptote-git
 atlassian-confluence
 atlassian-plugin-sdk
 atolm-openbox-theme
@@ -109,6 +97,7 @@ audiere
 audiotube-git
 aura-browser
 aura-browser-git
+aurbs
 auryo
 autohand-cli
 autolabel
@@ -156,6 +145,7 @@ bitcoin-core-git
 bittube-wallet-gui
 blackcoin-git
 blackfire-agent
+blackfire-cli
 blender-plugin-bim-git
 blender-plugin-vectex
 bleufear-gtk-theme
@@ -208,6 +198,7 @@ ccase-bin
 cccc
 ccl-git
 ccminer-git
+ccsm-git
 ccsm-gtk3
 cdo
 centerim5-git
@@ -222,6 +213,7 @@ chez-scheme-git
 chia-cli-git
 chia-git
 chicken-srfi-180
+chinadns
 chipmachine
 chipmunk
 chisel
@@ -243,7 +235,9 @@ clevo-xsm-wmi
 cling-git
 cling-jupyter-git
 clipgrab-kde
+closure-hib
 cmake-modules-webos-git
+cmaptools
 cmospwd
 cmuclmtk
 cnijfilter-common
@@ -326,9 +320,11 @@ cvs2svn
 cwiid
 cxo
 cynthiune.app
+cypher-shell
 d1x-rebirth
 daala-git
 daggerfall-addons
+daggerfall-fixes
 dagu-bin
 dahdi-linux
 dalbum
@@ -336,6 +332,7 @@ darwinia
 dashcore
 datatype99
 davtools
+dbacl
 dbxcli
 ddgtk
 deepin-mail-bin
@@ -361,6 +358,8 @@ discord-qt
 distrho-ports-lv2-git
 dkopp
 dmg2dir
+docan-bin
+docan-unstable
 docker-gc-git
 docopts
 doctoc
@@ -415,6 +414,7 @@ elmerfem
 emacs-color-theme
 emacs-d-mode
 emacs-ess-git
+emacs-evil
 emacs-find-recursive
 emacs-icicles
 emacs-identica-mode
@@ -436,6 +436,7 @@ encryptr
 energyplus
 envoy-git
 envypn-font
+enyo-launcher
 eperiodique
 epson-inkjet-printer-escpr2-clos-bin
 errut
@@ -443,6 +444,7 @@ eslint-plugin-promise
 eslint-plugin-react
 eslint-plugin-vue
 esteem-bin
+esy
 etherpad-lite
 ethlint-git
 etmtk
@@ -473,6 +475,7 @@ fasd-git
 fastjet
 fastoggenc
 fatx
+faudio-git
 fbctrl
 fbff-git
 fcitx
@@ -490,6 +493,7 @@ fifth
 fifth-git
 filebot47
 findpkg-git
+findwild
 firebird
 firefox-babble
 firefox-esr-extension-privacybadger
@@ -501,6 +505,7 @@ firefox-extension-duckduckgo-privacy-essentials
 firefox-extension-gooreplacer
 firefox-floccus
 firefox-librejs
+firefox-patch-bin
 firefox-user-agent-switcher-and-manager-bin
 firmium-desktop-git
 firmware-mod-kit
@@ -541,7 +546,6 @@ fusion-icon
 fusion-icon-git
 futhark-bin
 fwlogwatch
-g2
 g3data
 gahshomar
 gaiaui-amd
@@ -552,6 +556,7 @@ ganyremote
 garlium-git
 garmindev
 gavrasm
+gbdk
 gcal
 gcccpuopt
 gcstar
@@ -597,6 +602,7 @@ gnome-battery-bench-git
 gnome-contacts-git
 gnome-directory-thumbnailer
 gnome-pass-search-provider-git
+gnome-pomodoro-git
 gnome-randr-rust
 gnome-rdp
 gnome-shell-extension-cpufreq-git
@@ -683,6 +689,7 @@ hearthstone-linux-gui-bin
 hepmc2
 hexchat-otr
 hfstospell
+hidapi-git
 hifive1-sdk-git
 hister-git
 hnswlib-git
@@ -707,6 +714,7 @@ hunter
 hydownloader-git
 hydrapaper-git
 hydrus-git
+hypatia
 hypervc-qt4
 hypr-git
 i2c-ch341-dkms
@@ -732,6 +740,7 @@ img2djvu-git
 inadyn
 inadyn-mt
 indicator-session
+infer
 infinity-background
 infnoise-openssl-git
 inform7
@@ -802,6 +811,7 @@ kexi
 kibana5
 kibana6
 kicad-library-ab2-git
+kicadlibrarian
 kiconedit
 kimageformats-git
 kio_gopher
@@ -867,6 +877,7 @@ libcss-git
 libcutefish
 libdill
 libdivecomputer-git
+libdmx
 libevdevc
 libffi-static
 libfprint-vfs_proprietary-git
@@ -887,6 +898,7 @@ libnbcompat
 libntru
 libnxml
 libopenaptx-git
+libparserutils-git
 libprelude
 libptp2
 libpurple-carbons-git
@@ -905,6 +917,7 @@ libretro-mednafen-supergrafx-git
 librewolf-extension-duckduckgo-privacy-essentials
 librewolf-extension-protonpass-bin
 librewolf-extension-vimiumc-bin
+librewolf-fix-bin
 libsingularity-git
 libsmi
 libspatialindex-git
@@ -949,6 +962,7 @@ linvst
 liri-cmake-shared-git
 liri-shell-git
 lite
+llama.cpp-sycl-f16-git
 lld19
 lll
 llvm-cbe-git
@@ -966,7 +980,6 @@ luazip5.1
 lucidvideo
 luksipc-git
 lure
-lv
 lwan-git
 lwxc-git
 lxdvdrip
@@ -1021,6 +1034,7 @@ milton-git
 mime-archpkg
 mimic-node-git
 minder-git
+minecraft-cracked
 minecraft-overviewer
 minecraft-overviewer-docs
 minecraft-overviewer-docs-git
@@ -1135,6 +1149,7 @@ nhentai-git
 nheqminer-cuda-git
 nikki
 nikola-git
+nikto-git
 nip2
 nipaplay-reload-bin
 nitrogen-git
@@ -1173,10 +1188,12 @@ nodejs-pkg
 nodejs-qunit
 nodejs-redis-commander
 nodejs-sails
+nodejs-serverless
 nodejs-shelljs
 nodejs-sweet
 nodejs-telegraf
 nodejs-triton
+nodejs-uglifycss
 nodejs-vim-debugger
 nodejs-webpack
 nodejs-ws
@@ -1190,6 +1207,7 @@ nox-bin
 npm-accel
 nrpe
 ntk-git
+nullfs-dkms-git
 num-utils
 numix-gtk-theme
 numix-themes-electric
@@ -1221,6 +1239,8 @@ ohcount
 ohcount-git
 olivia-git
 omnidb-server
+onivim2-git
+onvifviewer
 open-axiom
 open-hexagon-git
 openav-sorcer-git
@@ -1271,7 +1291,9 @@ parallel-python
 pass-cli
 pb-for-desktop
 pbincli
+pcb
 pcb2gcode
+pcmanx-gtk2-git
 pcsxr-git
 pdf2book
 pdf4qt-git
@@ -1302,10 +1324,13 @@ perl-term-extendedcolor
 perl-test-corpus-audio-mpd
 perl-text-aspell
 perl-xml-dom
+perl-xml-filter-domfilter-libxml
 petri-foo
+pfqueue
 pfstools
 pg2ipset-git
 pgcli-git
+pgdbf
 pgl
 pgpool-ii
 phantom-wallet
@@ -1338,9 +1363,11 @@ pktd
 pktstat
 planck
 plank-theme-arc
+plasma-theme-helium
 plasma5-wallpapers-video-git
 plasma6-applets-fancytasks
 plasma6-splashscreen-kuro-git
+plataro-icons
 playhouse
 playhouse-git
 plex-media-player-custom
@@ -1355,6 +1382,7 @@ plymouth-theme-monoarch
 pmount-safe-removal
 pmus-git
 png22pnm
+pngrim-git
 pnmixer-gtk3
 poi-nightly-bin
 poldi
@@ -1366,14 +1394,17 @@ premake-git
 prisma4postgres-bin
 privacy-redirect-git
 profile-sync-daemon-zen
+proteus-hib
 protoc-gen-ts
 psi-plus-plugins-git
 psi-plus-resources-git
+psychopy
 pulseaudio-dlna-cygn
 pulsemixer-git
 puppy-browser
 purescript
 purple-facebook-git
+purple-gowhatsapp
 pygist-git
 pyload-ng
 pymacs
@@ -1395,6 +1426,7 @@ python-celery
 python-cerealizer
 python-chompjs
 python-ci-info
+python-cmake-bin
 python-coolname
 python-coremltools
 python-cu2qu-git
@@ -1416,22 +1448,27 @@ python-future
 python-g4f
 python-gattlib
 python-gmpy
+python-graphsrv
 python-hist
 python-histoprint
 python-hnswlib-git
 python-hsaudiotag3k
+python-imagebackup
 python-iminuit
 python-iminuit-docs
 python-iso3166
 python-isounidecode
 python-isr-git
 python-jsmin
+python-json2html
 python-json2xml
 python-kiss-headers
+python-llama-cpp-hip
 python-luckydonald-utils
 python-miio
 python-milvus-lite-bin
 python-mmcif
+python-monkeytype
 python-monotonic
 python-mplhep
 python-mplhep_data
@@ -1455,6 +1492,7 @@ python-pylsp-rope
 python-pymilvus
 python-pyrogram
 python-pysocks-git
+python-pytest-filedata
 python-quamash-git
 python-rembg
 python-resvg
@@ -1469,6 +1507,7 @@ python-starsessions
 python-steamcontroller-git
 python-tabledata
 python-tarantool
+python-tmpl
 python-tradingeconomics
 python-uhi
 python-uproot
@@ -1550,6 +1589,7 @@ rdup
 reactphysics3d
 reactphysics3d-docs
 realtimeconfigquickscan-git
+redocly
 refind-theme-dreary-git
 remotemouse
 rep-gtk
@@ -1561,6 +1601,7 @@ rgain3
 rhythmbox-git
 rhythmbox-llyrics
 rhythmbox-plugin-alternative-toolbar-git
+rigsofrods-bin
 rimworld
 rke
 rkflashtool
@@ -1598,12 +1639,14 @@ ruby-kramdown-rfc2629
 ruby-libvirt
 ruby-mpd
 ruby-oauth
+ruby-open_uri_redirections
 ruby-parslet-1.5
 ruby-pusher-client
 ruby-pygments.rb
 ruby-railties
 ruby-rubysdl
 ruby-selenium-webdriver
+ruby-snapsync
 ruby-sprockets
 ruby-sprockets-rails
 ruby-thread_safe
@@ -1618,6 +1661,7 @@ saleae-logic
 saleae-logic-beta
 salt-git
 samba-mounter-git
+samsung-ssd-dc-toolkit
 samsungctl
 sandlock
 satanic-icon-themes
@@ -1627,6 +1671,7 @@ scallion
 scangearmp-mg3500series
 scanssh
 scavenger
+scd
 scm
 screenpipe-bin
 sdcc-bin
@@ -1675,6 +1720,7 @@ so-synth-lv2-git
 soapyptezuka
 socnetv
 softethervpn-client-manager
+softmaker-office-2012-bin
 sogo2
 solara-kernel-headers
 soldat-git
@@ -1684,6 +1730,8 @@ sonosano
 sope2
 soundpaad-bin
 soxt
+spacebar-client-git
+spacebar-git
 spigot-plugin-essentials
 splashtop-business
 spring-ba
@@ -1717,14 +1765,17 @@ sundtek
 svu
 sway-screenshot
 sway-xkb-switcher
+swig2
 switchboard-git
 sword-svn
 sync-my-l2p
 syslog-notify
+systemtap-git
 t4kcommon
 tack
 taipan
 taoframework
+tapeutape
 tarantool
 taskunifier
 tasmotizer-git
@@ -1745,6 +1796,7 @@ textsuggest-git
 thinkingrock
 thinkwatt
 this
+thomaswasalone-hib
 thunar-nextcloud-plugin
 thunderbird-conversations
 thunderbird-sieve
@@ -1782,19 +1834,23 @@ trytond
 tsm
 tsocks-tools
 ttcp
+ttf-all-ms-fonts
 ttf-consolas-powerline
 ttf-dejavu-emojiless
 ttf-dejavu-sans-mono-powerline-git
+ttf-dotsies
 ttf-essays
 ttf-impallari-dosis
 ttf-lcsmith-typewriter
 ttf-material-design-icons-git
+ttf-ms-fonts-all
 ttf-mutant-emoji
 ttf-pizzadude-bullets
 ttf-roboto-fontconfig
 ttf2eot
 tunacode-cli
 tup-git
+tuwunel-git
 tuxboot-git
 tvnamer
 tweeny
@@ -1804,6 +1860,7 @@ udev-browse-git
 udfclient
 uget-integrator
 ukui-notification-daemon
+ultimatevocalremovergui-git
 undistract-me-git
 uni2ascii
 unifi-beta
@@ -1815,6 +1872,7 @@ urho3d
 urjtag-git
 usbmount
 v2ray-geoip-custom
+vaping
 vapoursynth-preview-git
 vbam-git
 vcp-git
@@ -1824,6 +1882,7 @@ vectr
 veracrypt-git
 verso-git
 vertx
+vesktop-bin-patched
 vidalia
 vidcutter
 video-contact-sheet
@@ -1846,6 +1905,7 @@ vim-pandoc-syntax-git
 vim-pathogen-git
 vim-perl-support
 vim-pythonhelper
+vim-railscasts
 vim-solidity
 vim-vital
 vinetto
@@ -1937,7 +1997,6 @@ yii
 yofrankie
 yokadi
 yt6801-dkms
-yy
 z-push
 zafiro-icon-theme
 zaproxy-weekly
@@ -1945,10 +2004,12 @@ zathura-gruvbox-git
 zdoom-git
 zecwallet
 zelda-roth-se
+zen-browser-patched-bin
 zenbound2
 zenmonitor
 zenphoto
 zenpower-dkms
+zenta-git
 zephyr
 zeroinstall-injector
 zerx-lab-dida-bin

@@ -72,6 +72,9 @@ ARCH_OFFICIAL_AFFECTED_LIST_URL = "https://md.archlinux.org/s/SxbqukK6IA/downloa
 AUR_GENERAL_REPORT_THREAD_URL = "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
 LENUCKSI_PACKAGE_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt"
 LENUCKSI_MALICIOUS_NPM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
+LENUCKSI_CHAOS_RAT_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt"
+LENUCKSI_RUSSIAN_SPAM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt"
+LENUCKSI_IOCS_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt"
 CSCS_AUR_VULN_LIST_URL = "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt"
 CACHYOS_AUR_VULN_LIST_URL = "https://paste.cachyos.org/73a714d"
 
@@ -79,6 +82,8 @@ MALWARE_DB_URLS = [
     ARCH_OFFICIAL_AFFECTED_LIST_URL,
     AUR_GENERAL_REPORT_THREAD_URL,
     LENUCKSI_PACKAGE_LIST_URL,
+    LENUCKSI_CHAOS_RAT_LIST_URL,
+    LENUCKSI_RUSSIAN_SPAM_LIST_URL,
     CSCS_AUR_VULN_LIST_URL,
     CACHYOS_AUR_VULN_LIST_URL,
 ]
@@ -89,6 +94,17 @@ LOCAL_MALICIOUS_NPM_LIST = Path("data/malicious_npm_packages.txt")
 MALICIOUS_NPM_DB_URLS = [
     LENUCKSI_MALICIOUS_NPM_LIST_URL,
 ]
+
+AT_RISK_AUR_ACCOUNTS = {
+    "krisztinavarga": "confirmado: ola atomic-lockfile/lockfile-js",
+    "franziskaweber": "confirmado: paquetes con npm malicioso",
+    "tobiaswesterburg": "confirmado: paquetes con npm malicioso",
+    "ellenmyklebust": "confirmado: paquetes con npm malicioso",
+    "custodiatovar": "confirmado: ola js-digest/bun",
+    "veramagalhaes": "confirmado: ola js-digest/bun",
+    "ivonahruskova": "monitoreo: adopciones masivas reportadas",
+    "simongeisler": "monitoreo: adopciones masivas reportadas",
+}
 
 
 CONFIG_DIR = Path("config")
@@ -152,7 +168,22 @@ INCIDENT_INFO_LINKS = [
     {
         "name": "GitHub - lenucksi/aur-malware-check",
         "url": "https://github.com/lenucksi/aur-malware-check",
-        "note": "Herramienta comunitaria y listas consolidadas para el ataque atomic-lockfile."
+        "note": "Herramienta comunitaria y listas consolidadas para atomic-lockfile, js-digest, Chaos RAT y campañas relacionadas."
+    },
+    {
+        "name": "lenucksi - Chaos RAT package list",
+        "url": LENUCKSI_CHAOS_RAT_LIST_URL,
+        "note": "Lista de paquetes AUR reportados en una campaña separada asociada a Chaos RAT."
+    },
+    {
+        "name": "lenucksi - Russian spam package list",
+        "url": LENUCKSI_RUSSIAN_SPAM_LIST_URL,
+        "note": "Lista de paquetes reportados por inyección de spam en archivos de shell del usuario."
+    },
+    {
+        "name": "lenucksi - IOCs",
+        "url": LENUCKSI_IOCS_URL,
+        "note": "Indicadores técnicos: hashes, C2 onion, temp.sh, systemd, eBPF y artefactos npm/bun."
     },
     {
         "name": "Arch aur-general official report thread",
@@ -199,6 +230,11 @@ SUSPICIOUS_PATTERNS = {
     "dd": r"\bdd\s+if=",
     "eBPF/rootkit": r"\b(eBPF|bpftrace|bpftool|rootkit)\b",
     "descarga remota": r"(https?|ftp)://",
+    "modifica shell rc": r"(\.bashrc|\.zshrc|\.profile|\.bash_profile|\.config/fish/config\.fish)",
+    "systemd persistente": r"(Restart\s*=\s*always|RestartSec\s*=\s*30|\.config/systemd/user|/etc/systemd/system)",
+    "temp.sh upload": r"(temp\.sh|POST\s+/upload)",
+    "onion/C2": r"(\.onion|POST\s+/api/agent|socks5?|127\.0\.0\.1)",
+    "monero staging": r"(/usr/bin/monero-wallet-gui|monero-wallet-gui)",
 }
 
 RISK_WEIGHTS = {
@@ -219,6 +255,11 @@ RISK_WEIGHTS = {
     "dd": 20,
     "eBPF/rootkit": 45,
     "descarga remota": 8,
+    "modifica shell rc": 40,
+    "systemd persistente": 45,
+    "temp.sh upload": 45,
+    "onion/C2": 45,
+    "monero staging": 35,
 }
 
 
@@ -259,9 +300,14 @@ AUR_MALWARE_SIGNATURES = {
     "BPF_rootkit_indicators": {
         "patterns": [
             r"/sys/fs/bpf/hidden_",
+            r"/sys/fs/bpf/hidden_pids",
+            r"/sys/fs/bpf/hidden_names",
+            r"/sys/fs/bpf/hidden_inodes",
             r"\bbpftool\b",
             r"\bbpftrace\b",
             r"\bebpf\b",
+            r"\bCAP_BPF\b",
+            r"\bCAP_SYS_ADMIN\b",
             r"\brootkit\b",
         ],
         "risk": "Crítico",
@@ -276,6 +322,32 @@ AUR_MALWARE_SIGNATURES = {
         "risk": "Alto",
         "score": 70,
         "description": "Uso sospechoso de hooks/dependencias durante instalación.",
+    },
+    "Shell_config_injection": {
+        "patterns": [
+            r"(echo|printf|cat)\s+.*>>\s*['\"]?\$?\{?HOME\}?/\.?(bashrc|zshrc|profile)",
+            r"(echo|printf|cat)\s+.*>>\s*['\"]?~/\.(bashrc|zshrc|profile)",
+            r"\.config/fish/config\.fish",
+            r"\bchsh\b.*(bash|zsh|fish)",
+        ],
+        "risk": "Alto",
+        "score": 80,
+        "description": "Posible inyección en archivos de inicio de shell del usuario.",
+    },
+    "Known_IOC_atomic_campaign": {
+        "patterns": [
+            r"6144D433F8A0316869877B5F834C801251BBB936E5F1577C5680878C7443C98B",
+            r"7883BDA1FF15425F2DBE622C45A3AE105DDFA6175009BBF0B0CAD9BF5C79B316",
+            r"47893d9badc38c54b71321263ce8178c1abb10396e0aadf9793e61ec8829e204",
+            r"42B59FDBE1B72895B2951412222EBF40",
+            r"olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid\.onion",
+            r"\btemp\.sh\b",
+            r"POST\s+/api/agent",
+            r"POST\s+/upload",
+        ],
+        "risk": "Crítico",
+        "score": 100,
+        "description": "Indicador conocido del malware AUR atomic-lockfile/js-digest.",
     },
 }
 
@@ -503,6 +575,45 @@ def analyze_pkgbuild_text(text):
         "hits": hits,
         "signature_hits": signature_result.get("signature_hits", []),
     }
+
+
+RISK_ORDER = {"No analizado": 0, "Sin alertas": 0, "Bajo": 1, "Medio": 2, "Alto": 3, "Crítico": 4}
+
+
+def merge_analysis_result(result, analysis):
+    previous_level = result.get("risk_level", "No analizado")
+    new_level = analysis.get("risk_level", "No analizado")
+    previous_score = int(result.get("risk_score") or 0)
+    new_score = int(analysis.get("risk_score") or 0)
+
+    result["risk_score"] = max(previous_score, new_score)
+    if RISK_ORDER.get(new_level, 0) >= RISK_ORDER.get(previous_level, 0):
+        result["risk_level"] = new_level
+    else:
+        result["risk_level"] = previous_level
+
+    result["hits"] = list(result.get("hits", [])) + list(analysis.get("hits", []))
+    if analysis.get("signature_hits"):
+        result["signature_hits"] = list(result.get("signature_hits", [])) + list(analysis.get("signature_hits", []))
+    return result
+
+
+def apply_aur_account_risk(result):
+    maintainer = str(result.get("maintainer") or "").strip().lower()
+    if maintainer in AT_RISK_AUR_ACCOUNTS:
+        note = AT_RISK_AUR_ACCOUNTS[maintainer]
+        severity = "Crítico" if note.startswith("confirmado") else "Alto"
+        score = 95 if severity == "Crítico" else 70
+        result["risk_score"] = max(int(result.get("risk_score") or 0), score)
+        if RISK_ORDER.get(severity, 0) > RISK_ORDER.get(result.get("risk_level", "No analizado"), 0):
+            result["risk_level"] = severity
+        result.setdefault("hits", []).append({
+            "pattern": f"MANTENEDOR REPORTADO: {maintainer}",
+            "weight": score,
+            "count": 1,
+            "description": note,
+        })
+    return result
 
 
 def run_arch_audit():
@@ -903,10 +1014,34 @@ def extract_packages_from_arch_mailing_thread(html_text):
     ]
     for pat in patterns:
         for m in re.findall(pat, html_text, flags=re.IGNORECASE):
-            pkg = m.strip().strip("/").strip()
-            if pkg and not pkg.lower().startswith(("http", "www")):
+            pkg = m.strip().strip("/").strip().lower()
+            if is_valid_package_token(pkg) and not pkg.startswith(("http", "www")):
                 names.add(pkg)
     return names
+
+
+PACKAGE_NAME_RE = re.compile(r"[a-z0-9][a-z0-9@._+\-]{1,}[a-z0-9+]")
+PACKAGE_STOPWORDS = {
+    "about", "accounts", "actualizado", "age", "agent", "almost", "arch", "archive", "archives", "aur",
+    "attack", "bash", "cache", "cachyos", "campaign", "check", "cleanup", "code",
+    "comments", "compromised", "content", "current", "download", "example", "failed",
+    "forum", "general", "github", "html", "http", "https", "infected", "install",
+    "last", "linux", "list", "lists", "malware", "maintainer", "manage", "master",
+    "message", "names", "packages", "package", "page", "powered", "profile",
+    "reported", "rootkit", "script", "shell", "sign", "source", "status",
+    "thread", "updated", "users", "warning",
+}
+
+
+def is_valid_package_token(token):
+    token = token.strip().strip("'\"`.,;:()[]{}<>")
+    if not PACKAGE_NAME_RE.fullmatch(token):
+        return False
+    if token.isdigit() or token in PACKAGE_STOPWORDS:
+        return False
+    if len(token) > 80:
+        return False
+    return True
 
 
 def parse_package_names_from_text(text):
@@ -915,10 +1050,12 @@ def parse_package_names_from_text(text):
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        # Evita capturar comandos enteros. Toma solo tokens compatibles con nombres de paquetes.
-        token = re.split(r"[\s,;]+", line)[0].strip().strip("'\"")
-        if re.fullmatch(r"[A-Za-z0-9@._+:-]{2,}", token):
-            names.add(token)
+        line = re.sub(r"<[^>]+>", " ", line)
+        line = line.split("#", 1)[0]
+        for token in re.split(r"[\s,;]+", line):
+            token = token.strip().strip("'\"`.,;:()[]{}<>").lower()
+            if is_valid_package_token(token):
+                names.add(token)
     return names
 
 
@@ -1109,9 +1246,9 @@ def run_external_aur_malware_check():
             args = [
                 "bash",
                 str(script_path),
-                "--refresh",
                 "--full",
                 "--all-time",
+                f"--package-list={LOCAL_AUR_PACKAGE_LIST}",
                 f"--malicious-npm-list={LOCAL_MALICIOUS_NPM_LIST}",
             ]
             elevated = False
@@ -1363,11 +1500,12 @@ class ScanWorker(QThread):
                         "incident_reported": is_reported,
                         "incident_status": "❌ REPORTADO / INFECTADO" if is_reported else "✅ No figura en base del incidente",
                     })
+                    result = apply_aur_account_risk(result)
                     if rpc.get("exists") == "sí":
                         text, url = download_pkgbuild(p["name"])
                         if text:
                             a = analyze_pkgbuild_text(text)
-                            result.update(a)
+                            result = merge_analysis_result(result, a)
                             result["pkgbuild_url"] = url
                     analysis.append(result)
                     if result.get("risk_level") in ["Alto", "Crítico"]:

@@ -48,6 +48,28 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 
 Esta sección resume los cambios recientes incorporados a **AUR Sentinel Audit** para mejorar la actualización de fuentes, la detección de paquetes AUR comprometidos y la revisión defensiva del sistema.
 
+### 2026-06-17 - Fuentes nuevas, limpieza de listas y técnicas adicionales
+
+- El botón **Actualizar listas** fusiona también listas comunitarias separadas para campañas asociadas a **Chaos RAT** y a inyección de spam en archivos de shell.
+- Se endureció el parser de listas para evitar falsos positivos tomados de HTML, encabezados o palabras sueltas.
+- El checker comunitario integrado usa la lista local fusionada `data/package_list.txt`, por lo que compara contra todas las campañas descargadas por el programa.
+- Se agregaron firmas para detectar:
+
+```text
+inyección en .bashrc/.zshrc/.profile/config.fish
+systemd persistente con Restart=always
+temp.sh / POST /upload
+C2 .onion / POST /api/agent / SOCKS local
+hashes conocidos del payload deps/js-digest
+/sys/fs/bpf/hidden_pids
+/sys/fs/bpf/hidden_names
+/sys/fs/bpf/hidden_inodes
+/usr/bin/monero-wallet-gui
+```
+
+- Se agregaron mantenedores/cuentas AUR reportadas como señal de riesgo defensiva.
+- La cache local se actualizó a **2023 entradas** fusionadas.
+
 ### 2026-06-15 - Mejoras de fuentes y detección AUR
 
 - Se separó la base de **paquetes AUR comprometidos** de la lista de **paquetes npm/bun usados como payload**.
@@ -59,7 +81,7 @@ Esta sección resume los cambios recientes incorporados a **AUR Sentinel Audit**
 - Se actualizó el checker comunitario para ejecutarse con:
 
 ```text
---refresh --full --all-time
+--full --all-time --package-list=data/package_list.txt
 ```
 
 - El checker comunitario intenta usar `sudo -n` si el sistema ya permite sudo no interactivo. Si no está disponible, continúa sin sudo y avisa que la revisión eBPF/rootkit puede ser parcial.
@@ -92,6 +114,9 @@ data/aur_check-v2.sh                   Checker comunitario integrado
 https://github.com/lenucksi/aur-malware-check
 https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
 https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt
 https://md.archlinux.org/s/SxbqukK6IA/download
 https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
 https://paste.cachyos.org/73a714d
@@ -175,6 +200,8 @@ Fuentes principales usadas por el programa:
 ```text
 https://github.com/lenucksi/aur-malware-check
 https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt
 https://md.archlinux.org/s/SxbqukK6IA/download
 https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
 https://paste.cachyos.org/73a714d
@@ -592,6 +619,9 @@ Escaneo completo
 - lenucksi/aur-malware-check: https://github.com/lenucksi/aur-malware-check
 - Lista AUR de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
 - Lista npm/bun de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+- Lista Chaos RAT de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt
+- Lista spam shell de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt
+- IOCs técnicos de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt
 - Arch HedgeDoc live list usada por `aur_check-v2.sh`: https://md.archlinux.org/s/SxbqukK6IA/download
 - CSCS raw list citada por CachyOS: https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
 - CachyOS paste/lista comunitaria: https://paste.cachyos.org/73a714d
@@ -743,10 +773,24 @@ bun add js-digest
 gsdigest
 src/hooks/deps
 /sys/fs/bpf/hidden_
+/sys/fs/bpf/hidden_pids
+/sys/fs/bpf/hidden_names
+/sys/fs/bpf/hidden_inodes
 bpftool
 bpftrace
 eBPF
 rootkit
+.bashrc
+.zshrc
+.profile
+.config/fish/config.fish
+Restart=always
+RestartSec=30
+temp.sh
+POST /upload
+POST /api/agent
+.onion
+monero-wallet-gui
 ```
 
 Si encuentra una firma crítica, marca el paquete como:
