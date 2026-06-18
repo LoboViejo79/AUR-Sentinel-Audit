@@ -149,11 +149,21 @@ https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/
 
 ### Interfaz principal
 
+Vista general de la aplicación después de un escaneo, con la clasificación de riesgo y la detección de un paquete reportado en la base del incidente.
+
 ![Interfaz principal de AUR Sentinel Audit](screenshots/0001.png)
 
-### Resultados y reportes
+### Guardia AUR antes de instalar
 
-![Resultados y reportes de AUR Sentinel Audit](screenshots/0002.png)
+Ejemplo del wrapper de instalación segura bloqueando un paquete AUR que aparece en las listas comunitarias de paquetes reportados.
+
+![Guardia AUR bloqueando una instalación reportada](screenshots/0002.png)
+
+### Consola del proceso y notificaciones
+
+Escaneo finalizado con riesgo bajo, consola detallada de cada etapa, generación automática de reportes y notificaciones de la Guardia AUR.
+
+![Consola del proceso y notificaciones de AUR Sentinel Audit](screenshots/0003.png)
 
 ---
 
