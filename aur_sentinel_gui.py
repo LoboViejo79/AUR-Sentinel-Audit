@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import datetime as dt
 import getpass
+import hashlib
 import html
 import ipaddress
 import json
@@ -24,8 +25,8 @@ import sys
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from PySide6.QtCore import Qt, QThread, Signal, QTimer, QProcess
-from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor, QColor, QPalette
+from PySide6.QtCore import Qt, QThread, Signal, QTimer, QProcess, QMarginsF
+from PySide6.QtGui import QFont, QTextDocument, QIcon, QAction, QCursor, QColor, QPalette, QPageLayout
 from PySide6.QtPrintSupport import QPrinter
 from PySide6.QtWidgets import (
     QApplication,
@@ -75,6 +76,9 @@ LENUCKSI_MALICIOUS_NPM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/au
 LENUCKSI_CHAOS_RAT_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt"
 LENUCKSI_RUSSIAN_SPAM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt"
 LENUCKSI_IOCS_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt"
+A1RM4X_REPOSITORY_URL = "https://github.com/A1RM4X/AUR-Malware-2026.06-Check"
+A1RM4X_SCRIPT_URL = "https://github.com/A1RM4X/AUR-Malware-2026.06-Check/blob/main/check-aur-vuln.sh"
+IOCTL_ANALYSIS_URL = "https://ioctl.fail/preliminary-analysis-of-aur-malware/"
 CSCS_AUR_VULN_LIST_URL = "https://cscs.pastes.sh/raw/aurvulnlist20260611.txt"
 CACHYOS_AUR_VULN_LIST_URL = "https://paste.cachyos.org/73a714d"
 
@@ -169,6 +173,21 @@ INCIDENT_INFO_LINKS = [
         "name": "GitHub - lenucksi/aur-malware-check",
         "url": "https://github.com/lenucksi/aur-malware-check",
         "note": "Herramienta comunitaria y listas consolidadas para atomic-lockfile, js-digest, Chaos RAT y campañas relacionadas."
+    },
+    {
+        "name": "GitHub - A1RM4X/AUR-Malware-2026.06-Check",
+        "url": A1RM4X_REPOSITORY_URL,
+        "note": "Inspiración y referencia MIT para el análisis profundo de hashes, persistencia, C2, historiales y caches de construcción."
+    },
+    {
+        "name": "A1RM4X - check-aur-vuln.sh",
+        "url": A1RM4X_SCRIPT_URL,
+        "note": "Script de referencia del que se adaptaron comprobaciones defensivas de solo lectura."
+    },
+    {
+        "name": "ioctl.fail - Preliminary analysis of AUR malware",
+        "url": IOCTL_ANALYSIS_URL,
+        "note": "Análisis técnico de los indicadores del payload deps, persistencia y rootkit eBPF."
     },
     {
         "name": "lenucksi - Chaos RAT package list",
@@ -993,6 +1012,315 @@ def persistence_checks():
     }
 
 
+DEPS_MALWARE_SHA256 = "6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b"
+DEPS_MALWARE_MD5 = "42b59fdbe1b72895b2951412222ebf40"
+DEPS_C2_ONION = "olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid.onion"
+DEPS_UPLOAD_HOST = "temp.sh"
+
+
+def file_hashes(path):
+    sha256 = hashlib.sha256()
+    md5 = hashlib.md5(usedforsecurity=False)
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            sha256.update(chunk)
+            md5.update(chunk)
+    return sha256.hexdigest(), md5.hexdigest()
+
+
+def add_deep_finding(report, check, severity, summary, path="", evidence=""):
+    report["findings"].append({
+        "check": check,
+        "severity": severity,
+        "summary": summary,
+        "path": str(path),
+        "evidence": evidence,
+    })
+
+
+def scan_deps_binaries(report, emit):
+    emit("  [deps/hash] Buscando archivos llamados 'deps' en el sistema...")
+    cmd = [
+        "find", "/", "-name", "deps", "-type", "f",
+        "-not", "-path", "/proc/*",
+        "-not", "-path", "/sys/*",
+        "-not", "-path", "/dev/*",
+        "-not", "-path", "/mnt/*",
+        "-not", "-path", "/media/*",
+        "-not", "-path", "/run/*",
+        "-print",
+    ]
+    result = run_cmd(cmd, timeout=180)
+    if result["returncode"] == 124:
+        report["partial"].append("La búsqueda global de archivos deps agotó el tiempo de 180 segundos.")
+    elif result["returncode"] == 127:
+        report["partial"].append("No se encontró el comando find; no se pudo buscar el payload deps.")
+    candidates = [Path(line) for line in result["stdout"].splitlines() if line.strip()]
+    report["checks"]["deps_candidates"] = len(candidates)
+    emit(f"  [deps/hash] Candidatos encontrados: {len(candidates)}")
+    if len(candidates) > 500:
+        report["partial"].append("Se limitaron los hashes a los primeros 500 candidatos llamados deps.")
+    for candidate in candidates[:500]:
+        try:
+            sha256, md5 = file_hashes(candidate)
+        except (OSError, PermissionError) as exc:
+            report["partial"].append(f"No se pudo calcular hash de {candidate}: {exc}")
+            continue
+        if sha256 == DEPS_MALWARE_SHA256 or md5 == DEPS_MALWARE_MD5:
+            add_deep_finding(
+                report,
+                "Binario deps",
+                "Crítico",
+                "El archivo coincide con un hash conocido del payload deps.",
+                candidate,
+                f"SHA256={sha256} MD5={md5}",
+            )
+            emit(f"  [ALERTA CRÍTICA] Hash conocido detectado: {candidate}")
+
+
+def scan_systemd_persistence(report, emit):
+    emit("  [systemd] Buscando Restart=always + RestartSec=30...")
+    roots = [Path("/var/lib"), Path("/etc/systemd/system"), Path.home() / ".config/systemd/user"]
+    checked = 0
+    for root in roots:
+        if not root.exists():
+            continue
+        try:
+            services = root.rglob("*.service")
+            for service in services:
+                checked += 1
+                text = read_file(service)
+                if re.search(r"^\s*Restart\s*=\s*always\s*$", text, re.I | re.M) and re.search(
+                    r"^\s*RestartSec\s*=\s*30(?:s)?\s*$", text, re.I | re.M
+                ):
+                    add_deep_finding(
+                        report,
+                        "Persistencia systemd",
+                        "Alto",
+                        "Servicio con la combinación de persistencia observada en la campaña.",
+                        service,
+                        "Restart=always + RestartSec=30",
+                    )
+                    emit(f"  [ALERTA] Servicio systemd sospechoso: {service}")
+        except (OSError, PermissionError) as exc:
+            report["partial"].append(f"No se pudo recorrer {root}: {exc}")
+    report["checks"]["systemd_services_checked"] = checked
+
+
+def scan_ebpf_artifacts(report, emit):
+    emit("  [eBPF] Revisando mapas fijados hidden_pids/hidden_names/hidden_inodes...")
+    bpf_root = Path("/sys/fs/bpf")
+    if not bpf_root.exists():
+        report["partial"].append("/sys/fs/bpf no está montado o no es accesible.")
+        return
+    if not os.access(bpf_root, os.R_OK | os.X_OK):
+        report["partial"].append("/sys/fs/bpf existe, pero el usuario actual no tiene acceso suficiente.")
+    for name in ("hidden_pids", "hidden_names", "hidden_inodes"):
+        artifact = bpf_root / name
+        try:
+            exists = artifact.exists()
+        except PermissionError:
+            report["partial"].append(f"Sin permisos para revisar {artifact}.")
+            continue
+        if exists:
+            add_deep_finding(
+                report,
+                "Rootkit eBPF",
+                "Crítico",
+                "Se encontró un mapa eBPF con nombre asociado al rootkit de la campaña.",
+                artifact,
+                name,
+            )
+            emit(f"  [ALERTA CRÍTICA] Artefacto eBPF: {artifact}")
+
+
+def scan_c2_connections(report, emit):
+    emit("  [red/C2] Buscando temp.sh y el host onion conocido en conexiones activas...")
+    result = run_cmd(["ss", "-tunap"], timeout=90)
+    pattern = re.compile(rf"({re.escape(DEPS_UPLOAD_HOST)}|{re.escape(DEPS_C2_ONION)})", re.I)
+    matches = [line for line in result["stdout"].splitlines() if pattern.search(line)]
+    for line in matches:
+        add_deep_finding(
+            report,
+            "Conexión C2",
+            "Crítico",
+            "Conexión activa coincidente con un indicador de red conocido.",
+            evidence=line[:1000],
+        )
+        emit("  [ALERTA CRÍTICA] Coincidencia C2 en conexiones activas.")
+    report["checks"]["c2_connection_matches"] = len(matches)
+
+
+def scan_credential_artifacts(report, emit):
+    emit("  [credenciales] Revisando known_hosts e historiales sin copiar su contenido...")
+    targets = [
+        (Path.home() / ".ssh/known_hosts", re.compile(rf"(temp\.sh|{re.escape(DEPS_C2_ONION)})", re.I)),
+        (Path.home() / ".bash_history", re.compile(rf"(curl|wget).*(temp\.sh|{re.escape(DEPS_C2_ONION)})|npm\s+install\s+atomic-lockfile", re.I)),
+        (Path.home() / ".zsh_history", re.compile(rf"(curl|wget).*(temp\.sh|{re.escape(DEPS_C2_ONION)})|npm\s+install\s+atomic-lockfile", re.I)),
+        (Path.home() / ".local/share/fish/fish_history", re.compile(rf"(curl|wget).*(temp\.sh|{re.escape(DEPS_C2_ONION)})|npm\s+install\s+atomic-lockfile", re.I)),
+    ]
+    for path, pattern in targets:
+        if not path.is_file():
+            continue
+        try:
+            matched = any(pattern.search(line) for line in path.read_text(encoding="utf-8", errors="ignore").splitlines())
+        except (OSError, PermissionError) as exc:
+            report["partial"].append(f"No se pudo revisar {path}: {exc}")
+            continue
+        if matched:
+            add_deep_finding(
+                report,
+                "Rastro de credenciales/C2",
+                "Alto",
+                "El archivo contiene un indicador conocido. Su contenido no se guarda en el reporte.",
+                path,
+                "Coincidencia booleana; contenido omitido por privacidad.",
+            )
+            emit(f"  [ALERTA] Indicador localizado en {path}")
+
+
+def scan_monero_staging(report, emit):
+    emit("  [staging] Revisando modificación reciente de /usr/bin/monero-wallet-gui...")
+    path = Path("/usr/bin/monero-wallet-gui")
+    if not path.is_file():
+        return
+    try:
+        age_days = max(0, int((dt.datetime.now().timestamp() - path.stat().st_mtime) // 86400))
+    except OSError as exc:
+        report["partial"].append(f"No se pudo consultar {path}: {exc}")
+        return
+    report["checks"]["monero_wallet_age_days"] = age_days
+    if age_days < 30:
+        add_deep_finding(
+            report,
+            "Ruta de staging",
+            "Alto",
+            f"monero-wallet-gui fue modificado hace {age_days} días; requiere verificar propietario e integridad.",
+            path,
+            f"age_days={age_days}",
+        )
+        emit(f"  [ALERTA] {path} fue modificado hace {age_days} días.")
+
+
+def scan_aur_build_caches(report, emit):
+    emit("  [yay/paru] Buscando hooks preinstall que invoquen deps...")
+    checked = 0
+    pattern = re.compile(r'"preinstall"\s*:\s*"[^"]*\bdeps\b', re.I)
+    for cache_root in (Path.home() / ".cache/yay", Path.home() / ".cache/paru"):
+        if not cache_root.exists():
+            continue
+        try:
+            for package_json in cache_root.rglob("package.json"):
+                checked += 1
+                if pattern.search(read_file(package_json)):
+                    add_deep_finding(
+                        report,
+                        "Cache de construcción AUR",
+                        "Crítico",
+                        "package.json contiene un hook preinstall que referencia deps.",
+                        package_json,
+                        "preinstall -> deps",
+                    )
+                    emit(f"  [ALERTA CRÍTICA] Hook preinstall sospechoso: {package_json}")
+        except (OSError, PermissionError) as exc:
+            report["partial"].append(f"No se pudo recorrer {cache_root}: {exc}")
+    report["checks"]["package_json_checked"] = checked
+
+
+def scan_npm_bun_installations(report, malicious_packages, emit):
+    emit("  [npm/bun] Revisando instalaciones globales/locales y caches conocidas...")
+    checked_names = sorted(set(malicious_packages) | {"atomic-lockfile", "lockfile-js", "js-digest", "nextfile-js"})
+    evidence_seen = set()
+
+    if which("npm"):
+        for command, scope in ((["npm", "list", "-g", "--depth=0"], "global"), (["npm", "list", "--depth=0"], "local")):
+            result = run_cmd(command, timeout=90)
+            for pkg in checked_names:
+                if re.search(rf"(?<![\w-]){re.escape(pkg)}@", result["stdout"], re.I):
+                    key = ("npm", scope, pkg)
+                    if key not in evidence_seen:
+                        evidence_seen.add(key)
+                        add_deep_finding(
+                            report,
+                            "Paquete npm malicioso",
+                            "Crítico",
+                            f"{pkg} aparece instalado en el ámbito npm {scope}.",
+                            evidence=f"npm {scope}: {pkg}",
+                        )
+                        emit(f"  [ALERTA CRÍTICA] npm {scope}: {pkg}")
+
+    cache_roots = [Path.home() / ".npm", Path.home() / ".bun/install/cache"]
+    for cache_root in cache_roots:
+        if not cache_root.exists():
+            continue
+        for pkg in checked_names:
+            try:
+                matches = list(cache_root.glob(f"**/*{pkg}*"))[:10]
+            except (OSError, PermissionError) as exc:
+                report["partial"].append(f"No se pudo revisar {cache_root}: {exc}")
+                continue
+            for match in matches:
+                key = (str(cache_root), pkg, str(match))
+                if key in evidence_seen:
+                    continue
+                evidence_seen.add(key)
+                add_deep_finding(
+                    report,
+                    "Cache npm/bun",
+                    "Alto",
+                    f"Se encontró una ruta de cache coincidente con {pkg}.",
+                    match,
+                    f"cache={cache_root}",
+                )
+                emit(f"  [ALERTA] Cache coincidente con {pkg}: {match}")
+    report["checks"]["malicious_npm_names_checked"] = len(checked_names)
+
+
+def deep_malware_scan(malicious_packages=None, emit=None):
+    """
+    Comprobaciones defensivas de solo lectura adaptadas de la metodología MIT de:
+    https://github.com/A1RM4X/AUR-Malware-2026.06-Check
+    y de los indicadores documentados por ioctl.fail.
+    """
+    emit = emit or (lambda _message: None)
+    report = {
+        "source": A1RM4X_REPOSITORY_URL,
+        "script_reference": A1RM4X_SCRIPT_URL,
+        "analysis_reference": IOCTL_ANALYSIS_URL,
+        "started_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "checks": {},
+        "findings": [],
+        "partial": [],
+    }
+    scanners = [
+        ("1/8", scan_deps_binaries),
+        ("2/8", scan_systemd_persistence),
+        ("3/8", scan_ebpf_artifacts),
+        ("4/8", scan_c2_connections),
+        ("5/8", scan_credential_artifacts),
+        ("6/8", scan_monero_staging),
+        ("7/8", scan_aur_build_caches),
+    ]
+    for number, scanner in scanners:
+        emit(f"[PROFUNDO {number}] {scanner.__name__}")
+        scanner(report, emit)
+    emit("[PROFUNDO 8/8] scan_npm_bun_installations")
+    scan_npm_bun_installations(report, malicious_packages or [], emit)
+    report["finished_at"] = dt.datetime.now().isoformat(timespec="seconds")
+    report["issue_count"] = len(report["findings"])
+    severity_order = {"Crítico": 4, "Alto": 3, "Medio": 2, "Bajo": 1}
+    report["risk"] = max(
+        (item["severity"] for item in report["findings"]),
+        key=lambda value: severity_order.get(value, 0),
+        default="Sin alertas",
+    )
+    emit(
+        f"[PROFUNDO] Finalizado: {report['issue_count']} hallazgo(s), "
+        f"{len(report['partial'])} comprobación(es) parcial(es)."
+    )
+    return report
+
+
 def installed_tools_status():
     return {tool: which(tool) for tool in RECOMMENDED_TOOLS}
 
@@ -1285,11 +1613,12 @@ def run_external_aur_malware_check():
 def general_risk(report):
     levels = [p.get("risk_level") for p in report.get("aur_analysis", [])]
     ip_risks = [x.get("risk") for x in report.get("ip_reputation", {}).get("results", [])]
-    if "Crítico" in levels:
+    deep_risk = report.get("deep_malware_scan", {}).get("risk")
+    if "Crítico" in levels or deep_risk == "Crítico":
         return "Crítico"
-    if "Alto" in levels or "Alto" in ip_risks:
+    if "Alto" in levels or "Alto" in ip_risks or deep_risk == "Alto":
         return "Alto"
-    if "Medio" in levels or "Medio" in ip_risks:
+    if "Medio" in levels or "Medio" in ip_risks or deep_risk == "Medio":
         return "Medio"
     return "Bajo"
 
@@ -1319,7 +1648,7 @@ def generate_pdf_from_html(html_path, pdf_path):
         printer = QPrinter(QPrinter.HighResolution)
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setOutputFileName(str(pdf_path))
-        printer.setPageMargins(12, 12, 12, 12, QPrinter.Millimeter)
+        printer.setPageMargins(QMarginsF(12, 12, 12, 12), QPageLayout.Millimeter)
         doc.print_(printer)
         return True, ""
     except Exception as e:
@@ -1336,6 +1665,7 @@ def generate_html(report):
     sysinfo = report.get("system", {})
     aur = report.get("aur_analysis", [])
     connections = report.get("connections", {}).get("connections", [])
+    deep_scan = report.get("deep_malware_scan", {})
     risk = general_risk(report)
 
     rows = ""
@@ -1376,6 +1706,16 @@ def generate_html(report):
         rdap_txt = rdap.get("name") or rdap.get("handle") or rdap.get("status", "")
         ip_rows += f"<tr><td>{esc(r.get('status'))}</td><td>{esc(r.get('ip'))}</td><td>{esc(r.get('type'))}</td><td>{esc(r.get('risk'))}</td><td>{esc(rdap_txt)}</td><td>{esc(vt_txt)}</td><td>{esc(abuse_txt)}</td><td>{esc(otx_txt)}</td><td>{esc(r.get('reason'))}</td><td>{esc(', '.join(r.get('related_processes', [])))}</td></tr>"
 
+    deep_rows = ""
+    for finding in deep_scan.get("findings", []):
+        deep_rows += (
+            f"<tr><td>{esc(finding.get('severity'))}</td>"
+            f"<td>{esc(finding.get('check'))}</td>"
+            f"<td>{esc(finding.get('summary'))}</td>"
+            f"<td>{esc(finding.get('path'))}</td>"
+            f"<td>{esc(finding.get('evidence'))}</td></tr>"
+        )
+
     html_doc = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1415,6 +1755,7 @@ pre {{ white-space:pre-wrap; max-height:420px; overflow:auto; background:#05080e
 <div class="card"><h2>Paquetes AUR</h2><div class="kpi">{len(aur)}</div></div>
 <div class="card"><h2>Base incidente</h2><div class="kpi">{esc(report.get('malware_db', {}).get('count', 0))}</div><p>{esc(report.get('malware_db', {}).get('source', ''))}</p></div>
 <div class="card"><h2>Conexiones</h2><div class="kpi">{len(connections)}</div></div>
+<div class="card"><h2>Análisis profundo</h2><div class="kpi">{esc(deep_scan.get('issue_count', 0))}</div><p>Riesgo: {esc(deep_scan.get('risk', 'No ejecutado'))}</p></div>
 </div>
 <div class="card"><h2>Guía para usuarios no técnicos</h2>
 <p>Este reporte revisa si los paquetes instalados desde AUR aparecen en listas comunitarias relacionadas con el incidente de malware. También revisa señales de riesgo como conexiones activas, servicios, puertos abiertos y vulnerabilidades conocidas.</p>
@@ -1428,6 +1769,10 @@ pre {{ white-space:pre-wrap; max-height:420px; overflow:auto; background:#05080e
 <div class="card"><h2>Sistema</h2><table>{''.join(f'<tr><th>{esc(k)}</th><td>{esc(v)}</td></tr>' for k,v in sysinfo.items())}</table></div>
 <div class="card"><h2>Paquetes AUR analizados</h2><p>✅ significa que el paquete instalado no figura en la base comunitaria consultada del incidente AUR. No reemplaza una revisión manual del PKGBUILD.</p><table><tr><th>Estado incidente</th><th>Paquete</th><th>Versión</th><th>AUR</th><th>Mantenedor</th><th>Riesgo</th><th>Puntaje</th><th>Motivos</th></tr>{rows}</table></div>
 <div class="card"><h2>Chequeo comunitario aur-malware-check</h2><pre>{esc(report.get('external_aur_check', {}).get('output'))}</pre></div>
+<div class="card"><h2>Análisis profundo inspirado en A1RM4X</h2>
+<p>Referencia: <a href="{esc(A1RM4X_REPOSITORY_URL)}">{esc(A1RM4X_REPOSITORY_URL)}</a></p>
+<table><tr><th>Severidad</th><th>Comprobación</th><th>Hallazgo</th><th>Ruta</th><th>Evidencia</th></tr>{deep_rows}</table>
+<h3>Comprobaciones parciales</h3><pre>{esc(chr(10).join(deep_scan.get('partial', [])) or 'Ninguna')}</pre></div>
 <div class="card"><h2>arch-audit</h2><pre>{esc(report.get('arch_audit', {}).get('output'))}</pre></div>
 <div class="card"><h2>Integridad pacman -Qkk</h2><pre>{esc(chr(10).join(report.get('integrity', {}).get('warnings', [])) or report.get('integrity', {}).get('raw_limited', ''))}</pre></div>
 <div class="card"><h2>Conexiones activas</h2><table><tr><th>Estado</th><th>Local</th><th>Remoto</th><th>Proceso</th></tr>{conn_rows}</table></div>
@@ -1435,6 +1780,7 @@ pre {{ white-space:pre-wrap; max-height:420px; overflow:auto; background:#05080e
 <div class="card"><h2>Servicios en ejecución</h2><pre>{esc(report.get('services', {}).get('running'))}</pre></div>
 <div class="card"><h2>Servicios habilitados</h2><pre>{esc(report.get('services', {}).get('enabled'))}</pre></div>
 <div class="card"><h2>Persistencia básica</h2><pre>{esc(json.dumps(report.get('persistence', {}), indent=2, ensure_ascii=False))}</pre></div>
+<div class="card"><h2>Consola del proceso</h2><pre>{esc(chr(10).join(report.get('process_log', [])))}</pre></div>
 <div class="card"><h2>Fuentes de seguimiento y actualización</h2><p>Estas fuentes pueden actualizarse. Desde el programa puedes presionar <b>Actualizar listas</b> y luego ejecutar <b>Escaneo completo</b> nuevamente.</p><p>Base local/cache: {esc(report.get('incident_sources', {}).get('local_cache', 'data/aur_malware_package_list.txt'))}</p><ul>{''.join(f'<li><b>{esc(i.get("name"))}</b>: <a href="{esc(i.get("url"))}">{esc(i.get("url"))}</a><br>{esc(i.get("note"))}</li>' for i in report.get('incident_sources', {}).get('links', []))}</ul></div>
 <div class="card"><h2>Recomendaciones</h2><ul><li>Revisa PKGBUILD antes de instalar.</li><li>Prioriza repositorios oficiales.</li><li>Evita paquetes huérfanos o con cambios recientes sospechosos.</li><li>Ejecuta arch-audit periódicamente.</li><li>Repite el análisis porque las listas comunitarias pueden actualizarse.</li><li>No borres evidencia si sospechas infección.</li></ul></div>
 </div>
@@ -1460,29 +1806,57 @@ class ScanWorker(QThread):
 
     def run(self):
         try:
-            report = {"system": system_info(), "scan_type": self.mode, "tools": installed_tools_status(), "incident_sources": incident_sources_status()}
+            process_log = []
+
+            def trace(message):
+                stamped = f"[{dt.datetime.now().strftime('%H:%M:%S')}] {message}"
+                process_log.append(stamped)
+                self.log.emit(message)
+
+            report = {
+                "system": system_info(),
+                "scan_type": self.mode,
+                "tools": installed_tools_status(),
+                "incident_sources": incident_sources_status(),
+                "process_log": process_log,
+            }
+            trace("=" * 72)
+            trace(f"AUR Sentinel Audit — escaneo {self.mode}")
+            trace("Modo de operación: sólo lectura; no se eliminarán ni modificarán archivos.")
+            trace("=" * 72)
             self.progress.emit(5, "Detectando sistema y herramientas...")
-            self.log.emit("Sistema detectado: " + report["system"]["distro"])
+            trace("Sistema detectado: " + report["system"]["distro"])
+            trace(
+                f"Kernel: {report['system']['kernel']} | Usuario: {report['system']['usuario']} | "
+                f"AUR helper: {report['system']['aur_helper']}"
+            )
+            trace("Herramientas: " + ", ".join(
+                f"{name}={'sí' if available else 'no'}" for name, available in report["tools"].items()
+            ))
 
             self.progress.emit(8, "Actualizando base de paquetes reportados...")
+            trace("[ETAPA 1] Consultando y fusionando listas comunitarias...")
             malware_db, malware_meta = update_malware_db()
             report["malware_db"] = malware_meta
-            self.log.emit(f"Base malware: {malware_meta.get('count', 0)} entradas ({malware_meta.get('source')})")
-            self.log.emit("Fuentes: lenucksi/aur-malware-check + hilos CachyOS/Garuda en pestaña Fuentes")
+            trace(f"Base malware: {malware_meta.get('count', 0)} entradas ({malware_meta.get('source')})")
+            trace("Fuentes: Arch, lenucksi, CSCS, CachyOS y aur-general; detalles en la pestaña Fuentes.")
             if malware_meta.get("errors"):
-                self.log.emit("Aviso: algunas fuentes no pudieron consultarse. Se usará cache local si existe.")
+                trace(f"[AVISO] {len(malware_meta['errors'])} fuente(s) no respondieron; se conserva la cache local.")
 
             self.progress.emit(12, "Listando paquetes AUR/external con pacman -Qm...")
+            trace("[ETAPA 2] Ejecutando: pacman -Qm")
             packages = get_aur_packages()
             report["aur_packages"] = packages
-            self.log.emit(f"Paquetes AUR/externos detectados: {len(packages)}")
+            trace(f"Paquetes AUR/externos detectados: {len(packages)}")
 
             analysis = []
             if self.mode == "full":
+                trace("[ETAPA 3] Consultando AUR y analizando PKGBUILD paquete por paquete...")
                 total = max(len(packages), 1)
                 for i, p in enumerate(packages, start=1):
                     pct = 12 + int((i / total) * 38)
                     self.progress.emit(pct, f"Analizando PKGBUILD: {p['name']}")
+                    trace(f"  [{i}/{len(packages)}] {p['name']}: API AUR + PKGBUILD + firmas")
                     rpc = aur_rpc_info(p["name"])
                     text, url = ("", "")
                     result = dict(p)
@@ -1509,8 +1883,9 @@ class ScanWorker(QThread):
                             result["pkgbuild_url"] = url
                     analysis.append(result)
                     if result.get("risk_level") in ["Alto", "Crítico"]:
-                        self.log.emit(f"ALERTA {result['risk_level']}: {p['name']}")
+                        trace(f"  [ALERTA {result['risk_level']}] {p['name']}")
             else:
+                trace("[ETAPA 3] Comparando paquetes instalados con la base local (modo rápido)...")
                 for p in packages:
                     is_reported = p["name"] in malware_db
                     result = dict(p)
@@ -1528,34 +1903,62 @@ class ScanWorker(QThread):
             report["aur_analysis"] = analysis
 
             self.progress.emit(58, "Ejecutando arch-audit...")
+            trace("[ETAPA 4] Ejecutando arch-audit...")
             report["arch_audit"] = run_arch_audit()
+            trace(f"arch-audit finalizó con código {report['arch_audit'].get('returncode')}.")
 
             self.progress.emit(68, "Revisando conexiones activas...")
+            trace("[ETAPA 5] Ejecutando: ss -tunap")
             report["connections"] = active_connections()
+            trace(f"Conexiones analizadas: {len(report['connections'].get('connections', []))}")
 
             self.progress.emit(73, "Analizando reputación de IPs externas...")
+            trace("[ETAPA 6] Analizando reputación RDAP/VT/AbuseIPDB/OTX según disponibilidad...")
             report["ip_reputation"] = analyze_ip_reputation(report["connections"])
+            trace(f"Direcciones únicas clasificadas: {len(report['ip_reputation'].get('results', []))}")
 
             self.progress.emit(78, "Revisando servicios systemd...")
+            trace("[ETAPA 7] Ejecutando listados de servicios systemd activos y habilitados...")
             report["services"] = services_info()
 
-            self.progress.emit(86, "Revisando puertos abiertos...")
+            self.progress.emit(82, "Revisando puertos abiertos...")
+            trace("[ETAPA 8] Revisando puertos locales con nmap o ss...")
             report["ports"] = ports_info()
 
             if self.mode == "full":
-                self.progress.emit(88, "Ejecutando chequeo comunitario aur-malware-check...")
-                report["external_aur_check"] = run_external_aur_malware_check()
+                self.progress.emit(85, "Ejecutando análisis profundo de malware...")
+                trace("[ETAPA 9] Análisis profundo inspirado en A1RM4X (hashes, eBPF, C2, caches e historiales)...")
+                report["deep_malware_scan"] = deep_malware_scan(
+                    load_local_malicious_npm_db(),
+                    emit=trace,
+                )
 
-                self.progress.emit(92, "Revisando integridad pacman -Qkk...")
+                self.progress.emit(91, "Ejecutando chequeo comunitario aur-malware-check...")
+                trace("[ETAPA 10] Ejecutando aur_check-v2.sh --full --all-time...")
+                report["external_aur_check"] = run_external_aur_malware_check()
+                trace(
+                    "Chequeo comunitario finalizado con código "
+                    f"{report['external_aur_check'].get('returncode', 'no disponible')}."
+                )
+
+                self.progress.emit(95, "Revisando integridad pacman -Qkk...")
+                trace("[ETAPA 11] Ejecutando: pacman -Qkk")
                 report["integrity"] = pacman_integrity()
-                self.progress.emit(96, "Revisando persistencia básica...")
+                trace(f"Advertencias de integridad: {len(report['integrity'].get('warnings', []))}")
+                self.progress.emit(98, "Revisando persistencia básica...")
+                trace("[ETAPA 12] Revisando crontab, autostart y procesos desde directorios temporales...")
                 report["persistence"] = persistence_checks()
             else:
+                report["deep_malware_scan"] = {}
                 report["external_aur_check"] = {}
                 report["integrity"] = {}
                 report["persistence"] = {}
 
             self.progress.emit(100, "Escaneo finalizado.")
+            trace(
+                f"Escaneo finalizado. Riesgo general: {general_risk(report)} | "
+                f"Hallazgos profundos: {report.get('deep_malware_scan', {}).get('issue_count', 0)}"
+            )
             self.done.emit(report)
         except Exception as e:
             self.failed.emit(str(e))
@@ -1760,13 +2163,21 @@ class MainWindow(QMainWindow):
         self.txt_audit.setReadOnly(True)
         self.tabs.addTab(self.txt_audit, "arch-audit / Integridad")
 
+        self.txt_deep_scan = QPlainTextEdit()
+        self.txt_deep_scan.setReadOnly(True)
+        self.txt_deep_scan.setFont(QFont("Monospace", 10))
+        self.tabs.addTab(self.txt_deep_scan, "Análisis profundo")
+
         self.txt_sources = QPlainTextEdit()
         self.txt_sources.setReadOnly(True)
         self.tabs.addTab(self.txt_sources, "Fuentes")
 
         self.txt_log = QPlainTextEdit()
         self.txt_log.setReadOnly(True)
-        self.tabs.addTab(self.txt_log, "Log")
+        self.txt_log.setFont(QFont("Monospace", 10))
+        self.txt_log.document().setMaximumBlockCount(10000)
+        self.txt_log.setPlaceholderText("Aquí se mostrará en tiempo real cada etapa ejecutada por Sentinel.")
+        self.tabs.addTab(self.txt_log, "Consola del proceso")
 
         root.addWidget(self.tabs)
         scroll = QScrollArea()
@@ -2157,6 +2568,8 @@ class MainWindow(QMainWindow):
 
     def append_log(self, text):
         self.txt_log.appendPlainText(f"[{dt.datetime.now().strftime('%H:%M:%S')}] {text}")
+        scrollbar = self.txt_log.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
 
     def set_busy(self, busy):
         self.btn_quick.setDisabled(busy)
@@ -2174,6 +2587,8 @@ class MainWindow(QMainWindow):
         self.progress.setValue(0)
         self.status.setText("Iniciando escaneo...")
         self.txt_log.clear()
+        self.txt_deep_scan.clear()
+        self.tabs.setCurrentWidget(self.txt_log)
         self.append_log("Iniciando escaneo " + ("completo" if mode == "full" else "rápido"))
         self.worker = ScanWorker(mode)
         self.worker.progress.connect(self.on_progress)
@@ -2197,16 +2612,21 @@ class MainWindow(QMainWindow):
             riesgo = general_risk(self.report)
             criticos = [p for p in self.report.get("aur_analysis", []) if p.get("risk_level") in ["Crítico", "Alto"] or p.get("incident_reported")]
             ip_sospechosas = [x for x in self.report.get("ip_reputation", {}).get("results", []) if x.get("risk") in ["Alto", "Medio"]]
-            if criticos or ip_sospechosas:
+            hallazgos_profundos = self.report.get("deep_malware_scan", {}).get("findings", [])
+            if criticos or ip_sospechosas or hallazgos_profundos:
                 titulo = "⚠️ Guardia AUR: revisar alertas"
-                cuerpo = f"Controles finalizados con riesgo {riesgo}.\nPaquetes/firmas: {len(criticos)} | IPs a revisar: {len(ip_sospechosas)}"
+                cuerpo = (
+                    f"Controles finalizados con riesgo {riesgo}.\n"
+                    f"Paquetes/firmas: {len(criticos)} | IPs a revisar: {len(ip_sospechosas)} | "
+                    f"Hallazgos profundos: {len(hallazgos_profundos)}"
+                )
                 icono = QSystemTrayIcon.Warning
             else:
                 titulo = "✅ Guardia AUR: controles aprobados"
                 cuerpo = "No se detectaron firmas críticas ni paquetes reportados. Reporte HTML/PDF generado."
                 icono = QSystemTrayIcon.Information
 
-            nivel_popup = "warning" if (criticos or ip_sospechosas) else "ok"
+            nivel_popup = "warning" if (criticos or ip_sospechosas or hallazgos_profundos) else "ok"
             self.show_guard_popup(titulo, cuerpo + "\n\nSe generó reporte HTML y PDF automáticamente.", nivel_popup, 15000)
 
             if self.tray_icon:
@@ -2215,7 +2635,7 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Finalizado", cuerpo + "\n\nSe generó reporte HTML y PDF automáticamente.")
         except Exception as e:
             self.append_log("ERROR generando reporte automático: " + str(e))
-            QMessageBox.warning(self, "Escaneo finalizado", "El escaneo terminó, pero hubo un error generando el reporte automático. Revisa la pestaña Log.")
+            QMessageBox.warning(self, "Escaneo finalizado", "El escaneo terminó, pero hubo un error generando el reporte automático. Revisa la pestaña Consola del proceso.")
 
     def on_scan_failed(self, error):
         self.set_busy(False)
@@ -2307,7 +2727,38 @@ class MainWindow(QMainWindow):
         audit = self.report.get("arch_audit", {}).get("output", "")
         integ = "\n".join(self.report.get("integrity", {}).get("warnings", [])) or self.report.get("integrity", {}).get("raw_limited", "")
         self.txt_audit.setPlainText("ARCH-AUDIT\n\n" + audit + "\n\nINTEGRIDAD PACMAN -QKK\n\n" + integ)
+        self.txt_deep_scan.setPlainText(self.render_deep_scan_text())
         self.txt_sources.setPlainText(self.render_sources_text())
+
+    def render_deep_scan_text(self):
+        deep = self.report.get("deep_malware_scan", {})
+        if not deep:
+            return "El análisis profundo se ejecuta únicamente durante el Escaneo completo."
+        lines = [
+            "ANÁLISIS PROFUNDO DE MALWARE",
+            "=" * 72,
+            f"Riesgo: {deep.get('risk', 'Sin alertas')}",
+            f"Hallazgos: {deep.get('issue_count', 0)}",
+            f"Fuente metodológica: {deep.get('source', A1RM4X_REPOSITORY_URL)}",
+            f"Script de referencia: {deep.get('script_reference', A1RM4X_SCRIPT_URL)}",
+            "",
+        ]
+        findings = deep.get("findings", [])
+        if not findings:
+            lines.append("✅ No se encontraron los indicadores profundos comprobados.")
+        for index, finding in enumerate(findings, start=1):
+            lines.extend([
+                f"[{index}] {finding.get('severity')} — {finding.get('check')}",
+                f"    {finding.get('summary')}",
+                f"    Ruta: {finding.get('path') or '-'}",
+                f"    Evidencia: {finding.get('evidence') or '-'}",
+                "",
+            ])
+        partial = deep.get("partial", [])
+        if partial:
+            lines.extend(["COMPROBACIONES PARCIALES", "-" * 72])
+            lines.extend(f"- {item}" for item in partial)
+        return "\n".join(lines)
 
     def update_lists_now(self):
         self.status.setText("Actualizando listas comunitarias...")

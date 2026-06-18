@@ -1,5 +1,5 @@
 # AUR Sentinel Audit - malicious npm/bun packages
-# Actualizado: 2026-06-17 17:33:14
+# Actualizado: 2026-06-17 17:36:07
 # Entradas: 4
 #
 # Fuentes consultadas:

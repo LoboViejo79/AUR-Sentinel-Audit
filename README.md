@@ -48,6 +48,22 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 
 Esta sección resume los cambios recientes incorporados a **AUR Sentinel Audit** para mejorar la actualización de fuentes, la detección de paquetes AUR comprometidos y la revisión defensiva del sistema.
 
+### 2026-06-17 - Análisis profundo inspirado en A1RM4X y consola en tiempo real
+
+- El **Escaneo completo** incorpora comprobaciones defensivas adaptadas de la metodología publicada por [A1RM4X/AUR-Malware-2026.06-Check](https://github.com/A1RM4X/AUR-Malware-2026.06-Check).
+- Busca archivos llamados `deps` en el sistema y calcula sus hashes SHA256/MD5 para compararlos con indicadores conocidos.
+- Revisa servicios systemd con la combinación `Restart=always` y `RestartSec=30`.
+- Comprueba los mapas eBPF `hidden_pids`, `hidden_names` y `hidden_inodes`.
+- Busca indicadores `temp.sh` y el C2 onion conocido en conexiones activas.
+- Revisa `known_hosts` e historiales de Bash, Zsh y Fish sin copiar su contenido al reporte.
+- Comprueba modificaciones recientes de `/usr/bin/monero-wallet-gui`.
+- Revisa caches de compilación de yay/paru en busca de hooks `preinstall` relacionados con `deps`.
+- Revisa instalaciones y caches npm/bun para paquetes maliciosos conocidos.
+- Se agregó una pestaña **Consola del proceso** que muestra en tiempo real etapas, comandos defensivos, progreso, advertencias y hallazgos.
+- Se agregó una pestaña **Análisis profundo** y una sección equivalente en los reportes HTML, PDF, TXT y JSON.
+
+Estas comprobaciones son de sólo lectura. La adaptación no ejecuta el script remoto de A1RM4X ni elimina automáticamente ningún artefacto.
+
 ### 2026-06-17 - Fuentes nuevas, limpieza de listas y técnicas adicionales
 
 - El botón **Actualizar listas** fusiona también listas comunitarias separadas para campañas asociadas a **Chaos RAT** y a inyección de spam en archivos de shell.
@@ -374,6 +390,40 @@ crontab -l
 procesos ejecutándose desde /tmp o /var/tmp
 ```
 
+### 10. Análisis profundo del payload `deps`
+
+Durante el **Escaneo completo**, Sentinel realiza además:
+
+```text
+búsqueda de archivos deps y verificación SHA256/MD5
+persistencia systemd Restart=always + RestartSec=30
+mapas /sys/fs/bpf/hidden_pids, hidden_names y hidden_inodes
+indicadores de red temp.sh y C2 onion
+rastros en known_hosts e historiales shell
+modificación reciente de /usr/bin/monero-wallet-gui
+hooks preinstall -> deps en caches yay/paru
+instalaciones y caches npm/bun maliciosas
+```
+
+La búsqueda estándar excluye `/proc`, `/sys`, `/dev`, `/run`, `/mnt` y `/media` al localizar candidatos `deps`, evitando pseudo-sistemas y montajes que pueden hacer el análisis innecesariamente lento. La comprobación de eBPF se realiza directamente sobre `/sys/fs/bpf`.
+
+Por privacidad, el programa no guarda líneas completas de historiales ni claves SSH: únicamente informa que un archivo contiene una coincidencia.
+
+### 11. Consola del proceso
+
+La pestaña **Consola del proceso** muestra en tiempo real:
+
+```text
+etapa actual
+comando defensivo ejecutado
+cantidad de elementos revisados
+fuentes que no respondieron
+comprobaciones parciales por permisos o timeout
+alertas y resumen final
+```
+
+La consola también se incorpora al reporte para facilitar auditorías y diagnóstico.
+
 ---
 
 ## 📊 Reportes
@@ -616,6 +666,8 @@ Escaneo completo
 
 ### Fuentes usadas para listas y seguimiento
 
+- A1RM4X/AUR-Malware-2026.06-Check: https://github.com/A1RM4X/AUR-Malware-2026.06-Check
+- Script check-aur-vuln.sh de A1RM4X: https://github.com/A1RM4X/AUR-Malware-2026.06-Check/blob/main/check-aur-vuln.sh
 - lenucksi/aur-malware-check: https://github.com/lenucksi/aur-malware-check
 - Lista AUR de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
 - Lista npm/bun de lenucksi: https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
@@ -631,6 +683,17 @@ Escaneo completo
 - ioctl.fail análisis técnico: https://ioctl.fail/preliminary-analysis-of-aur-malware/
 - Arch aur-general: https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/
 - Arch Security Advisories para vulnerabilidades conocidas usadas por `arch-audit`: https://security.archlinux.org/
+
+### Atribución de la adaptación A1RM4X
+
+Las comprobaciones profundas de hashes, persistencia, eBPF, C2, historiales, staging y caches de construcción se inspiraron y adaptaron a Python a partir del proyecto:
+
+- Proyecto: [A1RM4X/AUR-Malware-2026.06-Check](https://github.com/A1RM4X/AUR-Malware-2026.06-Check)
+- Script de referencia: [check-aur-vuln.sh](https://github.com/A1RM4X/AUR-Malware-2026.06-Check/blob/main/check-aur-vuln.sh)
+- Licencia del proyecto de referencia: [MIT](https://github.com/A1RM4X/AUR-Malware-2026.06-Check/blob/main/LICENSE)
+- Análisis técnico utilizado por ambos proyectos: [ioctl.fail — Preliminary analysis of AUR malware](https://ioctl.fail/preliminary-analysis-of-aur-malware/)
+
+Sentinel implementa estas ideas de forma nativa dentro de la GUI, añade límites de tiempo, evita registrar contenido sensible y conserva su política de sólo lectura.
 
 
 ---
