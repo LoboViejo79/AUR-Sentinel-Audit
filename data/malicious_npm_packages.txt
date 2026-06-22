@@ -1,9 +1,9 @@
 # AUR Sentinel Audit - malicious npm/bun packages
-# Actualizado: 2026-06-17 23:21:10
+# Actualizado: 2026-06-22 16:42:44
 # Entradas: 4
 #
 # Fuentes consultadas:
-# - https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt | extraidos: 4
+# - https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_npm_packages.txt | extraidos: 4
 
 atomic-lockfile
 js-digest

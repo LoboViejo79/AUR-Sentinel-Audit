@@ -71,11 +71,16 @@ RECOMMENDED_TOOLS = ["arch-audit", "bind-tools", "whois", "lsof", "nmap", "curl"
 # Fuentes oficiales/comunitarias del incidente AUR
 ARCH_OFFICIAL_AFFECTED_LIST_URL = "https://md.archlinux.org/s/SxbqukK6IA/download"
 AUR_GENERAL_REPORT_THREAD_URL = "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/thread/FGXPCB3ZVCJIV7FX323SBAX2JHYB7ZS4/"
-LENUCKSI_PACKAGE_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt"
-LENUCKSI_MALICIOUS_NPM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt"
-LENUCKSI_CHAOS_RAT_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt"
-LENUCKSI_RUSSIAN_SPAM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt"
-LENUCKSI_IOCS_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt"
+AUR_GENERAL_BUN_WAVE_MESSAGE_URL = "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/NHRO2RT3VRXHQ7O4WQCPTNGNIOQQQAWX/"
+AUR_GENERAL_HTBROWSER_MESSAGE_URL = "https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/TND7HA2KBQ46OHHUMMIAHKGXZE4WALM6/"
+OCAML_BATTERIES_MALICIOUS_COMMIT_URL = "https://aur.archlinux.org/cgit/aur.git/commit/?h=ocaml-batteries&id=e7ce921ab2cba8fea42b602af0b3c60d60b5d03e"
+PHORONIX_MORE_MALWARE_URL = "https://www.phoronix.com/news/Arch-Linux-AUR-More-Malware"
+PHORONIX_RUSSIAN_SPAM_URL = "https://www.phoronix.com/news/Arch-Linux-AUR-Russian-Spam"
+LENUCKSI_PACKAGE_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/package_list.txt"
+LENUCKSI_MALICIOUS_NPM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_npm_packages.txt"
+LENUCKSI_CHAOS_RAT_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/chaos_rat_packages.txt"
+LENUCKSI_RUSSIAN_SPAM_LIST_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_russian_spam_packages.txt"
+LENUCKSI_IOCS_URL = "https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/iocs/iocs.txt"
 A1RM4X_REPOSITORY_URL = "https://github.com/A1RM4X/AUR-Malware-2026.06-Check"
 A1RM4X_SCRIPT_URL = "https://github.com/A1RM4X/AUR-Malware-2026.06-Check/blob/main/check-aur-vuln.sh"
 IOCTL_ANALYSIS_URL = "https://ioctl.fail/preliminary-analysis-of-aur-malware/"
@@ -85,11 +90,13 @@ CACHYOS_AUR_VULN_LIST_URL = "https://paste.cachyos.org/73a714d"
 MALWARE_DB_URLS = [
     ARCH_OFFICIAL_AFFECTED_LIST_URL,
     AUR_GENERAL_REPORT_THREAD_URL,
+    AUR_GENERAL_BUN_WAVE_MESSAGE_URL,
+    AUR_GENERAL_HTBROWSER_MESSAGE_URL,
+    OCAML_BATTERIES_MALICIOUS_COMMIT_URL,
     LENUCKSI_PACKAGE_LIST_URL,
     LENUCKSI_CHAOS_RAT_LIST_URL,
     LENUCKSI_RUSSIAN_SPAM_LIST_URL,
     CSCS_AUR_VULN_LIST_URL,
-    CACHYOS_AUR_VULN_LIST_URL,
 ]
 LOCAL_MALWARE_DB = Path("data/aur_malware_package_list.txt")
 LOCAL_MALWARE_DB.parent.mkdir(exist_ok=True)
@@ -208,6 +215,31 @@ INCIDENT_INFO_LINKS = [
         "name": "Arch aur-general official report thread",
         "url": AUR_GENERAL_REPORT_THREAD_URL,
         "note": "Hilo oficial de aur-general donde Arch pidió reportar paquetes maliciosos en un solo lugar. El programa extrae nombres desde enlaces AUR del hilo."
+    },
+    {
+        "name": "Arch aur-general - nueva ola Bun ofuscada",
+        "url": AUR_GENERAL_BUN_WAVE_MESSAGE_URL,
+        "note": "Mensaje oficial con 53 paquetes detectados mediante commits que añadían dependencias Bun ofuscadas. Se consulta al actualizar listas."
+    },
+    {
+        "name": "Arch aur-general - htbrowser-bin",
+        "url": AUR_GENERAL_HTBROWSER_MESSAGE_URL,
+        "note": "Reporte oficial del commit malicioso de htbrowser-bin. Se consulta al actualizar listas."
+    },
+    {
+        "name": "AUR commit malicioso - ocaml-batteries",
+        "url": OCAML_BATTERIES_MALICIOUS_COMMIT_URL,
+        "note": "Commit del 14 de junio de 2026 que inyectó spam en configuraciones globales de Bash, Zsh, Fish y profile.d. Se consulta al actualizar listas."
+    },
+    {
+        "name": "Phoronix - More Malware Found On Arch Linux AUR",
+        "url": PHORONIX_MORE_MALWARE_URL,
+        "note": "Cobertura informativa de la nueva ola de paquetes AUR con dependencias Bun ofuscadas."
+    },
+    {
+        "name": "Phoronix - Russian Spam Added To Some AUR Packages",
+        "url": PHORONIX_RUSSIAN_SPAM_URL,
+        "note": "Cobertura informativa de la campaña que modificó archivos de configuración de shells."
     },
     {
         "name": "Arch affected packages live list",
@@ -1345,7 +1377,21 @@ def extract_packages_from_arch_mailing_thread(html_text):
             pkg = m.strip().strip("/").strip().lower()
             if is_valid_package_token(pkg) and not pkg.startswith(("http", "www")):
                 names.add(pkg)
+    # Algunos reportes pegan la salida de `git log --oneline`, por ejemplo:
+    # af09b1cf1b59 (python-django-js-asset) Update dependencies
+    for m in re.findall(r"\b[0-9a-f]{7,40}\s+\(([A-Za-z0-9@._+\-]+)\)", html_text, flags=re.IGNORECASE):
+        pkg = m.strip().lower()
+        if is_valid_package_token(pkg):
+            names.add(pkg)
     return names
+
+
+def extract_package_from_aur_commit_url(url):
+    match = re.search(r"[?&]h=([A-Za-z0-9@._+\-]+)", url)
+    if not match:
+        return set()
+    pkg = match.group(1).strip().lower()
+    return {pkg} if is_valid_package_token(pkg) else set()
 
 
 PACKAGE_NAME_RE = re.compile(r"[a-z0-9][a-z0-9@._+\-]{1,}[a-z0-9+]")
@@ -1484,6 +1530,8 @@ def update_malware_db():
                 txt = r.read().decode("utf-8", errors="ignore")
             if "lists.archlinux.org/archives/list/aur-general" in url:
                 names = extract_packages_from_arch_mailing_thread(txt)
+            elif "aur.archlinux.org/cgit/aur.git/commit/" in url:
+                names = extract_package_from_aur_commit_url(url)
             else:
                 names = parse_package_names_from_text(txt)
             remote_combined.update(names)

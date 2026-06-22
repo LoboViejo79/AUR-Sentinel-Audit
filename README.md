@@ -48,6 +48,54 @@ El programa ayuda a detectar exposición y señales de riesgo, pero no reemplaza
 
 Esta sección resume los cambios recientes incorporados a **AUR Sentinel Audit** para mejorar la actualización de fuentes, la detección de paquetes AUR comprometidos y la revisión defensiva del sistema.
 
+### 2026-06-22 - Nuevas fuentes oficiales y detección de `ocaml-batteries`
+
+- Se revisaron los mensajes oficiales de `aur-general`, el commit AUR y los artículos de Phoronix proporcionados como nuevas referencias.
+- Se detectó **1 paquete que no estaba en la base local**: `ocaml-batteries`.
+- El commit malicioso `e7ce921ab2cba8fea42b602af0b3c60d60b5d03e`, fechado el 14 de junio de 2026, añadió un `post_install()` que escribía spam en:
+
+```text
+/etc/bash.bashrc
+/etc/zsh/zshrc
+/etc/fish/config.fish
+/etc/profile.d/albanianvirus2.sh
+```
+
+- La revisión del repositorio AUR confirmó que la rama actual de `ocaml-batteries` volvió al commit padre limpio `6454ba5abcf3b86cdb7b366a0a80eca015c108ed`. La entrada se conserva en la base para detectar instalaciones realizadas durante la ventana afectada.
+- El mensaje `NHRO2RT3VRXHQ7O4WQCPTNGNIOQQQAWX` aportó 53 nombres de paquetes mediante salida de `git log`; todos ellos ya estaban presentes en la base.
+- El mensaje `TND7HA2KBQ46OHHUMMIAHKGXZE4WALM6` confirmó `htbrowser-bin`, que también estaba previamente registrado.
+- La base fusionada pasa de **2023 a 2024 paquetes AUR reportados**.
+- El botón **Actualizar listas** consulta ahora también estos dos mensajes de `aur-general` y el commit AUR de `ocaml-batteries`. El extractor reconoce tanto enlaces AUR como líneas con el formato `hash (paquete)` para incorporar automáticamente nombres nuevos.
+- Los dos artículos de Phoronix se añadieron como fuentes informativas, pero no se usan como listas automáticas para evitar falsos positivos al extraer palabras de una noticia HTML.
+
+### 2026-06-22 - Verificación de la base y actualización de rutas
+
+- Se consultaron nuevamente las siete fuentes comunitarias configuradas y la lista separada de payloads npm/bun.
+- **No se detectaron paquetes nuevos** respecto de la base local: se conservan **2023 paquetes AUR reportados** y **4 paquetes npm/bun maliciosos**.
+- La comprobación individual confirmó que la base local ya contiene:
+  - 1932 paquetes de la lista principal de la campaña `atomic-lockfile`/`js-digest`.
+  - 7 paquetes de la campaña separada asociada a Chaos RAT.
+  - 73 paquetes de la campaña separada de inyección de spam ruso en archivos de shell.
+- El repositorio `lenucksi/aur-malware-check` reorganizó sus archivos bajo `data/lists/` y `data/iocs/`. Se actualizaron las URL del programa para evitar respuestas HTTP 404 y volver a consultar esas listas correctamente.
+- La fuente histórica `https://paste.cachyos.org/73a714d` devuelve HTTP 404 al 22 de junio de 2026. Se mantiene como referencia documental, pero se retiró de la descarga automática porque la lista principal continúa disponible desde Arch Linux, CSCS y el repositorio consolidado.
+- La base fusionada conserva entradas de campañas distintas. Por ello, el total 2023 no debe interpretarse como 2023 paquetes pertenecientes a una única campaña.
+
+#### Cómo se determinó si había paquetes nuevos
+
+La actualización normaliza cada nombre a minúsculas, descarta comentarios, HTML, encabezados y tokens no válidos, y luego calcula una diferencia exacta de conjuntos:
+
+```text
+paquetes_nuevos = entradas_remotas - entradas_locales
+```
+
+En esta verificación el resultado fue vacío. Las listas remotas válidas se fusionaron igualmente con la caché local, sin eliminar entradas históricas, y se regeneraron:
+
+```text
+data/aur_malware_package_list.txt
+data/package_list.txt
+data/malicious_npm_packages.txt
+```
+
 ### 2026-06-17 - Análisis profundo inspirado en A1RM4X y consola en tiempo real
 
 - El **Escaneo completo** incorpora comprobaciones defensivas adaptadas de la metodología publicada por [A1RM4X/AUR-Malware-2026.06-Check](https://github.com/A1RM4X/AUR-Malware-2026.06-Check).
@@ -128,14 +176,19 @@ data/aur_check-v2.sh                   Checker comunitario integrado
 
 ```text
 https://github.com/lenucksi/aur-malware-check
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/iocs.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/package_list.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_npm_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/chaos_rat_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_russian_spam_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/iocs/iocs.txt
 https://md.archlinux.org/s/SxbqukK6IA/download
+https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/NHRO2RT3VRXHQ7O4WQCPTNGNIOQQQAWX/
+https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/TND7HA2KBQ46OHHUMMIAHKGXZE4WALM6/
+https://aur.archlinux.org/cgit/aur.git/commit/?h=ocaml-batteries&id=e7ce921ab2cba8fea42b602af0b3c60d60b5d03e
 https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
 https://paste.cachyos.org/73a714d
+https://www.phoronix.com/news/Arch-Linux-AUR-More-Malware
+https://www.phoronix.com/news/Arch-Linux-AUR-Russian-Spam
 https://discuss.cachyos.org/t/aur-compromised-almost-2000-packages-affected-20260611/31040
 https://discuss.cachyos.org/t/how-to-check-for-compromised-packages-from-the-current-aur-malware-attack/31077
 https://discourse.ifin.network/t/400-aur-packages-compromised-with-infostealer-and-rootkit/577
@@ -225,11 +278,19 @@ Fuentes principales usadas por el programa:
 
 ```text
 https://github.com/lenucksi/aur-malware-check
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/package_list.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/chaos_rat_packages.txt
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_russian_spam_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/package_list.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/chaos_rat_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_russian_spam_packages.txt
 https://md.archlinux.org/s/SxbqukK6IA/download
+https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/NHRO2RT3VRXHQ7O4WQCPTNGNIOQQQAWX/
+https://lists.archlinux.org/archives/list/aur-general@lists.archlinux.org/message/TND7HA2KBQ46OHHUMMIAHKGXZE4WALM6/
+https://aur.archlinux.org/cgit/aur.git/commit/?h=ocaml-batteries&id=e7ce921ab2cba8fea42b602af0b3c60d60b5d03e
 https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
+```
+
+Referencia histórica no descargada automáticamente desde el 22 de junio de 2026:
+
+```text
 https://paste.cachyos.org/73a714d
 ```
 
@@ -243,7 +304,7 @@ data/package_list.txt
 Los paquetes npm/bun usados como payload se actualizan por separado desde:
 
 ```text
-https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/malicious_npm_packages.txt
+https://raw.githubusercontent.com/lenucksi/aur-malware-check/master/data/lists/malicious_npm_packages.txt
 ```
 
 y se guardan en:
@@ -264,6 +325,8 @@ https://forum.garudalinux.org/t/attack-wave-on-aur-packages/48124
 https://forum.garudalinux.org/t/chaotic-aur-packages-requests-recompilation-reports/26/1238
 https://github.com/lenucksi/aur-malware-check
 https://cscs.pastes.sh/raw/aurvulnlist20260611.txt
+https://www.phoronix.com/news/Arch-Linux-AUR-More-Malware
+https://www.phoronix.com/news/Arch-Linux-AUR-Russian-Spam
 ```
 
 ---

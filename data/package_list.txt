@@ -1224,6 +1224,7 @@ ob-xd-lv2
 ob-xd-standalone
 ob-xd-vst3
 obfs4proxy-bin
+ocaml-batteries
 ocaml-js_of_ocaml
 ocaml-lambda-term
 ocaml-sexplib
